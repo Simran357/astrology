@@ -30,9 +30,50 @@ const PLANET_ICON_MAP: Record<string, (props: { size?: number; className?: strin
 };
 
 export default function ChartPage({ onNavigate }: ChartPageProps) {
-  const { user, highlightedPlanet, setHighlightedPlanet } = useApp();
+  const { user, highlightedPlanet, setHighlightedPlanet, isLoggedIn } = useApp();
   const [activeTab, setActiveTab] = useState(0);
   const [expandedPlanet, setExpandedPlanet] = useState<string | null>(null);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-[#0e0a17] text-[#eee5d3] flex flex-col items-center justify-center px-6 py-16 selection:bg-[#ee5d34] selection:text-[#0e0a17]">
+        <div className="max-w-md w-full border border-[rgba(238,93,52,0.3)] bg-[rgba(31,24,48,0.9)] p-8 rounded-sm text-center space-y-6 shadow-2xl relative">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest">
+            <span>✦ PRIVATE NATAL VAULT · AUTHENTICATION REQUIRED</span>
+          </div>
+
+          <h1 className="font-serif text-2xl md:text-3xl text-[#eee5d3] leading-snug">
+            Chart Access Protected
+          </h1>
+
+          <p className="text-xs text-[#bfb7aa] leading-relaxed">
+            Your full interactive birth chart, whole-sign planetary degrees, and aspect geometry cannot be accessed without an active session. Please sign in or complete onboarding to unlock your wheel.
+          </p>
+
+          <div className="pt-2 flex flex-col gap-3">
+            <button
+              onClick={() => onNavigate("login")}
+              className="w-full py-3.5 bg-[#ee5d34] text-[#0e0a17] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#f58a6b] transition-colors rounded-sm cursor-pointer shadow-lg"
+            >
+              Sign In to View Chart →
+            </button>
+            <button
+              onClick={() => onNavigate("onboarding")}
+              className="w-full py-3.5 border border-[rgba(238,93,52,0.3)] text-[#eee5d3] text-xs font-mono uppercase tracking-widest hover:border-[#ee5d34] transition-colors rounded-sm cursor-pointer"
+            >
+              New Seeker? Begin Onboarding →
+            </button>
+            <button
+              onClick={() => onNavigate("home")}
+              className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] font-mono tracking-wider pt-1 transition-colors cursor-pointer"
+            >
+              ← Return to Salon Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Scroll to chart container and expand planet if highlightedPlanet is set
   useEffect(() => {

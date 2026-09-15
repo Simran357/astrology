@@ -20,8 +20,16 @@ function Shell({ eyebrow, title, intro, children }: { eyebrow: string; title: st
 }
 
 export function LoginPage({ onNavigate }: Props) {
+  const { login } = useApp();
   const [submitted, setSubmitted] = useState(false);
-  const submit = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); setSubmitted(true); };
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+    login();
+    setTimeout(() => {
+      onNavigate("chart");
+    }, 400);
+  };
   return <div className="auth-page astral-app-surface"><div className="auth-card">
     <button className="brand auth-brand" onClick={() => onNavigate("home")}><span className="brand-mark">AF</span><span className="brand-name">AstroFindings</span></button>
     <span className="eyebrow">Private access</span><h1 className="display">Return to the salon.</h1>

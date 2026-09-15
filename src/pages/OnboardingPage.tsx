@@ -7,19 +7,20 @@ interface OnboardingPageProps {
 }
 
 const STEPS = [
-  { id: "q1", title: "The Instinct of Retreat", symbol: "🛡️", category: "Diagnostic 1/3" },
-  { id: "q2", title: "The Unseen Anchor", symbol: "🕯️", category: "Diagnostic 2/3" },
-  { id: "q3", title: "The Sacred Crossroads", symbol: "✧", category: "Diagnostic 3/3" },
   { id: "name", title: "What should we call you?", symbol: "✦", category: "Coordinate 1/4" },
   { id: "birth", title: "When were you born?", symbol: "☉", category: "Coordinate 2/4" },
   { id: "time", title: "What time were you born?", symbol: "☽", category: "Coordinate 3/4" },
   { id: "location", title: "Where were you born?", symbol: "♄", category: "Coordinate 4/4" },
+  { id: "q1", title: "The Instinct of Retreat", symbol: "🛡️", category: "Diagnostic 1/3" },
+  { id: "q2", title: "The Unseen Anchor", symbol: "🕯️", category: "Diagnostic 2/3" },
+  { id: "q3", title: "The Sacred Crossroads", symbol: "✧", category: "Diagnostic 3/3" },
   { id: "reveal", title: "Your First Cosmic Mirror", symbol: "🪞", category: "Synthesis" },
 ];
 
 const YES_QUESTIONS = [
   {
-    stepIndex: 0,
+    stepIndex: 4,
+    qNumber: 1,
     tag: "RELATIONAL DEFENSE · THE ICE WALL",
     question:
       "Do you find yourself pulling away, going cold, and disappearing into silence the moment someone gets close enough to see your real mess — because detaching feels safer than being dropped?",
@@ -40,7 +41,8 @@ const YES_QUESTIONS = [
     ],
   },
   {
-    stepIndex: 1,
+    stepIndex: 5,
+    qNumber: 2,
     tag: "UNSEEN HEAVINESS · EMOTIONAL ISOLATION",
     question:
       "Do you often feel like the unpaid emotional anchor for everyone else — absorbing their crises, listening to their problems — while secretly wondering if anyone would ever notice how heavy your own silence is?",
@@ -61,7 +63,8 @@ const YES_QUESTIONS = [
     ],
   },
   {
-    stepIndex: 2,
+    stepIndex: 6,
+    qNumber: 3,
     tag: "CAREER & SOUL CROSSROADS",
     question:
       "Are you quietly terrified that you are performing competence and keeping the peace inside a life or relationship you've already outgrown, while your real voice stays locked away?",
@@ -84,7 +87,7 @@ const YES_QUESTIONS = [
 ];
 
 export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
-  const { updateUser, isCalculating, user } = useApp();
+  const { updateUser, isCalculating, user, login } = useApp();
   const [step, setStep] = useState(0);
 
   // Form Data
@@ -113,7 +116,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
   // Debounced Location API Search with Pincode
   useEffect(() => {
-    if (step !== 6) return;
+    if (step !== 3) return;
     if (!locationQuery || locationQuery.trim().length < 2) {
       setSuggestions([]);
       return;
@@ -137,7 +140,6 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
   // Handle Location Selection with Pincode
   const handleSelectLocation = (loc: GeocodedLocation) => {
-    // Build clean location name with postal code if available
     let full = loc.displayName || loc.name;
     if (loc.postcode && !full.includes(loc.postcode)) {
       full = `${loc.city || loc.name}, ${loc.postcode}, ${loc.state ? loc.state + ", " : ""}${loc.country || ""}`;
@@ -158,7 +160,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
     if (step < 6) {
       setStep((s) => s + 1);
     } else if (step === 6) {
-      // Step 6 -> Step 7 (Reveal): Calculate exact whole-sign ephemeris
+      // Step 6 (Q3) -> Step 7 (Reveal): Calculate exact whole-sign ephemeris
       await updateUser({
         name: data.name.trim() || "Seeker",
         birthDate: data.birthDate || "1994-08-09",
@@ -172,7 +174,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       });
       setStep(7);
     } else {
-      onNavigate("dashboard");
+      login(); onNavigate("chart");
     }
   };
 
@@ -243,91 +245,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-10 md:py-14">
         <div className="w-full max-w-2xl">
           {/* -------------------------------------------------------------- */}
-          {/* STEPS 0, 1, 2: THE 3 PROVOCATIVE "YES" EMOTIONAL QUESTIONS     */}
+          {/* STEP 0: NAME                                                   */}
           {/* -------------------------------------------------------------- */}
-          {activeQ && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest rotate-[-1deg]">
-                  <span>{activeQ.tag}</span>
-                </div>
-                <span className="text-[10px] font-mono text-[#bfb7aa]">
-                  QUESTION 0{activeQ.stepIndex + 1} OF 03
-                </span>
-              </div>
-
-              <div>
-                <h1 className="font-serif text-2xl md:text-3xl font-light text-[#eee5d3] leading-snug">
-                  {activeQ.question}
-                </h1>
-                <p className="text-xs text-[#bfb7aa] mt-2 font-light">
-                  {activeQ.subtext}
-                </p>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                {activeQ.options.map((opt) => {
-                  const isSelected =
-                    step === 0
-                      ? data.q1Answer === opt.id
-                      : step === 1
-                      ? data.q2Answer === opt.id
-                      : data.q3Answer === opt.id;
-
-                  return (
-                    <div
-                      key={opt.id}
-                      onClick={() => {
-                        if (step === 0) setData((d) => ({ ...d, q1Answer: opt.id }));
-                        if (step === 1) setData((d) => ({ ...d, q2Answer: opt.id }));
-                        if (step === 2) setData((d) => ({ ...d, q3Answer: opt.id }));
-                      }}
-                      className={`p-4 rounded-sm border cursor-pointer transition-all duration-200 ${
-                        isSelected
-                          ? "border-[#ee5d34] bg-[rgba(238,93,52,0.08)] shadow-md"
-                          : "border-[rgba(238,93,52,0.18)] bg-[rgba(31,24,48,0.5)] hover:border-[rgba(238,93,52,0.4)]"
-                      }`}>
-                      <div className="flex items-start gap-3">
-                        <div
-                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${
-                            isSelected ? "border-[#ee5d34] bg-[#ee5d34]" : "border-[#bfb7aa]"
-                          }`}>
-                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#0e0a17]" />}
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-serif text-[#eee5d3] leading-snug font-normal">
-                            {opt.label}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Live Validating Whisper */}
-              {(() => {
-                const currentOptId =
-                  step === 0 ? data.q1Answer : step === 1 ? data.q2Answer : data.q3Answer;
-                const chosen = activeQ.options.find((o) => o.id === currentOptId) || activeQ.options[0];
-                return (
-                  <div className="p-4 rounded-sm border-l-2 border-[#ee5d34] bg-[rgba(238,93,52,0.06)] space-y-1">
-                    <span className="text-[10px] font-mono text-[#ee5d34] tracking-wider uppercase font-semibold">
-                      THE MIRROR CONFIRMS
-                    </span>
-                    <p className="font-serif italic text-xs text-[#eee5d3] leading-relaxed">
-                      "{chosen.whisper}"
-                    </p>
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-
-          {/* -------------------------------------------------------------- */}
-          {/* STEP 3: NAME                                                   */}
-          {/* -------------------------------------------------------------- */}
-          {step === 3 && (
+          {step === 0 && (
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[rgba(238,93,52,0.4)] bg-[#171126]/90 text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest">
                 <span>✦ NATAL FOLIO · ENTRY IDENTITY</span>
@@ -352,9 +272,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           )}
 
           {/* -------------------------------------------------------------- */}
-          {/* STEP 4: BIRTH DATE                                             */}
+          {/* STEP 1: BIRTH DATE                                             */}
           {/* -------------------------------------------------------------- */}
-          {step === 4 && (
+          {step === 1 && (
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[rgba(238,93,52,0.4)] bg-[#171126]/90 text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest">
                 <span>☉ SOLAR EPHEMERIS COORDINATE</span>
@@ -377,9 +297,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           )}
 
           {/* -------------------------------------------------------------- */}
-          {/* STEP 5: BIRTH TIME                                             */}
+          {/* STEP 2: BIRTH TIME                                             */}
           {/* -------------------------------------------------------------- */}
-          {step === 5 && (
+          {step === 2 && (
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[rgba(238,93,52,0.4)] bg-[#171126]/90 text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest">
                 <span>☽ LUNAR & ASCENDANT HORIZON</span>
@@ -410,9 +330,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           )}
 
           {/* -------------------------------------------------------------- */}
-          {/* STEP 6: BIRTH LOCATION WITH LIVE API & PINCODE AUTOCOMPLETE     */}
+          {/* STEP 3: BIRTH LOCATION WITH LIVE API & PINCODE AUTOCOMPLETE     */}
           {/* -------------------------------------------------------------- */}
-          {step === 6 && (
+          {step === 3 && (
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[rgba(238,93,52,0.4)] bg-[#171126]/90 text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest">
                 <span>♄ GEOGRAPHIC EPHEMERIS & PINCODE</span>
@@ -484,6 +404,88 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   {data.birthLocation}
                 </span>
               </div>
+            </div>
+          )}
+
+          {/* -------------------------------------------------------------- */}
+          {/* STEPS 4, 5, 6: THE 3 PROVOCATIVE "YES" EMOTIONAL QUESTIONS     */}
+          {/* -------------------------------------------------------------- */}
+          {activeQ && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center gap-2 px-3 py-1  text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest rotate-[-1deg]">
+                  <span>{activeQ.tag}</span>
+                </div>
+                <span className="text-[10px] font-mono text-[#bfb7aa]">
+                  QUESTION 0{activeQ.qNumber} OF 03
+                </span>
+              </div>
+
+              <div>
+                <h1 className="font-serif text-2xl md:text-3xl font-light text-[#eee5d3] leading-snug">
+                  {activeQ.question}
+                </h1>
+                <p className="text-xs text-[#bfb7aa] mt-2 font-light">
+                  {activeQ.subtext}
+                </p>
+              </div>
+
+              <div className="space-y-3 pt-2">
+                {activeQ.options.map((opt) => {
+                  const isSelected =
+                    step === 4
+                      ? data.q1Answer === opt.id
+                      : step === 5
+                      ? data.q2Answer === opt.id
+                      : data.q3Answer === opt.id;
+
+                  return (
+                    <div
+                      key={opt.id}
+                      onClick={() => {
+                        if (step === 4) setData((d) => ({ ...d, q1Answer: opt.id }));
+                        if (step === 5) setData((d) => ({ ...d, q2Answer: opt.id }));
+                        if (step === 6) setData((d) => ({ ...d, q3Answer: opt.id }));
+                      }}
+                      className={`p-4 rounded-sm border cursor-pointer transition-all duration-200 ${
+                        isSelected
+                          ? "border-[#ee5d34] bg-[rgba(238,93,52,0.08)] shadow-md"
+                          : "border-[rgba(238,93,52,0.18)] bg-[rgba(31,24,48,0.5)] hover:border-[rgba(238,93,52,0.4)]"
+                      }`}>
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${
+                            isSelected ? "border-[#ee5d34] bg-[#ee5d34]" : "border-[#bfb7aa]"
+                          }`}>
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#0e0a17]" />}
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-serif text-[#eee5d3] leading-snug font-normal">
+                            {opt.label}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Live Validating Whisper */}
+              {(() => {
+                const currentOptId =
+                  step === 4 ? data.q1Answer : step === 5 ? data.q2Answer : data.q3Answer;
+                const chosen = activeQ.options.find((o) => o.id === currentOptId) || activeQ.options[0];
+                return (
+                  <div className="p-4 rounded-sm border-l-2 border-[#ee5d34] bg-[rgba(238,93,52,0.06)] space-y-1">
+                    <span className="text-[10px] font-mono text-[#ee5d34] tracking-wider uppercase font-semibold">
+                      THE MIRROR CONFIRMS
+                    </span>
+                    <p className="font-serif italic text-xs text-[#eee5d3] leading-relaxed">
+                      "{chosen.whisper}"
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           )}
 

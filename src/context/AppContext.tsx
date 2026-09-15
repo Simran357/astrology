@@ -54,6 +54,9 @@ interface AppContextType {
   navigateWithHighlight: (page: string, planet?: string) => void;
   isMembershipActive: boolean;
   toggleMembership: () => void;
+  isLoggedIn: boolean;
+  login: (email?: string) => void;
+  logout: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -69,6 +72,28 @@ export const AppProvider: React.FC<{
   onNavigate: (page: string) => void;
 }> = ({ children, currentPage, onNavigate }) => {
   const [isCalculating, setIsCalculating] = useState(false);
+  const AUTH_STORAGE_KEY = "astrofindings_auth_session";
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(AUTH_STORAGE_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  const login = useCallback((email?: string) => {
+    setIsLoggedIn(true);
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, "true");
+    } catch {}
+  }, []);
+
+  const logout = useCallback(() => {
+    setIsLoggedIn(false);
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch {}
+  }, []);
   const [highlightedPlanet, setHighlightedPlanet] = useState<string | null>(null);
 
   // Load User from LocalStorage or default
@@ -279,6 +304,9 @@ export const AppProvider: React.FC<{
         navigateWithHighlight,
         isMembershipActive,
         toggleMembership,
+        isLoggedIn,
+        login,
+        logout,
       }}
     >
       {children}

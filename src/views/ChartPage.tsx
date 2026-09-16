@@ -128,17 +128,17 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
       <div className="fixed inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 40% 60% at 20% 50%, rgba(234,193,87,0.06) 0%, transparent 70%)" }}/>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-8 font-sans">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-6 pb-12 font-sans">
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <p className="text-xs text-[#c5d3df] tracking-widest uppercase mb-2">Natal chart</p>
+            <p className="text-xs text-[#c5d3df] tracking-widest uppercase mb-2 font-mono">Natal chart</p>
             <h1 className="font-serif text-3xl md:text-4xl font-normal text-[#FAF9F6]">{user.name}'s chart</h1>
-            <p className="text-sm text-[#c5d3df] mt-2">{user.birthDate} · {user.birthTime} · {user.birthLocation}</p>
+            <p className="text-sm text-[#c5d3df] mt-1.5">{user.birthDate} · {user.birthTime} · {user.birthLocation}</p>
           </div>
           <button onClick={() => onNavigate("reading")}
-            className="px-6 py-2.5 bg-[#EAC157] text-[#052036] text-sm font-semibold hover:bg-[#d9b048] transition-colors rounded-full hidden md:block cursor-pointer shadow-md">
+            className="px-6 py-2.5 bg-[#EAC157] text-[#052036] text-sm font-semibold hover:bg-[#d9b048] transition-colors rounded-full cursor-pointer shadow-md shrink-0 self-start sm:self-auto">
             Read my chart →
           </button>
         </div>
@@ -161,7 +161,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
             />
 
             {/* Key placements row */}
-            <div className="w-full mt-6 grid grid-cols-3 gap-3">
+            <div className="w-full mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: "Sun", value: user.sunSign, icon: <SunSymbol size={14} className="text-[#EAC157]"/> },
                 { label: "Moon", value: user.moonSign, icon: <MoonSymbol size={14} className="text-[#c5d3df]"/> },
@@ -174,12 +174,12 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                     setHighlightedPlanet(target);
                     setExpandedPlanet(target);
                   }}
-                  className={`border p-3.5 rounded-xl text-left transition-colors cursor-pointer ${
+                  className={`border p-3.5 rounded-xl text-left transition-colors cursor-pointer flex items-center justify-between sm:flex-col sm:items-start ${
                     highlightedPlanet?.toLowerCase() === p.label.toLowerCase()
                       ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
                       : "border-[rgba(234,193,87,0.18)] bg-[#082842] hover:border-[rgba(234,193,87,0.4)]"
                   }`}>
-                  <div className="flex items-center gap-1.5 mb-1.5">{p.icon}
+                  <div className="flex items-center gap-1.5 sm:mb-1.5">{p.icon}
                     <span className="text-xs text-[#c5d3df]">{p.label}</span>
                   </div>
                   <p className="text-sm font-serif text-[#FAF9F6]">{p.value}</p>
@@ -254,11 +254,11 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
                           {/* Paid Deep Layer */}
                           <div className="p-4 border border-[rgba(234,193,87,0.25)] bg-[rgba(234,193,87,0.06)] rounded-lg space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-mono text-[#EAC157] uppercase font-semibold">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <span className="text-[10px] font-mono text-[#EAC157] uppercase font-semibold break-words">
                                 ✦ Deep Psychological Synthesis (Planet + Sign + House)
                               </span>
-                              <span className="text-[9px] font-mono px-2 py-0.5 bg-[rgba(234,193,87,0.2)] text-[#EAC157] rounded-full font-semibold">
+                              <span className="text-[9px] font-mono px-2 py-0.5 bg-[rgba(234,193,87,0.2)] text-[#EAC157] rounded-full font-semibold shrink-0">
                                 AI SYNTHESIS
                               </span>
                             </div>
@@ -302,7 +302,6 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                                     `Examine my ${planet.planet} in ${planet.sign} in House ${planet.house}: Why do I react this way under stress, what triggers make me suppress myself or cry, why do I hold a soft corner, and what makes me shine?`
                                   );
                                   onNavigate("askai");
-                                daylight: true;
                                 }}
                                 className="text-xs text-[#EAC157] hover:underline font-mono cursor-pointer"
                               >
@@ -423,18 +422,18 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
               </div>
 
               {/* Input row */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
                 <input
                   type="text"
                   value={psychQuestion}
                   onChange={(e) => setPsychQuestion(e.target.value)}
                   placeholder="Ask why you react this way, or what triggers your heart..."
-                  className="flex-1 bg-[#052036] border border-[rgba(234,193,87,0.25)] rounded-full px-4 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] placeholder:text-[#c5d3df]/60"
+                  className="flex-1 min-w-0 bg-[#052036] border border-[rgba(234,193,87,0.25)] rounded-full px-4 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] placeholder:text-[#c5d3df]/60"
                 />
                 <button
                   disabled={isAskingAI || !psychQuestion.trim()}
                   onClick={() => handleAskPsychAI()}
-                  className="px-5 py-2.5 bg-[#EAC157] text-[#052036] rounded-full text-xs font-semibold cursor-pointer whitespace-nowrap disabled:opacity-50 hover:bg-[#d9b048] transition-colors shadow-md"
+                  className="px-5 py-2.5 bg-[#EAC157] text-[#052036] rounded-full text-xs font-semibold cursor-pointer whitespace-nowrap disabled:opacity-50 hover:bg-[#d9b048] transition-colors shadow-md shrink-0 self-start sm:self-auto"
                 >
                   {isAskingAI ? "Consulting..." : "Send Inquiry →"}
                 </button>

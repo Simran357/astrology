@@ -139,7 +139,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 py-8 md:py-12 space-y-8">
         {/* Header Breadcrumb */}
-        <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4">
+        <div className="flex flex-wrap items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4 gap-3">
           <div>
             <p className="text-[11px] font-mono text-[#EAC157] tracking-widest uppercase">
               ✦ Personal Sky Vault · Account & Settings

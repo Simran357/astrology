@@ -370,8 +370,9 @@ export default function BirthChart({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const scale = rect.width > 0 ? size / rect.width : 1;
+    const clickX = (e.clientX - rect.left) * scale;
+    const clickY = (e.clientY - rect.top) * scale;
 
     const cx = size / 2;
     const cy = size / 2;
@@ -395,10 +396,19 @@ export default function BirthChart({
   };
 
   return (
-    <canvas
-      ref={canvasRef}
-      onClick={handleClick}
-      style={{ width: size, height: size, maxWidth: "100%", cursor: onSelectPlanet ? "pointer" : "default" }}
-    />
+    <div className="w-full flex items-center justify-center" style={{ maxWidth: size }}>
+      <canvas
+        ref={canvasRef}
+        onClick={handleClick}
+        className="w-full aspect-square block mx-auto select-none"
+        style={{
+          width: "100%",
+          maxWidth: size,
+          aspectRatio: "1 / 1",
+          height: "auto",
+          cursor: onSelectPlanet ? "pointer" : "default",
+        }}
+      />
+    </div>
   );
 }

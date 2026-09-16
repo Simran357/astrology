@@ -143,6 +143,7 @@
 }
 
 :root {
+  --nav-height: 72px;
   /* Brand Style Guide Variables */
   --ink: #052036; /* Deep Space */
   --ink-soft: #082842;
@@ -154,6 +155,12 @@
   --gold: #EAC157; /* Cosmic Gold */
   --white: #FFFFFF;
   --line: rgba(234, 193, 87, 0.22);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+  }
 }
 
 .astral-page { overflow: hidden; position: relative; }
@@ -181,20 +188,20 @@
   letter-spacing: -.025em;
 }
 .fine-rule { border-top: 1px solid var(--line); }
-.site-header {
+.site-header, .app-header {
   align-items: center;
-  background: rgba(5, 32, 54, 0.92);
+  background: rgba(5, 32, 54, 0.95);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(234, 193, 87, 0.18);
   display: flex;
-  height: 80px;
+  height: var(--nav-height) !important;
   justify-content: space-between;
   left: 0;
   padding: 0 5vw;
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 30;
+  z-index: 40;
 }
 .brand { align-items: center; color: var(--paper); display: inline-flex; gap: 12px; text-decoration: none; }
 .brand-mark {
@@ -240,12 +247,34 @@
   box-shadow: 0 6px 20px rgba(234, 193, 87, 0.35);
 }
 .header-cta { padding: 11px 22px; }
-.menu-toggle { background: none; border: 0; color: var(--paper); cursor: pointer; display: none; padding: 8px; }
-.mobile-nav { background: var(--ink-soft); border-bottom: 1px solid var(--line); display: none; left: 0; padding: 20px 5vw 24px; position: fixed; right: 0; top: 80px; z-index: 29; }
-.mobile-nav.is-open { display: grid; gap: 18px; }
-.mobile-nav a { color: var(--paper); font: 500 .8rem/1 var(--app-font-sans); letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.menu-toggle {
+  background: none;
+  border: 0;
+  color: var(--paper);
+  cursor: pointer;
+  display: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 8px;
+}
+.mobile-nav {
+  background: rgba(8, 40, 66, 0.98);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  display: none;
+  left: 0;
+  padding: 20px 5vw 24px;
+  position: fixed;
+  right: 0;
+  top: var(--nav-height) !important;
+  z-index: 39;
+  max-height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+}
+.mobile-nav.is-open { display: grid; gap: 14px; }
+.mobile-nav a, .mobile-nav button { color: var(--paper); font: 500 .85rem/1 var(--app-font-sans); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
 
-.hero { min-height: 820px; padding-top: 80px; position: relative; background: #052036; }
+.hero { min-height: 820px; padding-top: var(--nav-height); position: relative; background: #052036; }
 .hero::before { background: radial-gradient(circle at 68% 43%, rgba(234, 193, 87, 0.16), transparent 28%), radial-gradient(circle at 18% 30%, rgba(12, 51, 84, 0.4), transparent 26%); content: ''; inset: 0; pointer-events: none; position: absolute; }
 .hero-grid { align-items: center; display: grid; grid-template-columns: 1.04fr .96fr; gap: 4vw; min-height: 746px; position: relative; }
 .hero-copy { animation: rise-in .9s .12s both cubic-bezier(.2,.8,.2,1); max-width: 670px; position: relative; z-index: 1; }
@@ -463,12 +492,18 @@
 @media(max-width:880px){.app-access-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.app-access-grid{grid-template-columns:1fr}}
 
-.app-header{position:fixed!important;height:64px!important}
-.app-header .site-nav{gap:10px}
-.app-header .button-quiet{padding:10px 12px}
-.app-status{font:500 .62rem var(--app-font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim)}
-.app-status span{color:var(--sage);margin-right:6px}
-@media(max-width:900px){.app-header .site-nav{display:none}.app-status{display:none}}
+.app-header {
+  height: var(--nav-height) !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+}
+.app-header .site-nav { gap: 10px; }
+.app-header .button-quiet { padding: 10px 12px; }
+.app-status { font: 500 .62rem var(--app-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--paper-dim); }
+.app-status span { color: var(--sage); margin-right: 6px; }
 
 /* Astral Heretic application surfaces — visual layer only */
 .app-header { padding-left: 22px; padding-right: 22px; }
@@ -477,13 +512,13 @@
 .app-status { color: var(--gold); font: 500 .62rem/1 var(--app-font-mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
 .app-status span { color: var(--sage); margin-right: 7px; }
 .astral-app-surface { min-height: 100vh; background: var(--ink); color: var(--paper); }
-.app-page-shell { padding: 120px 0 90px; }
-.app-display-title { font-size: clamp(3rem, 7vw, 6.5rem); line-height: .92; max-width: 900px; }
-.app-page-intro { color: var(--paper-dim); font-size: 1.05rem; line-height: 1.7; max-width: 680px; margin: 24px 0 42px; }
+.app-page-shell { padding: 24px 0 80px; }
+.app-display-title { font-size: clamp(2.4rem, 6vw, 5rem); line-height: .95; max-width: 900px; word-break: break-word; }
+.app-page-intro { color: var(--paper-dim); font-size: clamp(0.95rem, 1.4vw, 1.1rem); line-height: 1.7; max-width: 680px; margin: 18px 0 32px; }
 .feature-grid { display:grid; gap:18px; margin: 36px 0; }
 .feature-grid.two { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .editorial-card { background: var(--ink-soft); border:1px solid var(--line); padding:28px; min-height:210px; display:flex; flex-direction:column; gap:14px; }
-.editorial-card h2 { color:var(--paper); font-size:2rem; line-height:1; margin:0; }
+.editorial-card h2 { color:var(--paper); font-size:clamp(1.5rem, 3.5vw, 2rem); line-height:1.1; margin:0; word-break: break-word; }
 .editorial-card p { color:var(--paper-dim); line-height:1.65; margin:0 0 auto; }
 .editorial-card input,.ai-console textarea,.form-stack input { background:var(--ink-raised); border:1px solid var(--line); color:var(--paper); outline:none; padding:14px 15px; width:100%; }
 .editorial-card input:focus,.ai-console textarea:focus,.form-stack input:focus { border-color:var(--rust); }
@@ -491,7 +526,7 @@
 .editorial-list li { border-top:1px solid var(--line); padding:13px 0; }
 .timeline-list { border-top:1px solid var(--line); margin-top:44px; }
 .timeline-row { display:grid; grid-template-columns:110px 1fr 20px; gap:22px; align-items:center; padding:24px 0; border-bottom:1px solid var(--line); }
-.timeline-row h3 { font:500 1.4rem/1.1 var(--app-font-serif); margin:0 0 7px; }
+.timeline-row h3 { font:500 clamp(1.1rem, 2.5vw, 1.4rem)/1.1 var(--app-font-serif); margin:0 0 7px; }
 .timeline-row p { color:var(--paper-dim); margin:0; line-height:1.55; }
 .tarot-stage { background:var(--ink-soft); border:1px solid var(--line); padding:36px; margin:40px 0; text-align:center; }
 .tarot-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:700px; margin:0 auto 30px; }
@@ -508,21 +543,24 @@
 .auth-page { display:grid; place-items:center; padding:40px 20px; }
 .auth-card { width:min(480px,100%); background:var(--ink-soft); border:1px solid var(--line); padding:42px; box-shadow:var(--shadow-xl); }
 .auth-brand { margin-bottom:52px; }
-.auth-card h1 { font-size:clamp(3rem,8vw,5rem); line-height:.9; margin:12px 0; }
+.auth-card h1 { font-size:clamp(2.5rem,7vw,5rem); line-height:.95; margin:12px 0; word-break: break-word; }
 .form-stack { display:grid; gap:18px; margin:28px 0; }
 .form-stack label { color:var(--paper-dim); font:500 .64rem/1.2 var(--app-font-mono); letter-spacing:.08em; text-transform:uppercase; }
 .form-stack input { display:block; margin-top:8px; }
 @media (max-width: 900px) {
- .app-header .site-nav { display:none; }
- .app-header .app-status { display:none; }
- .feature-grid.two { grid-template-columns:1fr; }
- .timeline-row { grid-template-columns:80px 1fr 15px; }
+  .site-header .site-nav, .app-header .site-nav { display: none !important; }
+  .site-header .header-cta { display: none !important; }
+  .app-header .app-status { display: none !important; }
+  .menu-toggle { display: block !important; }
+  .feature-grid.two { grid-template-columns: 1fr; }
+  .timeline-row { grid-template-columns: 80px 1fr 15px; }
 }
 @media (max-width: 640px) {
- .app-page-shell { padding-top:105px; }
- .section-shell { padding:0 22px; }
- .tarot-cards { gap:8px; }
- .tarot-stage { padding:22px 14px; }
- .auth-card { padding:28px 22px; }
- .brand-name { font-size:.62rem; }
+  .app-page-shell { padding-top: 18px; }
+  .section-shell { padding: 0 18px; }
+  .tarot-cards { gap: 8px; }
+  .tarot-stage { padding: 22px 14px; }
+  .auth-card { padding: 28px 20px; }
+  .brand-name { font-size: .62rem; }
+  .timeline-row { grid-template-columns: 1fr; gap: 8px; }
 }

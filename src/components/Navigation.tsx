@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import AstroFindingsLogo from "./AstroFindingsLogo";
 
@@ -12,9 +13,11 @@ const items:{id:Page;label:string}[]=[
 ];
 export default function Navigation({currentPage,onNavigate}:NavigationProps){
  const { isLoggedIn } = useApp();
+ const [mobileOpen, setMobileOpen] = useState(false);
  if(["home","onboarding","login","signup"].includes(currentPage)) return null;
 
  const handleNavClick = (id: Page) => {
+   setMobileOpen(false);
    if (id === "chart" && !isLoggedIn) {
      onNavigate("login");
      return;
@@ -22,11 +25,52 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
    onNavigate(id);
  };
 
- return <header className="site-header app-header">
-   <div className="cursor-pointer" onClick={()=>onNavigate("home")} aria-label="AstroFindings home">
-     <AstroFindingsLogo size="sm" variant="dark" showTagline={false} />
-   </div>
-   <nav className="site-nav">{items.filter(x=>x.id!=="home").map(x=><button key={x.id} className="button-quiet cursor-pointer" onClick={()=>handleNavClick(x.id)} style={{color:currentPage===x.id?"var(--gold)":"var(--paper-dim)", fontWeight: currentPage===x.id?600:500}}>{x.label}</button>)}</nav>
-   <div className="app-status"><span>●</span> Moon phase / live sky</div>
- </header>;
+ return (
+   <>
+     <header className="site-header app-header">
+       <div className="cursor-pointer" onClick={()=>{ setMobileOpen(false); onNavigate("home"); }} aria-label="AstroFindings home">
+         <AstroFindingsLogo size="sm" variant="dark" showTagline={false} />
+       </div>
+       <nav className="site-nav">
+         {items.filter(x=>x.id!=="home").map(x=>(
+           <button
+             key={x.id}
+             className="button-quiet cursor-pointer"
+             onClick={()=>handleNavClick(x.id)}
+             style={{
+               color: currentPage===x.id ? "var(--gold)" : "var(--paper-dim)",
+               fontWeight: currentPage===x.id ? 600 : 500
+             }}>
+             {x.label}
+           </button>
+         ))}
+       </nav>
+       <div className="app-status"><span>●</span> Moon phase / live sky</div>
+       <button
+         className="menu-toggle"
+         onClick={() => setMobileOpen(!mobileOpen)}
+         aria-label="Toggle navigation menu"
+       >
+         {mobileOpen ? "×" : "☰"}
+       </button>
+     </header>
+
+     {mobileOpen && (
+       <nav className="mobile-nav is-open" aria-label="Mobile navigation">
+         {items.filter(x=>x.id!=="home").map(x=>(
+           <button
+             key={x.id}
+             className="text-left py-2.5 font-sans text-sm tracking-wide cursor-pointer transition-colors border-b border-[rgba(234,193,87,0.1)] last:border-0"
+             style={{
+               color: currentPage===x.id ? "var(--gold)" : "var(--paper)",
+               fontWeight: currentPage===x.id ? 600 : 400
+             }}
+             onClick={()=>handleNavClick(x.id)}>
+             {x.label}
+           </button>
+         ))}
+       </nav>
+     )}
+   </>
+ );
 }

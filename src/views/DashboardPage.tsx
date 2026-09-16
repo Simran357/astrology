@@ -88,14 +88,14 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
 
             {/* Today's Psychological Horoscope & Trigger Diagnosis */}
             <div className="border border-[rgba(234,193,87,0.3)] bg-[#082842] rounded-xl p-6 sm:p-7 space-y-4 shadow-xl">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <SunSymbol size={16} className="text-[#EAC157]" />
+                  <SunSymbol size={16} className="text-[#EAC157] shrink-0" />
                   <span className="text-xs font-sans text-[#EAC157] tracking-widest uppercase font-bold">
                     Today's Emotional Climate · {user.sunSign} Sun × {user.moonSign} Moon
                   </span>
                 </div>
-                <span className="text-[10px] font-sans text-[#EAC157] uppercase px-2.5 py-0.5 border border-[#EAC157]/40 rounded-full font-semibold">
+                <span className="text-[10px] font-sans text-[#EAC157] uppercase px-2.5 py-0.5 border border-[#EAC157]/40 rounded-full font-semibold shrink-0">
                   Free Discovery
                 </span>
               </div>
@@ -119,11 +119,11 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
 
               {/* Competitor-Style Curiosity & Paywall Teaser */}
               <div className="p-4 rounded-lg border border-dashed border-[#EAC157]/45 bg-[rgba(234,193,87,0.08)] space-y-3">
-                <div className="flex items-center justify-between text-xs">
+                <div className="flex flex-wrap items-center justify-between text-xs gap-2">
                   <span className="font-sans text-[#EAC157] font-semibold uppercase tracking-wider text-[11px]">
                     ✦ Premium Hope Window & Timing Unlock
                   </span>
-                  <span className="font-sans text-[10px] text-[#c5d3df] font-semibold">PAID // THE RESOLUTION</span>
+                  <span className="font-sans text-[10px] text-[#c5d3df] font-semibold shrink-0">PAID // THE RESOLUTION</span>
                 </div>
                 <p className="text-xs text-[#FAF9F6]/90 leading-relaxed font-sans">
                   You know the trigger. But when does the emotional fog lift? Our deep transit engine has mapped your <strong>Hope Window</strong>—the exact date this karmic tension resolves, how to handle the conversation without guilt, and how to step into what makes you shine.

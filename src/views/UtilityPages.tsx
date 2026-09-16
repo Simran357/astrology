@@ -1032,7 +1032,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
       {/* Synastry Analysis Detail Card */}
       {selectedPerson && compatibility && (
         <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.85)] p-6 rounded-xl mb-6 space-y-5">
-          <div className="flex items-baseline justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
+          <div className="flex flex-wrap items-baseline justify-between border-b border-[rgba(234,193,87,0.1)] pb-3 gap-3">
             <div>
               <h3 className="font-serif text-2xl text-[#FAF9F6]">
                 {user.name} & {selectedPerson.name}
@@ -1602,7 +1602,7 @@ export function AskAIPage({ onNavigate }: Props) {
             {/* Provider Selector */}
             <div className="space-y-2">
               <label className="text-xs font-mono text-[#FAF9F6] block uppercase">Select Calculation Engine</label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
                   { id: "builtin", name: "Free Built-in Engine", desc: "100% Free · No API key needed" },
                   { id: "groq", name: "Groq Cloud (Free)", desc: "Free key at console.groq.com" },
@@ -1770,7 +1770,7 @@ export function AskAIPage({ onNavigate }: Props) {
 
         {/* Manuscript Input Field */}
         <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(6,28,48,0.75)] p-5 rounded-xl space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <label className="text-xs font-mono text-[#FAF9F6] uppercase tracking-wider">
               Formulate Inscription for AstroFindings
             </label>

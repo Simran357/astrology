@@ -111,6 +111,135 @@ function classifyQuestionTheme(question: string) {
   return "emotions" as const;
 }
 
+export async function processAstrologyReading(payload: ServerReadingRequest): Promise<{ status: number; body: any }> {
+  // Validation
+  if (!payload.question || typeof payload.question !== "string" || !payload.question.trim()) {
+    return { status: 400, body: { error: "Inquiry question is required." } };
+  }
+
+  if (payload.question.length > 1000) {
+    return { status: 400, body: { error: "Inquiry exceeds maximum allowed length of 1000 characters." } };
+  }
+
+  const userBirth = payload.user;
+  if (!userBirth || !userBirth.birthDate) {
+    return { status: 400, body: { error: "User birth date is required for calculation." } };
+  }
+
+  // 1. Calculate Real Natal Chart
+  const lat = userBirth.latitude ?? 37.7749;
+  const lng = userBirth.longitude ?? -122.4194;
+  const tz = userBirth.timezone || "America/Los_Angeles";
+  const bTime = userBirth.birthTime || "12:00";
+
+  const natalChart = calculateNatalEphemeris(userBirth.birthDate, bTime, lat, lng, tz);
+
+  // 2. Calculate Real Transits & Current Sky
+  const liveTransits = calculateLiveTransits(DateTime.now().toISODate() || "2026-09-16", natalChart.placements);
+
+  // 3. Check for Second Person Chart (Synastry)
+  let secondPersonChart = null;
+  let hasSecondPerson = false;
+  if (payload.optionalSecondPerson?.birthDate) {
+    const sp = payload.optionalSecondPerson;
+    const spBirthDate = sp.birthDate;
+    if (spBirthDate) {
+      secondPersonChart = calculateNatalEphemeris(
+        spBirthDate,
+        sp.birthTime || "12:00",
+        sp.latitude || 30.2672,
+        sp.longitude || -97.7431,
+        sp.timezone || "America/Chicago"
+      );
+      hasSecondPerson = true;
+    }
+  }
+
+  // 4. Mind Reading Protection Directive
+  const asksAboutAnotherPerson =
+    /\b(they|them|he|him|she|her|partner|ex|crush|boss|co-founder|parents?)\b/i.test(payload.question);
+
+  let mindReadingDisclaimer: string | undefined = undefined;
+  if (asksAboutAnotherPerson && !hasSecondPerson) {
+    mindReadingDisclaimer =
+      "Chart Boundary: Because only your birth chart is registered, this consultation reads your emotional architecture, relational expectations, and intuitive radar. It does not fabricate or guess another person's private thoughts.";
+  }
+
+  // 5. Select Relevant Placements & Transits
+  const category = classifyQuestionTheme(payload.question);
+  const relevantPlacements: StructuredAstrologyReading["relevantPlacements"] = [];
+
+  const sun = natalChart.placements.find((p) => p.planet === "Sun");
+  const moon = natalChart.placements.find((p) => p.planet === "Moon");
+  const venus = natalChart.placements.find((p) => p.planet === "Venus");
+  const mars = natalChart.placements.find((p) => p.planet === "Mars");
+  const saturn = natalChart.placements.find((p) => p.planet === "Saturn");
+  const mercury = natalChart.placements.find((p) => p.planet === "Mercury");
+
+  if (category === "love") {
+    if (venus) relevantPlacements.push({ planet: "Venus", sign: venus.sign, house: venus.house, influence: "Values, attraction & boundaries" });
+    if (moon) relevantPlacements.push({ planet: "Moon", sign: moon.sign, house: moon.house, influence: "Subconscious sanctuary & instinctual defense" });
+    if (mars) relevantPlacements.push({ planet: "Mars", sign: mars.sign, house: mars.house, influence: "Passion & emotional friction" });
+  } else if (category === "career") {
+    if (mars) relevantPlacements.push({ planet: "Mars", sign: mars.sign, house: mars.house, influence: "Momentum, sovereignty & execution" });
+    if (sun) relevantPlacements.push({ planet: "Sun", sign: sun.sign, house: sun.house, influence: "Core authority & public recognition" });
+    if (saturn) relevantPlacements.push({ planet: "Saturn", sign: saturn.sign, house: saturn.house, influence: "Mastery, endurance & discipline" });
+  } else {
+    if (moon) relevantPlacements.push({ planet: "Moon", sign: moon.sign, house: moon.house, influence: "Emotional nervous system & safety" });
+    if (mercury) relevantPlacements.push({ planet: "Mercury", sign: mercury.sign, house: mercury.house, influence: "Mental rhythm & cognitive patterns" });
+    if (saturn) relevantPlacements.push({ planet: "Saturn", sign: saturn.sign, house: saturn.house, influence: "Karmic defense & boundary structure" });
+  }
+
+  const relevantTransits: StructuredAstrologyReading["relevantTransits"] = liveTransits.activeShifts.slice(0, 3).map((s) => ({
+    transit: s.transit || s.title,
+    impact: s.impact || s.description,
+  }));
+
+  // 6. Attempt Server-side AI Provider (Groq / Gemini / OpenAI via process.env)
+  const groqKey = process.env.GROQ_API_KEY || "";
+  const geminiKey = process.env.GEMINI_API_KEY || "";
+  const openaiKey = process.env.OPENAI_API_KEY || "";
+
+  let aiResult: StructuredAstrologyReading | null = null;
+
+  if (groqKey || geminiKey || openaiKey) {
+    try {
+      aiResult = await executeServerAiCall({
+        groqKey,
+        geminiKey,
+        openaiKey,
+        userName: userBirth.name || "Seeker",
+        question: payload.question,
+        category,
+        natalChart,
+        liveTransits,
+        relevantPlacements,
+        relevantTransits,
+        secondPersonChart,
+        mindReadingDisclaimer,
+      });
+    } catch (aiErr) {
+      console.warn("Server AI provider call failed, falling back to built-in ephemeris synthesis:", aiErr);
+    }
+  }
+
+  // 7. Fallback to Server-Side Deep Ephemeris Synthesis if AI is unconfigured or failed
+  if (!aiResult) {
+    aiResult = generateServerEphemerisSynthesis({
+      userName: userBirth.name || "Seeker",
+      question: payload.question,
+      category,
+      natalChart,
+      liveTransits,
+      relevantPlacements,
+      relevantTransits,
+      mindReadingDisclaimer,
+    });
+  }
+
+  return { status: 200, body: aiResult };
+}
+
 /**
  * Express / Connect style middleware handler for /api/astrology/reading
  */
@@ -120,7 +249,6 @@ export function astrologyApiMiddleware(): Connect.NextHandleFunction {
       return next();
     }
 
-    // Read request body
     let bodyText = "";
     req.on("data", (chunk) => {
       bodyText += chunk;
@@ -137,140 +265,9 @@ export function astrologyApiMiddleware(): Connect.NextHandleFunction {
         }
 
         const payload: ServerReadingRequest = JSON.parse(bodyText);
-
-        // Validation
-        if (!payload.question || typeof payload.question !== "string" || !payload.question.trim()) {
-          res.statusCode = 400;
-          res.end(JSON.stringify({ error: "Inquiry question is required." }));
-          return;
-        }
-
-        if (payload.question.length > 1000) {
-          res.statusCode = 400;
-          res.end(JSON.stringify({ error: "Inquiry exceeds maximum allowed length of 1000 characters." }));
-          return;
-        }
-
-        const userBirth = payload.user;
-        if (!userBirth || !userBirth.birthDate) {
-          res.statusCode = 400;
-          res.end(JSON.stringify({ error: "User birth date is required for calculation." }));
-          return;
-        }
-
-        // 1. Calculate Real Natal Chart
-        const lat = userBirth.latitude ?? 37.7749;
-        const lng = userBirth.longitude ?? -122.4194;
-        const tz = userBirth.timezone || "America/Los_Angeles";
-        const bTime = userBirth.birthTime || "12:00";
-
-        const natalChart = calculateNatalEphemeris(userBirth.birthDate, bTime, lat, lng, tz);
-
-        // 2. Calculate Real Transits & Current Sky
-        const liveTransits = calculateLiveTransits(DateTime.now().toISODate() || "2026-09-16", natalChart.placements);
-
-        // 3. Check for Second Person Chart (Synastry)
-        let secondPersonChart = null;
-        let hasSecondPerson = false;
-        if (payload.optionalSecondPerson?.birthDate) {
-          const sp = payload.optionalSecondPerson;
-          const spBirthDate = sp.birthDate;
-          if (spBirthDate) {
-            secondPersonChart = calculateNatalEphemeris(
-              spBirthDate,
-              sp.birthTime || "12:00",
-              sp.latitude || 30.2672,
-              sp.longitude || -97.7431,
-              sp.timezone || "America/Chicago"
-            );
-            hasSecondPerson = true;
-          }
-        }
-
-        // 4. Mind Reading Protection Directive
-        const asksAboutAnotherPerson =
-          /\b(they|them|he|him|she|her|partner|ex|crush|boss|co-founder|parents?)\b/i.test(payload.question);
-
-        let mindReadingDisclaimer: string | undefined = undefined;
-        if (asksAboutAnotherPerson && !hasSecondPerson) {
-          mindReadingDisclaimer =
-            "Chart Boundary: Because only your birth chart is registered, this consultation reads your emotional architecture, relational expectations, and intuitive radar. It does not fabricate or guess another person's private thoughts.";
-        }
-
-        // 5. Select Relevant Placements & Transits
-        const category = classifyQuestionTheme(payload.question);
-        const relevantPlacements: StructuredAstrologyReading["relevantPlacements"] = [];
-
-        const sun = natalChart.placements.find((p) => p.planet === "Sun");
-        const moon = natalChart.placements.find((p) => p.planet === "Moon");
-        const venus = natalChart.placements.find((p) => p.planet === "Venus");
-        const mars = natalChart.placements.find((p) => p.planet === "Mars");
-        const saturn = natalChart.placements.find((p) => p.planet === "Saturn");
-        const mercury = natalChart.placements.find((p) => p.planet === "Mercury");
-
-        if (category === "love") {
-          if (venus) relevantPlacements.push({ planet: "Venus", sign: venus.sign, house: venus.house, influence: "Values, attraction & boundaries" });
-          if (moon) relevantPlacements.push({ planet: "Moon", sign: moon.sign, house: moon.house, influence: "Subconscious sanctuary & instinctual defense" });
-          if (mars) relevantPlacements.push({ planet: "Mars", sign: mars.sign, house: mars.house, influence: "Passion & emotional friction" });
-        } else if (category === "career") {
-          if (mars) relevantPlacements.push({ planet: "Mars", sign: mars.sign, house: mars.house, influence: "Momentum, sovereignty & execution" });
-          if (sun) relevantPlacements.push({ planet: "Sun", sign: sun.sign, house: sun.house, influence: "Core authority & public recognition" });
-          if (saturn) relevantPlacements.push({ planet: "Saturn", sign: saturn.sign, house: saturn.house, influence: "Mastery, endurance & discipline" });
-        } else {
-          if (moon) relevantPlacements.push({ planet: "Moon", sign: moon.sign, house: moon.house, influence: "Emotional nervous system & safety" });
-          if (mercury) relevantPlacements.push({ planet: "Mercury", sign: mercury.sign, house: mercury.house, influence: "Mental rhythm & cognitive patterns" });
-          if (saturn) relevantPlacements.push({ planet: "Saturn", sign: saturn.sign, house: saturn.house, influence: "Karmic defense & boundary structure" });
-        }
-
-        const relevantTransits: StructuredAstrologyReading["relevantTransits"] = liveTransits.activeShifts.slice(0, 3).map((s) => ({
-          transit: s.transit || s.title,
-          impact: s.impact || s.description,
-        }));
-
-        // 6. Attempt Server-side AI Provider (Groq / Gemini / OpenAI via process.env)
-        const groqKey = process.env.GROQ_API_KEY || "";
-        const geminiKey = process.env.GEMINI_API_KEY || "";
-        const openaiKey = process.env.OPENAI_API_KEY || "";
-
-        let aiResult: StructuredAstrologyReading | null = null;
-
-        if (groqKey || geminiKey || openaiKey) {
-          try {
-            aiResult = await executeServerAiCall({
-              groqKey,
-              geminiKey,
-              openaiKey,
-              userName: userBirth.name || "Seeker",
-              question: payload.question,
-              category,
-              natalChart,
-              liveTransits,
-              relevantPlacements,
-              relevantTransits,
-              secondPersonChart,
-              mindReadingDisclaimer,
-            });
-          } catch (aiErr) {
-            console.warn("Server AI provider call failed, falling back to built-in ephemeris synthesis:", aiErr);
-          }
-        }
-
-        // 7. Fallback to Server-Side Deep Ephemeris Synthesis if AI is unconfigured or failed
-        if (!aiResult) {
-          aiResult = generateServerEphemerisSynthesis({
-            userName: userBirth.name || "Seeker",
-            question: payload.question,
-            category,
-            natalChart,
-            liveTransits,
-            relevantPlacements,
-            relevantTransits,
-            mindReadingDisclaimer,
-          });
-        }
-
-        res.statusCode = 200;
-        res.end(JSON.stringify(aiResult));
+        const result = await processAstrologyReading(payload);
+        res.statusCode = result.status;
+        res.end(JSON.stringify(result.body));
       } catch (err: any) {
         console.error("Error in /api/astrology/reading:", err);
         res.statusCode = 500;

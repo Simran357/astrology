@@ -1,0 +1,19 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/astrology/reading/route": "app/api/astrology/reading/route.js",
+  "/askai/page": "app/askai/page.js",
+  "/chart/page": "app/chart/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/learn/page": "app/learn/page.js",
+  "/login/page": "app/login/page.js",
+  "/onboarding/page": "app/onboarding/page.js",
+  "/page": "app/page.js",
+  "/palm/page": "app/palm/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/reading/page": "app/reading/page.js",
+  "/relationships/page": "app/relationships/page.js",
+  "/signup/page": "app/signup/page.js",
+  "/timeline/page": "app/timeline/page.js",
+  "/wellness/page": "app/wellness/page.js"
+}

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Navigation from "./components/Navigation";
-import HomePage from "./pages/HomePage";
-import OnboardingPage from "./pages/OnboardingPage";
-import DashboardPage from "./pages/DashboardPage";
-import ChartPage from "./pages/ChartPage";
-import ReadingPage from "./pages/ReadingPage";
-import LearnPage from "./pages/LearnPage";
-import ProfilePage from "./pages/ProfilePage";
-import { LoginPage, SignupPage, TimelinePage, RelationshipsPage, AskAIPage, WellnessPage, PalmReadingPage } from "./pages/UtilityPages";
+import HomePage from "./views/HomePage";
+import OnboardingPage from "./views/OnboardingPage";
+import DashboardPage from "./views/DashboardPage";
+import ChartPage from "./views/ChartPage";
+import ReadingPage from "./views/ReadingPage";
+import LearnPage from "./views/LearnPage";
+import ProfilePage from "./views/ProfilePage";
+import { LoginPage, SignupPage, TimelinePage, RelationshipsPage, AskAIPage, WellnessPage, PalmReadingPage } from "./views/UtilityPages";
 import { AppProvider, PageId } from "./context/AppContext";
 
 type Page = PageId;

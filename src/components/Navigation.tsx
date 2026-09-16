@@ -1,3 +1,5 @@
+"use client";
+
 import { useApp } from "../context/AppContext";
 
 type Page = "home" | "dashboard" | "chart" | "reading" | "learn" | "profile" | "onboarding" | "login" | "signup" | "timeline" | "relationships" | "askai" | "wellness" | "palm";

@@ -21,22 +21,19 @@ const YES_QUESTIONS = [
   {
     stepIndex: 4,
     qNumber: 1,
-    tag: "DETACHMENT · OVERTHINKING PATTERNS",
-    question:
-      "Do you detach and step back into silence the moment overthinking triggers your anxiety — because numbness feels safer than heartbreak?",
+    tag: "DETACHMENT · OVERTHINKING",
+    question: "Do you detach, step back into silence, and overthink when emotionally overwhelmed?",
     subtext: "Why you react this way: unearthing the planet placement where your defense mechanism was born.",
     options: [
       {
         id: "yes_retreat",
-        label: "YES — I detach and step back. Overthinking triggers me to pull away before I get hurt.",
-        whisper:
-          "Your detachment isn't coldness. Your chart locates the exact planet placement making you retreat when anxiety spikes.",
+        label: "YES — Overthinking triggers me to detach and step back into silence.",
+        whisper: "Your detachment isn't coldness. Your chart locates the exact planet placement triggering your retreat.",
       },
       {
         id: "yes_freeze",
-        label: "YES — Anxiety freezes me. What triggers me makes me go silent and step back.",
-        whisper:
-          "Silence was built to avoid overwhelm. Your Moon and Saturn hold the blueprint of this thinking pattern.",
+        label: "YES — Anxiety freezes me; numbness feels safer than facing difficult emotions.",
+        whisper: "Silence was built to avoid overwhelm. Your Moon and Saturn hold the blueprint of this thinking pattern.",
       },
     ],
   },
@@ -44,21 +41,18 @@ const YES_QUESTIONS = [
     stepIndex: 5,
     qNumber: 2,
     tag: "HEARTBREAK · SUPPRESSED EMOTIONS",
-    question:
-      "Do you keep a soft corner for people who hurt you, while feeling completely alone and suppressing your own tears?",
+    question: "Do you hold a soft corner for someone who hurt you, feeling lonely while suppressing yourself?",
     subtext: "Why you still have feelings, and what makes you suppress yourself without guilt.",
     options: [
       {
         id: "yes_anchor",
-        label: "YES — I hold soft corners and still have feelings, even through betrayal and heartbreak.",
-        whisper:
-          "Your Venus and 7th House reveal why your feelings get hurt so easily and why you forgive betrayal.",
+        label: "YES — I still have feelings and hold a soft corner, even through betrayal and heartbreak.",
+        whisper: "Your Venus and 7th House reveal why your feelings get hurt so easily and why you forgive betrayal.",
       },
       {
         id: "yes_alone",
-        label: "YES — I suppress myself completely. I feel alone and carry difficult emotions in silence.",
-        whisper:
-          "Your chart proves that feeling alone is not a flaw — it reveals what they do which makes you cry.",
+        label: "YES — I suppress my heartbreak and carry the feeling of loneliness completely alone.",
+        whisper: "Your chart proves that feeling alone is not a defect — it reveals what they do which makes you cry.",
       },
     ],
   },
@@ -66,21 +60,18 @@ const YES_QUESTIONS = [
     stepIndex: 6,
     qNumber: 3,
     tag: "COMFORT ZONE · WHAT MAKES YOU SHINE",
-    question:
-      "Are you trapped in your comfort zone, overwhelmed by why you react this way instead of stepping into what makes you shine?",
+    question: "Are you hiding in your comfort zone, wondering what triggers you instead of stepping into what makes you shine?",
     subtext: "Moving from emotional overwhelm and fear into your true celestial power.",
     options: [
       {
         id: "yes_hollow",
-        label: "YES — Overwhelm keeps me in my comfort zone while what makes me shine stays locked inside.",
-        whisper:
-          "Your Sun, Mars, and Midheaven expose the exact triggers keeping you small and how to break free.",
+        label: "YES — Overwhelm traps me in my comfort zone while what makes me shine stays locked inside.",
+        whisper: "Your Sun, Mars, and Midheaven expose the exact triggers keeping you small and how to break free.",
       },
       {
         id: "yes_leap",
         label: "YES — I need to understand why I react this way so I can finally step into what makes me shine.",
-        whisper:
-          "Planetary shifts and transits are aligning right now to release unexplored emotions with no guilt.",
+        whisper: "Planetary shifts and transits are aligning right now to release unexplored emotions with no guilt.",
       },
     ],
   },
@@ -496,9 +487,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
             <div className="space-y-8 animate-fadeIn">
               {/* Talismanic Seal */}
               <div className="text-center space-y-3">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-[#ee5d34] bg-[#171126] text-[11px] font-mono text-[#ee5d34] uppercase tracking-widest shadow-xl">
-                  <span>✦ TALISMAN OF AWAKENING · ASTROFINDINGS ARCHIVE</span>
-                </div>
+
                 <h1 className="font-serif text-3xl md:text-4xl text-[#eee5d3] font-light">
                   Your First Cosmic Mirror, {data.name || "Seeker"}
                 </h1>

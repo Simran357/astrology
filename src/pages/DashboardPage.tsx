@@ -84,22 +84,69 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           {/* Left column — chart + insight */}
           <div className="lg:col-span-3 space-y-8">
 
-            {/* Today's insight */}
-            <div className="border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <SunSymbol size={16} className="text-[#f0c870]"/>
-                <span className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase">Today's cosmic influence</span>
+            {/* Today's Psychological Horoscope & Trigger Diagnosis */}
+            <div className="border border-[rgba(238,93,52,0.22)] bg-[rgba(31,24,48,0.85)] rounded-sm p-6 sm:p-7 space-y-4 shadow-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <SunSymbol size={16} className="text-[#f0c870]" />
+                  <span className="text-xs font-mono text-[#ee5d34] tracking-widest uppercase font-bold">
+                    Today's Emotional Climate · {user.sunSign} Sun × {user.moonSign} Moon
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-[#bfb7aa] uppercase px-2 py-0.5 border border-white/10 rounded-sm">
+                  Free Discovery
+                </span>
               </div>
-              <p className="font-serif text-xl font-light text-[#eee5d3] leading-relaxed mb-4">
-                With the current planetary weather meeting your natal {user.sunSign} Sun, communication and choices carry notable weight.
+
+              <h2 className="font-serif text-2xl md:text-3xl font-light text-[#eee5d3] leading-snug">
+                Why your impulse today is to detach, step back into silence, and overthink.
+              </h2>
+
+              <p className="text-sm text-[#eee5d3]/90 leading-relaxed font-serif">
+                Today's sky pressure acts directly on your {user.moonSign} Moon. When difficult emotions or unexpected friction surface, your immediate instinct is not to scream—it is to withdraw your energy, question what others feel about you, and retreat into your comfort zone where no one can hurt your feelings.
               </p>
-              <p className="text-sm text-[#bfb7aa] leading-relaxed">
-                Your {user.risingSign} rising amplifies this timing — moments that feel quiet on the surface may reveal long-term clarity. Trust your instinct to observe before reacting.
-              </p>
-              <button onClick={() => onNavigate("reading")}
-                className="mt-5 text-sm text-[#ee5d34] hover:text-[#f58a6b] transition-colors flex items-center gap-1.5 cursor-pointer">
-                Full reading for today <span>→</span>
-              </button>
+
+              <div className="p-4 rounded-sm bg-[rgba(14,10,23,0.7)] border-l-2 border-[#ee5d34] space-y-1 text-xs">
+                <span className="font-mono text-[10px] text-[#ee5d34] uppercase tracking-wider block font-bold">
+                  What Triggers You Today:
+                </span>
+                <p className="text-[#bfb7aa] leading-relaxed">
+                  The current Moon angle cross-examining your natal placements is amplifying feelings of loneliness and unexpressed anxiety. You are tempted to suppress what you feel to keep the peace.
+                </p>
+              </div>
+
+              {/* Competitor-Style Curiosity & Paywall Teaser */}
+              <div className="p-4 rounded-sm border border-dashed border-[#ee5d34]/40 bg-[rgba(238,93,52,0.06)] space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-mono text-[#d4af37] font-semibold uppercase tracking-wider text-[11px]">
+                    ✦ Premium Hope Window & Timing Unlock
+                  </span>
+                  <span className="font-mono text-[10px] text-[#bfb7aa]">PAID // THE RESOLUTION</span>
+                </div>
+                <p className="text-xs text-[#eee5d3]/90 leading-relaxed font-serif">
+                  You know the trigger. But when does the emotional fog lift? Our deep transit engine has mapped your <strong>Hope Window</strong>—the exact date this karmic tension resolves, how to handle the conversation without guilt, and how to step into what makes you shine.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(
+                        "astrofindings_pending_inquiry",
+                        `Today's Sky Analysis: What is triggering my detachment and overthinking today based on my ${user.sunSign} Sun and ${user.moonSign} Moon, and when will my hope window open?`
+                      );
+                      onNavigate("askai");
+                    }}
+                    className="button-primary cursor-pointer text-xs py-2 px-4 w-full sm:w-auto font-bold"
+                  >
+                    Ask AstroFindings on Today's Triggers →
+                  </button>
+                  <button
+                    onClick={() => onNavigate("timeline")}
+                    className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                  >
+                    View Transit Timeline of Relief ↗
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Birth chart preview */}

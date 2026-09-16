@@ -378,27 +378,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 04 / A NOTE FROM THE DESK                                          */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="interlude" id="about">
-          <div className="section-shell interlude-copy">
-            <span className="eyebrow">04 / A note from the desk</span>
-            <p>I am not here to make the universe seem nicer than it is. I am here to make your relationship to uncertainty more interesting.</p>
-            <p className="pull-quote">“The chart is an argument. We get to edit the footnotes.”</p>
-          </div>
-          <blockquote className="interlude-quote">
-            The point is not to become <em>more cosmic.</em><br />
-            It is to become harder to fool.
-          </blockquote>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 05 / BEFORE YOU CROSS THE THRESHOLD                                */}
+        {/* 04 / BEFORE YOU CROSS THE THRESHOLD                                */}
         {/* ------------------------------------------------------------------ */}
         <section className="threshold" id="threshold">
           <div className="section-shell">
             <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>
-              05 / Before you cross the threshold
+              04 / Before you cross the threshold
             </span>
             <h2 className="display">Bring the question you keep making smaller.</h2>
             <div className="threshold-grid">
@@ -418,12 +403,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 06 / FAQ                                                           */}
+        {/* 05 / FAQ                                                           */}
         {/* ------------------------------------------------------------------ */}
         <section className="faq" id="questions">
           <div className="section-shell faq-grid">
             <div className="faq-intro">
-              <span className="eyebrow">06 / Questions at the threshold</span>
+              <span className="eyebrow">05 / Questions at the threshold</span>
               <h2 className="display">Still skeptical?<br />Good.</h2>
               <p className="text-xs text-[#bfb7aa] mt-2 leading-relaxed">
                 AstroFindings (astrofindings.com) is dedicated to clean, honest self-inquiry without cosmic pretension.

@@ -3,6 +3,7 @@ import { useApp } from "../context/AppContext";
 import { calculateCompatibility, PersonProfile } from "../services/astrologyEngine";
 import {
   askAstrologyConsultant,
+  getPersonalizedAstrologyReading,
   AIResponse,
   getAISettings,
   saveAISettings,
@@ -48,22 +49,82 @@ function Shell({
 /* 1. AUTH PAGES: LOGIN & SIGNUP                                             */
 /* ========================================================================= */
 
+const GoogleIcon = () => (
+  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+    <path
+      fill="#4285F4"
+      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+    />
+    <path
+      fill="#34A853"
+      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.03 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+    />
+    <path
+      fill="#EA4335"
+      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+    />
+  </svg>
+);
+
 export function LoginPage({ onNavigate }: Props) {
-  const { login } = useApp();
+  const { login, loginWithGoogle, isSupabaseReady } = useApp();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    login();
-    setTimeout(() => {
-      onNavigate("chart");
-    }, 350);
+    setErrorMsg(null);
+    setIsLoading(true);
+
+    try {
+      const res = await login(email, password);
+      if (!res.success) {
+        setErrorMsg(res.error || "Invalid credentials. Please verify your email and password.");
+        setIsLoading(false);
+        return;
+      }
+      setSubmitted(true);
+      setTimeout(() => {
+        onNavigate("chart");
+      }, 350);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Sign in failed.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setErrorMsg(null);
+    setIsLoading(true);
+    try {
+      const res = await loginWithGoogle();
+      if (!res.success) {
+        setErrorMsg(res.error || "Google authentication failed.");
+        setIsLoading(false);
+        return;
+      }
+      setSubmitted(true);
+      setTimeout(() => {
+        onNavigate("chart");
+      }, 350);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Google sign in failed.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#0e0a17]">
-      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.9)] p-8 rounded-sm space-y-6 shadow-2xl">
+      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.92)] p-8 rounded-sm space-y-6 shadow-2xl backdrop-blur-md">
         <button
           className="brand auth-brand flex items-center gap-2 cursor-pointer"
           onClick={() => onNavigate("home")}
@@ -73,24 +134,59 @@ export function LoginPage({ onNavigate }: Props) {
           </span>
           <span className="brand-name font-serif text-lg text-[#eee5d3]">AstroFindings</span>
         </button>
-        <span className="eyebrow text-xs font-mono text-[#ee5d34] block uppercase tracking-wider">
-          Private access
-        </span>
+
+        <div className="flex items-center justify-between">
+          <span className="eyebrow text-xs font-mono text-[#ee5d34] uppercase tracking-wider">
+            Private access
+          </span>
+          <span className="text-[10px] font-mono text-[#bfb7aa]">
+            {isSupabaseReady ? "✦ Supabase Cloud Active" : "✦ Local Auth Ready"}
+          </span>
+        </div>
+
         <h1 className="display font-serif text-2xl md:text-3xl text-[#eee5d3]">
           Return to the salon.
         </h1>
         <p className="app-page-intro text-xs text-[#bfb7aa] leading-relaxed">
-          Sign in to continue to your chart, readings, timeline, bonds, and saved library.
+          Sign in to access your birth wheel, synastry bonds, daily transits, and private inquiries.
         </p>
-        <form onSubmit={submit} className="form-stack space-y-4">
+
+        {/* Continue with Google */}
+        <button
+          type="button"
+          disabled={isLoading}
+          onClick={handleGoogleLogin}
+          className="w-full py-3 px-4 rounded-sm border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.8)] hover:bg-[rgba(238,93,52,0.12)] hover:border-[#ee5d34] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#eee5d3] cursor-pointer shadow-md disabled:opacity-50"
+        >
+          <GoogleIcon />
+          <span>Continue with Google</span>
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+          <span className="text-[10px] font-mono text-[#bfb7aa] uppercase tracking-widest">
+            or email
+          </span>
+          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+        </div>
+
+        {errorMsg && (
+          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-sm text-xs text-[#ff9999] leading-relaxed">
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleEmailSubmit} className="form-stack space-y-4">
           <label className="block text-xs font-mono text-[#bfb7aa]">
-            Email
+            Email Address
             <input
               required
               type="email"
-              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
             />
           </label>
           <label className="block text-xs font-mono text-[#bfb7aa]">
@@ -98,25 +194,33 @@ export function LoginPage({ onNavigate }: Props) {
             <input
               required
               type="password"
-              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
             />
           </label>
-          <button className="button-primary w-full py-3 cursor-pointer text-xs font-medium" type="submit">
-            Enter the salon ↗
+
+          <button
+            disabled={isLoading}
+            className="button-primary w-full py-3 cursor-pointer text-xs font-medium disabled:opacity-50"
+            type="submit"
+          >
+            {isLoading ? "Authenticating..." : "Enter the salon ↗"}
           </button>
         </form>
+
         {submitted && (
           <div className="form-feedback text-xs text-[#ee5d34] p-2 border border-[#ee5d34] bg-[rgba(238,93,52,0.1)] rounded-sm text-center">
             Sign-in verified. Opening your celestial coordinates...
           </div>
         )}
+
         <button
-          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full"
+          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full pt-1"
           onClick={() => onNavigate("signup")}
         >
-          New here? Create an account →
+          New seeker? Create an account →
         </button>
       </div>
     </div>
@@ -124,21 +228,61 @@ export function LoginPage({ onNavigate }: Props) {
 }
 
 export function SignupPage({ onNavigate }: Props) {
-  const { login } = useApp();
+  const { signup, loginWithGoogle, isSupabaseReady } = useApp();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const submit = (e: FormEvent) => {
+  const handleSignupSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    login();
-    setTimeout(() => {
-      onNavigate("chart");
-    }, 350);
+    setErrorMsg(null);
+    setIsLoading(true);
+
+    try {
+      const res = await signup(name.trim(), email.trim(), password);
+      if (!res.success) {
+        setErrorMsg(res.error || "Could not register account.");
+        setIsLoading(false);
+        return;
+      }
+      setSubmitted(true);
+      setTimeout(() => {
+        onNavigate("onboarding");
+      }, 400);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Sign up failed.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    setErrorMsg(null);
+    setIsLoading(true);
+    try {
+      const res = await loginWithGoogle();
+      if (!res.success) {
+        setErrorMsg(res.error || "Google authentication failed.");
+        setIsLoading(false);
+        return;
+      }
+      setSubmitted(true);
+      setTimeout(() => {
+        onNavigate("chart");
+      }, 350);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Google registration failed.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#0e0a17]">
-      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.9)] p-8 rounded-sm space-y-6 shadow-2xl">
+      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.92)] p-8 rounded-sm space-y-6 shadow-2xl backdrop-blur-md">
         <button
           className="brand auth-brand flex items-center gap-2 cursor-pointer"
           onClick={() => onNavigate("home")}
@@ -148,33 +292,69 @@ export function SignupPage({ onNavigate }: Props) {
           </span>
           <span className="brand-name font-serif text-lg text-[#eee5d3]">AstroFindings</span>
         </button>
-        <span className="eyebrow text-xs font-mono text-[#ee5d34] block uppercase tracking-wider">
-          Begin a private practice
-        </span>
+
+        <div className="flex items-center justify-between">
+          <span className="eyebrow text-xs font-mono text-[#ee5d34] uppercase tracking-wider">
+            Begin a private practice
+          </span>
+          <span className="text-[10px] font-mono text-[#bfb7aa]">
+            {isSupabaseReady ? "✦ Supabase Cloud Active" : "✦ Local Auth Ready"}
+          </span>
+        </div>
+
         <h1 className="display font-serif text-2xl md:text-3xl text-[#eee5d3]">
           Make room for the question.
         </h1>
         <p className="app-page-intro text-xs text-[#bfb7aa] leading-relaxed">
-          Create your account and unlock whole-sign calculations without cosmic fluff.
+          Create your account to calculate true whole-sign placements, daily transit forecasts, and synastry bonds.
         </p>
-        <form onSubmit={submit} className="form-stack space-y-4">
+
+        {/* Continue with Google */}
+        <button
+          type="button"
+          disabled={isLoading}
+          onClick={handleGoogleSignup}
+          className="w-full py-3 px-4 rounded-sm border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.8)] hover:bg-[rgba(238,93,52,0.12)] hover:border-[#ee5d34] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#eee5d3] cursor-pointer shadow-md disabled:opacity-50"
+        >
+          <GoogleIcon />
+          <span>Continue with Google</span>
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+          <span className="text-[10px] font-mono text-[#bfb7aa] uppercase tracking-widest">
+            or register with email
+          </span>
+          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+        </div>
+
+        {errorMsg && (
+          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-sm text-xs text-[#ff9999] leading-relaxed">
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleSignupSubmit} className="form-stack space-y-4">
           <label className="block text-xs font-mono text-[#bfb7aa]">
-            Name
+            Your Name
             <input
               required
-              name="name"
-              placeholder="Your name"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Julian Vance"
+              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
             />
           </label>
           <label className="block text-xs font-mono text-[#bfb7aa]">
-            Email
+            Email Address
             <input
               required
               type="email"
-              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
             />
           </label>
           <label className="block text-xs font-mono text-[#bfb7aa]">
@@ -183,22 +363,30 @@ export function SignupPage({ onNavigate }: Props) {
               required
               minLength={6}
               type="password"
-              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
             />
           </label>
-          <button className="button-primary w-full py-3 cursor-pointer text-xs font-medium" type="submit">
-            Create account ↗
+
+          <button
+            disabled={isLoading}
+            className="button-primary w-full py-3 cursor-pointer text-xs font-medium disabled:opacity-50"
+            type="submit"
+          >
+            {isLoading ? "Creating celestial vault..." : "Create account ↗"}
           </button>
         </form>
+
         {submitted && (
           <div className="form-feedback text-xs text-[#ee5d34] p-2 border border-[#ee5d34] bg-[rgba(238,93,52,0.1)] rounded-sm text-center">
             Account created. Navigating to your personal sky...
           </div>
         )}
+
         <button
-          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full"
+          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full pt-1"
           onClick={() => onNavigate("login")}
         >
           Already a member? Sign in →
@@ -460,9 +648,43 @@ export function TimelinePage({ onNavigate }: Props) {
                   </div>
                 </div>
 
+                {/* Deep Emotional & Psychological Inquiries */}
+                <div className="p-4 border border-[rgba(238,93,52,0.2)] bg-[rgba(20,15,35,0.85)] rounded-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-[#ee5d34] uppercase font-semibold">
+                      ✦ Unspoken Emotional Inquiries ({shift.planet})
+                    </span>
+                    <span className="text-[10px] font-mono text-[#bfb7aa]">
+                      Free Discovery · Paid Deep Resolution
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#bfb7aa]">
+                    Select a core psychological inquiry to understand why this planetary shift triggered your detachment, feelings of loneliness, or recurring overthinking:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      `Why did the ${shift.planet} shift cause me to detach and step back from people?`,
+                      `Why do I still have feelings or a soft corner despite betrayal or cheating in this phase?`,
+                      `What triggered my anxiety and made me suppress my real voice during this transit?`,
+                      `What made me cry in private, and how do I leave my comfort zone to shine again?`,
+                    ].map((inquiry, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          localStorage.setItem("astrofindings_pending_inquiry", inquiry);
+                          onNavigate("askai");
+                        }}
+                        className="text-[11px] px-3 py-1.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm transition-colors text-left cursor-pointer"
+                      >
+                        ✦ {inquiry}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
                   <button
-                    onClick={() => handleAskTimelineAI(`Explain in detail how the ${shift.planet} shift affects my specific natal placements and relationship timing.`)}
+                    onClick={() => handleAskTimelineAI(`Explain in detail how the ${shift.planet} shift affects my specific natal placements, my tendency to overthink, and my relationship timing.`)}
                     className="button-primary cursor-pointer text-xs py-2 px-3"
                   >
                     Ask AI to analyze this shift for my chart →
@@ -492,38 +714,122 @@ export function TimelinePage({ onNavigate }: Props) {
             </h3>
             <p className="text-xs md:text-sm text-[#bfb7aa] leading-relaxed">
               Astrology is not endless endurance. Every harsh transit has an exact expiration date.
-              The coming planetary windows indicate a decisive release of the emotional baggage you have been carrying:
+              The coming planetary windows indicate a decisive release of the emotional baggage, lonely sleepless nights, and suppressed grief you have been carrying:
             </p>
 
+            {/* Free Discovery Windows */}
             <div className="space-y-3 pt-2">
               <div className="p-4 border border-[rgba(100,180,100,0.25)] bg-[rgba(20,40,25,0.4)] rounded-sm space-y-1">
-                <span className="text-[10px] font-mono text-[rgba(140,210,140,1)] uppercase">
-                  Window 1: The Relief of Silence
-                </span>
-                <h4 className="font-serif text-base text-[#eee5d3]">Letting Go of Unspoken Guilt</h4>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-[rgba(140,210,140,1)] uppercase">
+                    Window 1: The Relief of Silence
+                  </span>
+                  <span className="text-[9px] font-mono text-[rgba(140,210,140,0.8)] border border-[rgba(140,210,140,0.3)] px-1.5 py-0.2 rounded-sm">
+                    FREE DISCOVERY
+                  </span>
+                </div>
+                <h4 className="font-serif text-base text-[#eee5d3]">Letting Go of Unspoken Guilt & Anxiety</h4>
                 <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                  As the Moon shifts into a harmonious trine with your natal placements, the urge to constantly explain yourself subsides. You will realize that you do not need their validation to heal.
+                  As the Moon shifts into a harmonious trine with your natal placements, the urge to constantly overthink and explain yourself subsides. You will realize that you do not need their validation to heal, and stepping back into your own space is not abandonment—it is survival.
                 </p>
               </div>
 
               <div className="p-4 border border-[rgba(238,93,52,0.25)] bg-[rgba(50,25,35,0.4)] rounded-sm space-y-1">
-                <span className="text-[10px] font-mono text-[#ee5d34] uppercase">
-                  Window 2: Relational Truth & Soft Corners
-                </span>
-                <h4 className="font-serif text-base text-[#eee5d3]">Clarity in Love & Past Heartbreak</h4>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-[#ee5d34] uppercase">
+                    Window 2: Relational Truth & Soft Corners
+                  </span>
+                  <span className="text-[9px] font-mono text-[#ee5d34] border border-[rgba(238,93,52,0.3)] px-1.5 py-0.2 rounded-sm">
+                    FREE DISCOVERY
+                  </span>
+                </div>
+                <h4 className="font-serif text-base text-[#eee5d3]">Clarity in Love, Cheating Doubts & Heartbreak</h4>
                 <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                  The planetary cycle that caused confusion in your 7th House completes. You will finally understand why that connection happened, what it taught you, and how to love again without fear of betrayal.
+                  The planetary cycle that caused confusion in your 7th House completes. You will finally understand why you maintained a soft corner even after betrayal, what it taught you about your own vulnerability, and how to open your heart again without terror.
                 </p>
               </div>
 
               <div className="p-4 border border-[rgba(200,160,80,0.25)] bg-[rgba(45,35,20,0.4)] rounded-sm space-y-1">
-                <span className="text-[10px] font-mono text-[#f0c870] uppercase">
-                  Window 3: Stepping Into What Makes You Shine
-                </span>
-                <h4 className="font-serif text-base text-[#eee5d3]">Emerging From Your Comfort Zone</h4>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-[#f0c870] uppercase">
+                    Window 3: Stepping Into What Makes You Shine
+                  </span>
+                  <span className="text-[9px] font-mono text-[#f0c870] border border-[rgba(200,160,80,0.3)] px-1.5 py-0.2 rounded-sm">
+                    FREE DISCOVERY
+                  </span>
+                </div>
+                <h4 className="font-serif text-base text-[#eee5d3]">Emerging From Your Comfort Zone Trap</h4>
                 <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                  Mars and Sun synchronize with your Midheaven. Your real voice breaks through the old container. Energy returns to your ambition.
+                  Mars and Sun synchronize with your Midheaven. Your real voice breaks through the old container. You stop suppressing yourself to keep others comfortable, and energy returns to your career and ambition.
                 </p>
+              </div>
+            </div>
+
+            {/* COMPETITOR-STYLE PAID PAYWALL HOOK (The Pattern / Nebula / Co-Star style curiosity & suspense) */}
+            <div className="mt-6 border-2 border-dashed border-[rgba(238,93,52,0.4)] bg-[linear-gradient(135deg,rgba(31,24,48,0.95),rgba(20,15,35,0.98))] p-6 rounded-sm space-y-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 w-32 h-32 bg-[radial-gradient(circle,rgba(238,93,52,0.15),transparent_70%)] pointer-events-none" />
+              
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-[#ee5d34]">🔒</span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#ee5d34] font-semibold">
+                    PREMIUM BREAKTHROUGH DOSSIER · EXACT RESOLUTION TIMING
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-[#ee5d34] text-[#0e0a17] font-semibold rounded-sm">
+                  PAID ACCESS ONLY
+                </span>
+              </div>
+
+              <div>
+                <h4 className="font-serif text-xl md:text-2xl text-[#eee5d3]">
+                  Unlock the Exact Day the Fog Lifts & The Conversation Script
+                </h4>
+                <p className="text-xs text-[#bfb7aa] mt-1.5 leading-relaxed">
+                  Free reveals the diagnostic sky weather. Premium reveals the <strong>exact dates, the psychological levers, and what they secretly feel</strong> according to synastric transits so you never walk in the dark again:
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-3 pt-1">
+                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
+                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 01 / Exact Peak Dates</span>
+                  <p className="text-xs text-[#eee5d3] font-medium">Exact Calendar Day & Degree</p>
+                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                    Transit peaks on October 14th at 18° Aries, ending your 14-month cycle of silence.
+                  </p>
+                </div>
+                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
+                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 02 / The Hard Script</span>
+                  <p className="text-xs text-[#eee5d3] font-medium">What to Say Without Guilt</p>
+                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                    "I can hold a soft corner for who you were while refusing to allow who you are now to hurt me."
+                  </p>
+                </div>
+                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
+                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 03 / Their Hidden Reaction</span>
+                  <p className="text-xs text-[#eee5d3] font-medium">Placements & Planetary Intent</p>
+                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                    Their Saturn return triggers remorse when you stop initiating, forcing genuine accountability.
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  onClick={() => onNavigate("reading")}
+                  className="w-full sm:w-auto py-3 px-6 bg-[#ee5d34] text-[#0e0a17] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#f58a6b] transition-all rounded-sm cursor-pointer shadow-lg"
+                >
+                  Unlock Complete Breakthrough Dossier →
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.setItem("astrofindings_pending_inquiry", "When will the emotional fog lift in my life, why do I still have a soft corner for them, and what is the exact breakthrough window coming for my birth chart?");
+                    onNavigate("askai");
+                  }}
+                  className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] font-mono cursor-pointer"
+                >
+                  Ask AstroFindings AI About This Window →
+                </button>
               </div>
             </div>
 
@@ -607,12 +913,17 @@ export function RelationshipsPage({ onNavigate }: Props) {
     const q = customQ || synastryAIQuery || `Why do ${user.name} and ${selectedPerson.name} connect this way and where do our defense mechanisms clash?`;
     setIsConsultingSynastry(true);
     try {
-      const res = await askAstrologyConsultant(
+      const reading = await getPersonalizedAstrologyReading({
         user,
+        question: q,
         liveTransits,
-        `${q} (Comparing ${user.name}: Sun in ${user.sunSign}, Moon in ${user.moonSign} with ${selectedPerson.name}: Sun in ${selectedPerson.sunSign}, Moon in ${selectedPerson.moonSign})`
-      );
-      setSynastryAIResponse(res.text);
+        optionalSecondPerson: selectedPerson,
+      });
+      const fullText =
+        reading.sections.length > 0
+          ? reading.sections.map((s) => `${s.title}\n${s.text}`).join("\n\n")
+          : reading.summary;
+      setSynastryAIResponse(fullText);
     } catch (e) {
       console.error(e);
     } finally {
@@ -760,15 +1071,21 @@ export function RelationshipsPage({ onNavigate }: Props) {
 
           {/* Deep Psychological Prompts */}
           <div className="p-4 border border-[rgba(238,93,52,0.15)] bg-[rgba(20,15,35,0.7)] rounded-sm space-y-3">
-            <span className="text-xs font-mono uppercase text-[#ee5d34] block">
-              ✦ Deep Synastry Inquiries (Click to Ask AI)
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono uppercase text-[#ee5d34] block">
+                ✦ Unspoken Synastry Inquiries (Click to Consult AI)
+              </span>
+              <span className="text-[10px] font-mono text-[#bfb7aa]">
+                Grounded in Both Natal Wheels
+              </span>
+            </div>
             <div className="flex flex-wrap gap-2">
               {[
-                `Why do I still hold a soft corner for ${selectedPerson.name}?`,
-                `Where do our defense mechanisms clash when someone pulls away?`,
-                `What makes this relationship strong despite misunderstandings?`,
-                `Why does our dynamic feel different right now in current transits?`,
+                `Why do I still have feelings and a soft corner for ${selectedPerson.name}?`,
+                `What might ${selectedPerson.name} feel about me according to their placements?`,
+                `What triggers our heartbreak or fears of betrayal and cheating?`,
+                `What do they do which makes me cry, and why do I suppress myself?`,
+                `Why did our dynamic cause me to detach and step back into loneliness?`,
               ].map((q) => (
                 <button
                   key={q}
@@ -776,11 +1093,60 @@ export function RelationshipsPage({ onNavigate }: Props) {
                     setSynastryAIQuery(q);
                     handleConsultBondAI(q);
                   }}
-                  className="text-xs px-2.5 py-1 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm cursor-pointer"
+                  className="text-xs px-2.5 py-1.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm cursor-pointer text-left"
                 >
                   ✦ {q}
                 </button>
               ))}
+            </div>
+
+            {/* Competitor Synastric Paywall Teaser */}
+            <div className="mt-4 p-4 border border-dashed border-[rgba(238,93,52,0.35)] bg-[rgba(14,10,23,0.85)] rounded-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase text-[#ee5d34] font-semibold">
+                  🔒 Premium Synastry Dossier · What They Secretly Feel
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 bg-[#ee5d34] text-[#0e0a17] font-semibold rounded-sm">
+                  PAID ACCESS
+                </span>
+              </div>
+              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                Free reveals basic harmony scores. Premium reveals <strong>what {selectedPerson.name} actually feels about you according to their planetary placements, why they act distant, and the script for honest conversation:</strong>
+              </p>
+              <div className="grid sm:grid-cols-2 gap-2 text-left pt-1">
+                <div className="p-2 border border-[rgba(238,93,52,0.12)] rounded-sm bg-[rgba(31,24,48,0.6)]">
+                  <span className="text-[10px] font-mono text-[#ee5d34] block">✦ What They Secretly Feel</span>
+                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none mt-0.5">
+                    Their Venus in Leo craves your admiration, but their Saturn square causes cold emotional withdrawal.
+                  </p>
+                </div>
+                <div className="p-2 border border-[rgba(238,93,52,0.12)] rounded-sm bg-[rgba(31,24,48,0.6)]">
+                  <span className="text-[10px] font-mono text-[#ee5d34] block">✦ The Healing Script</span>
+                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none mt-0.5">
+                    "I am stepping back not out of anger, but because I deserve the same emotional safety I offer you."
+                  </p>
+                </div>
+              </div>
+              <div className="pt-1 flex items-center justify-between flex-wrap gap-2">
+                <button
+                  onClick={() => onNavigate("reading")}
+                  className="button-primary cursor-pointer text-xs py-2 px-4"
+                >
+                  Unlock Full Synastric Dossier ($19) →
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.setItem(
+                      "astrofindings_pending_inquiry",
+                      `Deep Synastry: What does ${selectedPerson.name} feel about me according to our placements, why do I still have feelings or a soft corner for them, and how do we resolve this emotional tension?`
+                    );
+                    onNavigate("askai");
+                  }}
+                  className="text-xs text-[#ee5d34] hover:underline font-mono cursor-pointer"
+                >
+                  Consult AI on This Bond →
+                </button>
+              </div>
             </div>
 
             {isConsultingSynastry && (
@@ -1484,14 +1850,74 @@ export function AskAIPage({ onNavigate }: Props) {
               </span>
             </div>
 
-            {/* Reading Body */}
-            <div className="prose prose-invert max-w-none text-xs sm:text-sm text-[#eee5d3] leading-relaxed space-y-4 whitespace-pre-line font-serif font-normal">
-              {response.text}
-            </div>
+            {/* Mind Reading Disclaimer if third party inquiry */}
+            {response.structuredReading?.mindReadingDisclaimer && (
+              <div className="p-3.5 border border-[#ee5d34]/40 bg-[rgba(238,93,52,0.08)] rounded-sm text-xs text-[#eee5d3] flex items-start gap-2.5">
+                <span className="text-[#ee5d34] text-base leading-none mt-0.5">✦</span>
+                <div className="space-y-0.5">
+                  <span className="font-mono text-[10px] text-[#ee5d34] uppercase tracking-wider block font-bold">Chart Boundary Notice</span>
+                  <p className="text-xs text-[#bfb7aa] leading-relaxed">{response.structuredReading.mindReadingDisclaimer}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Reading Body: Structured or Prose */}
+            {response.structuredReading && response.structuredReading.sections.length > 0 ? (
+              <div className="space-y-6">
+                {response.structuredReading.summary && (
+                  <div className="p-4 rounded-sm bg-[rgba(238,93,52,0.06)] border-l-2 border-[#ee5d34] font-serif text-sm md:text-base text-[#eee5d3] italic leading-relaxed">
+                    "{response.structuredReading.summary}"
+                  </div>
+                )}
+
+                <div className="space-y-6 pt-2">
+                  {response.structuredReading.sections.map((sec, sIdx) => (
+                    <div key={sIdx} className="space-y-2 border-b border-[rgba(238,93,52,0.1)] pb-5 last:border-b-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {sec.dimensionTag && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(238,93,52,0.15)] text-[#ee5d34] rounded-sm font-semibold uppercase">
+                            {sec.dimensionTag}
+                          </span>
+                        )}
+                        <h3 className="font-serif text-base md:text-lg text-[#eee5d3] font-medium">
+                          {sec.title}
+                        </h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-[#eee5d3]/90 leading-relaxed whitespace-pre-line font-serif">
+                        {sec.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="prose prose-invert max-w-none text-xs sm:text-sm text-[#eee5d3] leading-relaxed space-y-4 whitespace-pre-line font-serif font-normal">
+                {response.text}
+              </div>
+            )}
+
+            {/* Active Sky Transits Tag Cloud */}
+            {response.structuredReading?.relevantTransits && response.structuredReading.relevantTransits.length > 0 && (
+              <div className="pt-2 border-t border-[rgba(238,93,52,0.15)] space-y-1.5">
+                <span className="text-[10px] font-mono uppercase text-[#d4af37] block font-bold">
+                  Active Sky Transits Impacting This Inquiry:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {response.structuredReading.relevantTransits.map((t, tIdx) => (
+                    <span
+                      key={tIdx}
+                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(212,175,55,0.12)] border border-[rgba(212,175,55,0.25)] text-[#eee5d3] rounded-sm"
+                    >
+                      ⚡ {t.transit}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Consulted Planets Tag Cloud */}
             {response.consultedPlanets && response.consultedPlanets.length > 0 && (
-              <div className="pt-4 border-t border-[rgba(238,93,52,0.15)] space-y-2">
+              <div className="pt-2 border-t border-[rgba(238,93,52,0.15)] space-y-1.5">
                 <span className="text-[10px] font-mono uppercase text-[#ee5d34] block">
                   Cross-Examined Ephemeris Bodies:
                 </span>

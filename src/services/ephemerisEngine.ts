@@ -1,4 +1,5 @@
-import { Origin, Horoscope } from "circular-natal-horoscope-js";
+import horoscopePkg from "circular-natal-horoscope-js";
+const { Origin, Horoscope } = ((horoscopePkg as any)?.default || horoscopePkg) as any;
 import { DateTime } from "luxon";
 import { NatalPlacement, NatalAspect } from "./astrologyEngine";
 

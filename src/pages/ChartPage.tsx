@@ -251,10 +251,10 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                           </div>
 
                           {/* Paid Deep Layer */}
-                          <div className="p-3 border border-[rgba(238,93,52,0.25)] bg-[rgba(238,93,52,0.06)] rounded-sm space-y-1.5">
+                          <div className="p-4 border border-[rgba(238,93,52,0.25)] bg-[rgba(238,93,52,0.06)] rounded-sm space-y-3">
                             <div className="flex items-center justify-between">
                               <span className="text-[10px] font-mono text-[#ee5d34] uppercase font-semibold">
-                                ✦ Deep Psychological Meaning (Planet + Sign + House)
+                                ✦ Deep Psychological Synthesis (Planet + Sign + House)
                               </span>
                               <span className="text-[9px] font-mono px-1.5 py-0.5 bg-[rgba(238,93,52,0.2)] text-[#ee5d34] rounded-sm">
                                 AI SYNTHESIS
@@ -263,12 +263,41 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                             <p className="text-xs text-[#bfb7aa] leading-relaxed">
                               This exact combination explains why you react this way under pressure: your {planet.planet} instinct filters through {planet.sign}'s defense mechanisms inside your {planet.house}th House realm. It triggers your overthinking and dictates where you hold an unspoken soft corner.
                             </p>
-                            <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
+
+                            {/* 3 Core Psychological Dimensions */}
+                            <div className="grid sm:grid-cols-3 gap-2.5 pt-1">
+                              <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-2.5 rounded-sm">
+                                <span className="text-[10px] font-mono text-[#ee5d34] uppercase block">
+                                  Triggers & Reactions
+                                </span>
+                                <p className="text-[11px] text-[#eee5d3] mt-1 leading-snug">
+                                  Why you detach, step back into silence, and what makes you feel overwhelmed or defensive.
+                                </p>
+                              </div>
+                              <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-2.5 rounded-sm">
+                                <span className="text-[10px] font-mono text-[#f0c870] uppercase block">
+                                  Soft Corners & Heartbreak
+                                </span>
+                                <p className="text-[11px] text-[#eee5d3] mt-1 leading-snug">
+                                  Why you still have feelings despite betrayal, and what makes you suppress yourself and cry.
+                                </p>
+                              </div>
+                              <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-2.5 rounded-sm">
+                                <span className="text-[10px] font-mono text-[rgba(140,210,140,1)] uppercase block">
+                                  What Makes You Shine
+                                </span>
+                                <p className="text-[11px] text-[#eee5d3] mt-1 leading-snug">
+                                  Breaking free from your comfort zone trap into undeniable authenticity and magnetic power.
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="pt-2 flex items-center justify-between gap-2 flex-wrap">
                               <button
                                 onClick={() => {
                                   localStorage.setItem(
                                     "astrofindings_pending_inquiry",
-                                    `Examine my ${planet.planet} in ${planet.sign} in House ${planet.house}: What unconscious triggers and emotional patterns am I not noticing, how did this form in my past, how does it affect my love and friendships today, and what future shift is coming?`
+                                    `Examine my ${planet.planet} in ${planet.sign} in House ${planet.house}: Why do I react this way under stress, what triggers make me suppress myself or cry, why do I hold a soft corner, and what makes me shine?`
                                   );
                                   onNavigate("askai");
                                 }}

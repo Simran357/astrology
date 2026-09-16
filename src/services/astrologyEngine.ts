@@ -27,6 +27,8 @@ export interface NatalAspect {
 export interface UserProfileData {
   id: string;
   name: string;
+  email?: string;
+  authProvider?: "google" | "email" | "anonymous";
   birthDate: string;
   birthTime: string;
   birthLocation: string;

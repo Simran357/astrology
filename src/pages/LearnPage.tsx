@@ -36,7 +36,7 @@ const LIBRARY_TABS: { id: LibraryTab; label: string; icon: string }[] = [
   { id: "placements", label: "Placements (P+S+H)", icon: "⚝" },
   { id: "aspects", label: "Aspects & Angles", icon: "△" },
   { id: "transits", label: "Shifts & Transits", icon: "☿" },
-  { id: "palm", label: "Palm Lines", icon: "✋" },
+  { id: "palm", label: "Palm Lines", icon: "◈" },
 ];
 
 export default function LearnPage({ onNavigate }: LearnPageProps) {
@@ -278,7 +278,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <div className="space-y-4">
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          ⚡ Psychological Triggers & Reaction Pattern
+                          Psychological Triggers & Reaction Pattern
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">
                           {sign.emotionalTendencies ||
@@ -288,7 +288,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
 
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          💔 Love, Soft Corners & Betrayal
+                          Love, Soft Corners & Betrayal
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{sign.love}</p>
                       </div>
@@ -297,14 +297,14 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <div className="space-y-4">
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          👑 What Makes You Shine & Career Instinct
+                          What Makes You Shine & Career Instinct
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{sign.career}</p>
                       </div>
 
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          💬 Communication & Defense Style
+                          Communication & Defense Style
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{sign.communication}</p>
                       </div>
@@ -393,14 +393,14 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <div className="space-y-4">
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          🧠 Emotional Impact: Overthinking & Detachment
+                          Emotional Impact: Overthinking & Detachment
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{planet.emotionalRole}</p>
                       </div>
 
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          💔 Relational Soft Corners & Vulnerability
+                          Relational Soft Corners & Vulnerability
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{planet.loveRole}</p>
                       </div>
@@ -409,14 +409,14 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <div className="space-y-4">
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          🛡️ Difficult Expression (Why You React This Way)
+                          Difficult Expression (Why You React This Way)
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{planet.difficultExpression}</p>
                       </div>
 
                       <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          ✨ Sovereignty: How This Planet Makes You Shine
+                          Sovereignty: How This Planet Makes You Shine
                         </span>
                         <p className="text-xs text-[#bfb7aa] leading-relaxed">{planet.positiveExpression}</p>
                       </div>
@@ -428,12 +428,26 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <p className="text-xs text-[#bfb7aa]">
                       The general meaning of {planet.name} is free. Discover what it means specifically in your birth house:
                     </p>
-                    <button
-                      onClick={() => goToChartWithPlanet(planet.name)}
-                      className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
-                    >
-                      Inspect {planet.name} in My Chart →
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => {
+                          localStorage.setItem(
+                            "astrofindings_pending_inquiry",
+                            `Why does ${planet.name} in my chart trigger my reactions, overthinking, or detachment, and how do I step into its highest power?`
+                          );
+                          onNavigate("askai");
+                        }}
+                        className="button-primary cursor-pointer text-xs py-1.5 px-3"
+                      >
+                        Ask AstroFindings on {planet.name} →
+                      </button>
+                      <button
+                        onClick={() => goToChartWithPlanet(planet.name)}
+                        className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
+                      >
+                        Inspect in My Chart →
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -650,12 +664,26 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     <span className="text-[11px] font-mono text-[#ee5d34]">
                       Free: See where it sits in your chart · Paid: Deep psychological AI interpretation
                     </span>
-                    <button
-                      onClick={() => onNavigate("chart")}
-                      className="button-primary cursor-pointer text-xs py-1.5 px-3"
-                    >
-                      Check this in My Chart →
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          localStorage.setItem(
+                            "astrofindings_pending_inquiry",
+                            `Explain the deep psychological truth of ${placementPlanet} in ${placementSign} in House ${placementHouse}: Why do I react this way, what makes me overwhelmed, and how do I leave my comfort zone to shine?`
+                          );
+                          onNavigate("askai");
+                        }}
+                        className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
+                      >
+                        Ask AstroFindings AI →
+                      </button>
+                      <button
+                        onClick={() => onNavigate("chart")}
+                        className="button-primary cursor-pointer text-xs py-1.5 px-3"
+                      >
+                        Check this in My Chart →
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

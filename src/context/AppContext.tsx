@@ -9,6 +9,15 @@ import {
 import { calculateLiveTransits, LiveTransitData } from "../services/transitEngine";
 import { lookupLocation } from "../services/geocodingService";
 import { calculateNatalEphemeris } from "../services/ephemerisEngine";
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithGoogle,
+  signOut as supabaseSignOut,
+  onAuthStateChange,
+  getCurrentSession,
+  isSupabaseConfigured,
+} from "../services/supabaseClient";
 
 export type PageId =
   | "home"
@@ -44,8 +53,11 @@ interface AppContextType {
   isMembershipActive: boolean;
   toggleMembership: () => void;
   isLoggedIn: boolean;
-  login: (email?: string) => void;
-  logout: () => void;
+  login: (email?: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (name: string, email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  isSupabaseReady: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -53,6 +65,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const USER_STORAGE_KEY = "astral_heretic_user_profile";
 const PEOPLE_STORAGE_KEY = "astral_heretic_people_profiles";
 const MEMBERSHIP_STORAGE_KEY = "astral_heretic_membership";
+const AUTH_STORAGE_KEY = "astrofindings_auth_session";
 
 export const AppProvider: React.FC<{
   children: React.ReactNode;
@@ -60,7 +73,8 @@ export const AppProvider: React.FC<{
   onNavigate: (page: string) => void;
 }> = ({ children, currentPage, onNavigate }) => {
   const [isCalculating, setIsCalculating] = useState(false);
-  const AUTH_STORAGE_KEY = "astrofindings_auth_session";
+  const [isSupabaseReady] = useState(isSupabaseConfigured);
+
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     try {
       return localStorage.getItem(AUTH_STORAGE_KEY) === "true";
@@ -69,19 +83,6 @@ export const AppProvider: React.FC<{
     }
   });
 
-  const login = useCallback((email?: string) => {
-    setIsLoggedIn(true);
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, "true");
-    } catch {}
-  }, []);
-
-  const logout = useCallback(() => {
-    setIsLoggedIn(false);
-    try {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-    } catch {}
-  }, []);
   const [highlightedPlanet, setHighlightedPlanet] = useState<string | null>(null);
 
   // Load User from LocalStorage or default
@@ -93,6 +94,142 @@ export const AppProvider: React.FC<{
       return DEFAULT_USER_PROFILE;
     }
   });
+
+  // Supabase Auth state listener & session check
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getCurrentSession();
+      if (session?.user) {
+        setIsLoggedIn(true);
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+        setUser((prev) => ({
+          ...prev,
+          id: session.user.id,
+          email: session.user.email || prev.email,
+          name: session.user.user_metadata?.full_name || prev.name,
+          avatar: session.user.user_metadata?.avatar_url || prev.avatar,
+          authProvider: (session.user.app_metadata?.provider as any) || "google",
+        }));
+      }
+    };
+    checkSession();
+
+    const { unsubscribe } = onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setIsLoggedIn(true);
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+        setUser((prev) => ({
+          ...prev,
+          id: session.user.id,
+          email: session.user.email || prev.email,
+          name: session.user.user_metadata?.full_name || prev.name,
+          avatar: session.user.user_metadata?.avatar_url || prev.avatar,
+          authProvider: (session.user.app_metadata?.provider as any) || "google",
+        }));
+      } else if (!session && isSupabaseConfigured()) {
+        // Only log out if using real supabase and explicitly null
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const login = useCallback(
+    async (email?: string, password?: string): Promise<{ success: boolean; error?: string }> => {
+      if (email && password) {
+        const res = await signInWithEmail(email, password);
+        if (!res.success) {
+          return { success: false, error: res.error };
+        }
+        setIsLoggedIn(true);
+        try {
+          localStorage.setItem(AUTH_STORAGE_KEY, "true");
+        } catch {}
+        if (res.user) {
+          setUser((prev) => ({
+            ...prev,
+            email: res.user?.email || prev.email,
+            name: res.user?.name || prev.name,
+            avatar: res.user?.avatar || prev.avatar,
+            authProvider: "email",
+          }));
+        }
+        return { success: true };
+      }
+
+      setIsLoggedIn(true);
+      try {
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+      } catch {}
+      if (email) {
+        setUser((prev) => ({
+          ...prev,
+          email: email,
+          name: prev.name || email.split("@")[0],
+          authProvider: "email",
+        }));
+      }
+      return { success: true };
+    },
+    []
+  );
+
+  const signup = useCallback(
+    async (
+      name: string,
+      email: string,
+      password?: string
+    ): Promise<{ success: boolean; error?: string }> => {
+      const res = await signUpWithEmail(email, password || "password123", name);
+      if (!res.success) {
+        return { success: false, error: res.error };
+      }
+      setIsLoggedIn(true);
+      try {
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+      } catch {}
+      setUser((prev) => ({
+        ...prev,
+        name: name || prev.name,
+        email: email || prev.email,
+        avatar: res.user?.avatar || prev.avatar,
+        authProvider: "email",
+      }));
+      return { success: true };
+    },
+    []
+  );
+
+  const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    const res = await signInWithGoogle();
+    if (!res.success) {
+      return { success: false, error: res.error };
+    }
+    if (res.isMockFallback && res.user) {
+      setIsLoggedIn(true);
+      try {
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+      } catch {}
+      setUser((prev) => ({
+        ...prev,
+        email: res.user?.email || "seeker.astral@gmail.com",
+        name: res.user?.name || "Astral Seeker",
+        avatar: res.user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&auto=format",
+        authProvider: "google",
+      }));
+    }
+    return { success: true };
+  }, []);
+
+  const logout = useCallback(async () => {
+    await supabaseSignOut();
+    setIsLoggedIn(false);
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch {}
+  }, []);
 
   // Load People Profiles from LocalStorage
   const [people, setPeople] = useState<PersonProfile[]>(() => {

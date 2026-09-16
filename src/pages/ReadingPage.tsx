@@ -32,7 +32,7 @@ interface SectionInterpretation {
 }
 
 export default function ReadingPage({ onNavigate }: ReadingPageProps) {
-  const { user, liveTransits } = useApp();
+  const { user, liveTransits, isMembershipActive, toggleMembership } = useApp();
   const [activeSection, setActiveSection] = useState("emotional");
 
   const sunP = user.placements.find((p) => p.planet === "Sun") || user.placements[0] || { sign: user.sunSign, house: 10 };
@@ -71,10 +71,10 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         accent: "#bfb7aa",
         headline: `Your ${moonP.sign} Moon in the ${moonP.house}th House: Somatic Nervous System, Anger & Sanctuary`,
         highlight: `Your ${moonP.sign} Moon in the ${moonP.house}th House treats emotions like urgent emergencies—learning to pause is your greatest medicine.`,
-        celestialMechanism: `Your Moon represents your visceral subconscious, your nervous system, and your private definition of safety. Placed in ${moonP.sign} inside the ${moonP.house}th House, there is an intense friction between raw instinct and daily duty. ${moonP.sign === "Aries" ? "Aries is a cardinal fire sign ruled by Mars: your emotional tempo is swift, hot, and fiercely protective. Anger (gussa) or frustration flares instantaneously when you feel cornered, disrespected, or slowed down." : `The ${moonP.sign} nature gives your feelings a profound depth, but placing it in the ${moonP.house}th House causes your emotional weather to manifest directly in your somatic body.`} In the ${moonP.house}th House—the ancient realm of bodily health, daily labor, and the nervous system—you tend to treat your emotional pain as a 'task' or a 'defect' that must be solved immediately rather than felt.`,
+        celestialMechanism: `Your Moon represents your visceral subconscious, your nervous system, and your private definition of safety. Placed in ${moonP.sign} inside the ${moonP.house}th House, there is an intense friction between raw instinct and daily duty. ${moonP.sign === "Aries" ? "Aries is a cardinal fire sign ruled by Mars: your emotional tempo is swift, hot, and fiercely protective. Anger or frustration flares instantaneously when you feel cornered, disrespected, or slowed down." : `The ${moonP.sign} nature gives your feelings a profound depth, but placing it in the ${moonP.house}th House causes your emotional weather to manifest directly in your somatic body.`} In the ${moonP.house}th House—the ancient realm of bodily health, daily labor, and the nervous system—you tend to treat your emotional pain as a 'task' or a 'defect' that must be solved immediately rather than felt.`,
         pastRoots: `How did this emotional pattern form? In your past and early home life, vulnerability was rarely rewarded with patient softness. You quickly learned that crying or displaying helplessness either made other people anxious, invited unsolicited criticism, or left you exposed to emotional hurt. Consequently, your nervous system built a rapid-response defense: stay busy, fix the problem yourself, swallow the ache, or erupt in sharp self-defense before anyone can pierce your heart.`,
-        presentLoveAndFriendship: `Aaj kaisa feel ho raha hai (What you experience today): In relationships and love, you carry a fierce soft corner for those who have seen your true self, yet you are terrified of becoming emotionally dependent. If you feel misunderstood or criticized, your reflex is to snap in sudden anger (gussa) or abruptly lean back behind an impenetrable wall of silence. In friendships, you are loyal to the bone, but you secretly feel that no one checks on your heart with the same tenderness you offer others. When you feel lonely, you clean, work, or obsessively overthink rather than reaching out.`,
-        emotionalAngerAndBlindspot: `What you are not noticing (Jo hum notice nahi karte): Your body is absorbing what your pride refuses to speak. When you swallow irritation, it translates into physical somatic symptoms—tightness in the jaw, digestive knots, tension in the shoulders, and restless insomnia. Your subconscious blindspot is assuming that because you understand why people hurt you, you are obligated to forgive them immediately. You hold onto guilt for having normal human anger.`,
+        presentLoveAndFriendship: `What you experience today: In relationships and love, you carry a fierce soft corner for those who have seen your true self, yet you are terrified of becoming emotionally dependent. If you feel misunderstood or criticized, your reflex is to snap in sudden anger or abruptly lean back behind an impenetrable wall of silence. In friendships, you are loyal to the bone, but you secretly feel that no one checks on your heart with the same tenderness you offer others. When you feel lonely, you clean, work, or obsessively overthink rather than reaching out.`,
+        emotionalAngerAndBlindspot: `What you are not noticing: Your body is absorbing what your pride refuses to speak. When you swallow irritation, it translates into physical somatic symptoms—tightness in the jaw, digestive knots, tension in the shoulders, and restless insomnia. Your subconscious blindspot is assuming that because you understand why people hurt you, you are obligated to forgive them immediately. You hold onto guilt for having normal human anger.`,
         futureShiftAndThinking: `How your thinking pattern will evolve ahead: You are stepping out of the cycle of chronic emergency. You will realize that having a soft corner does not require leaving your front door unlocked for those who repeatedly hurt you. Ahead, your mind will learn to de-escalate the panic: anger will transform from an explosive reactive defense into a clear, quiet, unbreakable boundary. You will discover the somatic peace of saying 'I don't have to fix this today.'`,
         consultationPrompt: `Deep Natal Inquiry: My Moon is in ${moonP.sign} in the ${moonP.house}th House. Why do I experience visceral emotional overwhelm and sudden anger or shutdown? What unconscious childhood conditioning drives this, why do I feel lonely in friendships, and what future shifts are coming in my emotional thinking pattern?`,
       },
@@ -193,6 +193,32 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
           </p>
         </div>
 
+        {/* Free vs Paid Banner */}
+        <div className="flex flex-wrap items-center justify-between p-3.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] rounded-sm mb-6 gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#ee5d34]">✦</span>
+            <span className="text-xs font-mono text-[#bfb7aa]">
+              {isMembershipActive
+                ? "PREMIUM ACTIVE: All 6 Deep Psychological Chapters Unlocked"
+                : "FREE TIER: Core Energy & Emotional Patterns Unlocked · Chapters 3–6 Require Access"}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleMembership}
+              className="text-xs font-mono px-2.5 py-1 bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] text-[#eee5d3] hover:bg-[#ee5d34] hover:text-[#0e0a17] transition-all rounded-sm cursor-pointer"
+            >
+              {isMembershipActive ? "Switch to Free View" : "Simulate Premium Unlock ✦"}
+            </button>
+            <button
+              onClick={() => onNavigate("askai")}
+              className="text-xs text-[#ee5d34] font-mono hover:underline cursor-pointer"
+            >
+              Ask AI about your chart →
+            </button>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Navigation sidebar */}
           <div className="lg:col-span-1">
@@ -201,32 +227,44 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                 Reading Domains
               </span>
 
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-sm text-left transition-all duration-200 cursor-pointer border ${
-                    activeSection === section.id
-                      ? "bg-[rgba(238,93,52,0.12)] border-[#ee5d34] text-[#eee5d3] shadow-md"
-                      : "border-transparent text-[#bfb7aa] hover:text-[#eee5d3] hover:bg-[rgba(31,24,48,0.5)]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className={activeSection === section.id ? "opacity-100" : "opacity-60"}>
-                      {section.icon}
-                    </div>
-                    <div>
-                      <div className="text-xs font-serif font-medium">{section.label}</div>
-                      <div className="text-[10px] font-mono text-[#bfb7aa]">
-                        {section.planetName === "Transits" ? "Live Sky" : `${section.sign} · H${section.house}`}
+              {sections.map((section) => {
+                const isSectionLocked = ["relationships", "career", "challenges", "current"].includes(section.id) && !isMembershipActive;
+                return (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-sm text-left transition-all duration-200 cursor-pointer border ${
+                      activeSection === section.id
+                        ? "bg-[rgba(238,93,52,0.12)] border-[#ee5d34] text-[#eee5d3] shadow-md"
+                        : "border-transparent text-[#bfb7aa] hover:text-[#eee5d3] hover:bg-[rgba(31,24,48,0.5)]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className={activeSection === section.id ? "opacity-100" : "opacity-60"}>
+                        {section.icon}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-serif font-medium">{section.label}</span>
+                          <span className={`text-[9px] font-mono px-1 rounded-sm ${
+                            isSectionLocked
+                              ? "bg-[rgba(238,93,52,0.2)] text-[#ee5d34]"
+                              : "bg-[rgba(100,180,100,0.15)] text-[rgba(140,210,140,0.9)]"
+                          }`}>
+                            {isSectionLocked ? "PAID 🔒" : "FREE"}
+                          </span>
+                        </div>
+                        <div className="text-[10px] font-mono text-[#bfb7aa]">
+                          {section.planetName === "Transits" ? "Live Sky" : `${section.sign} · H${section.house}`}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {activeSection === section.id && (
-                    <span className="text-xs text-[#ee5d34] font-mono">✦</span>
-                  )}
-                </button>
-              ))}
+                    {activeSection === section.id && (
+                      <span className="text-xs text-[#ee5d34] font-mono">✦</span>
+                    )}
+                  </button>
+                );
+              })}
 
               <div className="h-px bg-[rgba(238,93,52,0.12)] my-4" />
 
@@ -291,49 +329,114 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                 </p>
               </div>
 
-              {/* 2. Past Roots & Childhood Pattern */}
-              <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
-                  <span>02</span>
-                  <span>✦ Past Roots: How This Defense Formed (Pehele Kaisa Pattern Tha)</span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
-                  {current.pastRoots}
-                </p>
-              </div>
+              {/* Free vs Paid Gate for Chapters 02–05 */}
+              {["relationships", "career", "challenges", "current"].includes(current.id) && !isMembershipActive ? (
+                <div className="relative mt-8 pt-8 border-t border-[rgba(238,93,52,0.15)] min-h-[380px]">
+                  {/* Blurred preview background */}
+                  <div className="space-y-6 filter blur-[5px] select-none opacity-30 pointer-events-none">
+                    <div className="space-y-2">
+                      <span className="text-xs font-mono uppercase text-[#ee5d34]">02 ✦ Past Roots & Childhood Pattern</span>
+                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.pastRoots}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-xs font-mono uppercase text-[#ee5d34]">03 ✦ Present Reality in Love & Friendship</span>
+                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.presentLoveAndFriendship}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-xs font-mono uppercase text-[#ee5d34]">04 ✦ Somatic Anger & Subconscious Blindspots</span>
+                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.emotionalAngerAndBlindspot}</p>
+                    </div>
+                  </div>
 
-              {/* 3. Present Love & Friendships */}
-              <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
-                  <span>03</span>
-                  <span>✦ Present Reality: In Love, Friendships & Daily Life (Aaj Kaisa Feel Hota Hai)</span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
-                  {current.presentLoveAndFriendship}
-                </p>
-              </div>
+                  {/* Floating Competitor-Style Paywall Box */}
+                  <div className="absolute inset-0 flex items-center justify-center p-4">
+                    <div className="w-full max-w-xl border-2 border-dashed border-[#ee5d34] bg-[rgba(14,10,23,0.97)] p-6 md:p-8 rounded-sm text-center space-y-4 shadow-2xl backdrop-blur-md">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest rounded-sm">
+                        <span>🔒 PREMIUM CHAPTER · PAID DOSSIER REQUIRED</span>
+                      </div>
+                      <h3 className="font-serif text-2xl md:text-3xl text-[#eee5d3]">
+                        Unlock The Complete {current.label} Synthesis
+                      </h3>
+                      <p className="text-xs text-[#bfb7aa] max-w-md mx-auto leading-relaxed">
+                        Free tier covers your Core Energy and Emotional Foundation. This chapter reveals 
+                        <strong> why you still hold a soft corner, what makes you suppress yourself, your subconscious blind spots</strong>, and how upcoming planetary shifts will reshape your thinking pattern.
+                      </p>
 
-              {/* 4. Emotional Anger & Subconscious Blindspots */}
-              <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
-                  <span>04</span>
-                  <span>✦ Emotional Anger (Gussa) & Somatic Blindspots (Jo Hum Notice Nahi Karte)</span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
-                  {current.emotionalAngerAndBlindspot}
-                </p>
-              </div>
+                      <div className="grid grid-cols-2 gap-2 text-left pt-2 pb-1">
+                        <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] p-2.5 rounded-sm">
+                          <span className="text-[10px] font-mono text-[#ee5d34] block">✦ Chapter 02–03</span>
+                          <p className="text-[11px] text-[#eee5d3] font-medium">Past Roots & Love Dynamics</p>
+                        </div>
+                        <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] p-2.5 rounded-sm">
+                          <span className="text-[10px] font-mono text-[#f0c870] block">✦ Chapter 04–05</span>
+                          <p className="text-[11px] text-[#eee5d3] font-medium">Blind Spots & Breakthroughs</p>
+                        </div>
+                      </div>
 
-              {/* 5. Future Shift & Thinking Pattern Evolution */}
-              <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d4af37]">
-                  <span>05</span>
-                  <span>✦ Future Evolution: Upcoming Shifts & Thinking Pattern Transformation</span>
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button
+                          onClick={toggleMembership}
+                          className="w-full sm:w-auto py-3 px-6 bg-[#ee5d34] text-[#0e0a17] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#f58a6b] transition-all rounded-sm cursor-pointer shadow-lg"
+                        >
+                          Unlock Full Reading ($19 / Full Access) →
+                        </button>
+                        <button
+                          onClick={() => handleLaunchConsultation(current.consultationPrompt)}
+                          className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                        >
+                          Ask AI on this placement →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs sm:text-sm text-[#eee5d3] leading-relaxed font-light font-serif">
-                  {current.futureShiftAndThinking}
-                </p>
-              </div>
+              ) : (
+                <>
+                  {/* 2. Past Roots & Childhood Pattern */}
+                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                      <span>02</span>
+                      <span>✦ Past Roots: How This Defense Formed </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                      {current.pastRoots}
+                    </p>
+                  </div>
+
+                  {/* 3. Present Love & Friendships */}
+                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                      <span>03</span>
+                      <span>✦ Present Reality: In Love, Friendships & Daily Life</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                      {current.presentLoveAndFriendship}
+                    </p>
+                  </div>
+
+                  {/* 4. Emotional Anger & Subconscious Blindspots */}
+                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                      <span>04</span>
+                      <span>✦ Emotional Anger & Somatic Blindspots</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                      {current.emotionalAngerAndBlindspot}
+                    </p>
+                  </div>
+
+                  {/* 5. Future Shift & Thinking Pattern Evolution */}
+                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d4af37]">
+                      <span>05</span>
+                      <span>✦ Future Evolution: Upcoming Shifts & Thinking Pattern Transformation</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#eee5d3] leading-relaxed font-light font-serif">
+                      {current.futureShiftAndThinking}
+                    </p>
+                  </div>
+                </>
+              )}
 
               {/* Bottom Consultation Banner */}
               <div className="p-5 border border-[#ee5d34] bg-[rgba(238,93,52,0.08)] rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">

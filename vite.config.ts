@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
+      astrologyServerPlugin(),
     ],
     resolve: {
       alias: {
@@ -38,6 +39,9 @@ export default defineConfig(({ mode }) => {
     preview: {
       host: process.env.FIGMA_DEV_SERVER_HOST || '0.0.0.0',
       port: parseInt(process.env.PORT || '8443'),
+    },
+    ssr: {
+      external: ['circular-natal-horoscope-js', 'luxon'],
     },
   }
 })
@@ -67,6 +71,47 @@ type FigmaSiteConfiguration = {
   accessibility?: {
     addBypassLinks?: boolean
   }
+}
+
+/** Server-side API endpoint for /api/astrology/reading */
+function astrologyServerPlugin(): Plugin {
+  return {
+    name: 'astrology-server-api',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const urlPath = req.url?.split('?')[0];
+        if (urlPath?.endsWith('/api/astrology/reading') && req.method === 'POST') {
+          try {
+            const mod = await server.ssrLoadModule('./src/server/astrologyApiServer.ts');
+            return mod.astrologyApiMiddleware()(req, res, next);
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: err.message || 'SSR module load error' }));
+            return;
+          }
+        }
+        next();
+      });
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const urlPath = req.url?.split('?')[0];
+        if (urlPath?.endsWith('/api/astrology/reading') && req.method === 'POST') {
+          try {
+            const mod = await server.ssrLoadModule('./src/server/astrologyApiServer.ts');
+            return mod.astrologyApiMiddleware()(req, res, next);
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: err.message || 'SSR module load error' }));
+            return;
+          }
+        }
+        next();
+      });
+    },
+  };
 }
 
 /** Applies /.figma/make/site.json to the generated document shell. */

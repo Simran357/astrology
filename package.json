@@ -10,6 +10,7 @@
     "format": "oxfmt"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
     "@types/luxon": "^3.7.5",
     "@types/tz-lookup": "^6.1.2",
     "circular-natal-horoscope-js": "^1.1.0",

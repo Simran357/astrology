@@ -509,40 +509,82 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
               {/* The Trinity Card (Sun, Moon, Rising) */}
               <div className="grid sm:grid-cols-3 gap-4">
-                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
-                    ☉ The Sun · Core Will
+                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors flex flex-col justify-between">
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
+                      ☉ The Sun · Core Will
+                    </div>
+                    <div className="text-2xl font-serif text-[#eee5d3] my-1">
+                      {user?.sunSign || "Leo"}
+                    </div>
+                    <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
+                      Your sovereign creative fire, your authenticity under pressure, and what allows you to stop performing and truly shine.
+                    </p>
                   </div>
-                  <div className="text-2xl font-serif text-[#eee5d3]">
-                    {user?.sunSign || "Leo"}
-                  </div>
-                  <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
-                    Your sovereign creative fire and the identity you are meant to embody when fear steps aside.
-                  </p>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(
+                        "astrofindings_pending_inquiry",
+                        `Examine my ${user?.sunSign || "natal"} Sun: Where am I suppressing my natural creative authority, what triggers my performance anxiety, and what does my true sovereign shine look like?`
+                      );
+                      onNavigate("askai");
+                    }}
+                    className="pt-2 text-[11px] font-mono text-[#ee5d34] hover:text-[#f58a6b] transition-colors cursor-pointer border-t border-[rgba(238,93,52,0.15)] mt-2"
+                  >
+                    Inscribe to Ask AstroFindings →
+                  </button>
                 </div>
 
-                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
-                    ☽ The Moon · The Sanctuary
+                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors flex flex-col justify-between">
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
+                      ☽ The Moon · Emotional Patterns
+                    </div>
+                    <div className="text-2xl font-serif text-[#eee5d3] my-1">
+                      {user?.moonSign || "Virgo"}
+                    </div>
+                    <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
+                      How you experience emotional overwhelm, why you shut down, why you carry unspoken anger or a soft corner, and the unconscious sanctuary your nervous system requires.
+                    </p>
                   </div>
-                  <div className="text-2xl font-serif text-[#eee5d3]">
-                    {user?.moonSign || "Virgo"}
-                  </div>
-                  <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
-                    How you experience emotional overwhelm, why you shut down, and the private care your heart requires.
-                  </p>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(
+                        "astrofindings_pending_inquiry",
+                        `Examine my ${user?.moonSign || "natal"} Moon: Why do I experience emotional overwhelm, what makes me shut down or withdraw into silence, why do I feel sudden anger or carry unsaid guilt, and what subconscious blindspots am I not noticing in love and friendships?`
+                      );
+                      onNavigate("askai");
+                    }}
+                    className="pt-2 text-[11px] font-mono text-[#ee5d34] hover:text-[#f58a6b] transition-colors cursor-pointer border-t border-[rgba(238,93,52,0.15)] mt-2"
+                  >
+                    Inscribe to Ask AstroFindings →
+                  </button>
                 </div>
 
-                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
-                    ↑ The Ascendant · The Shield
+                <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm text-center space-y-2 relative group hover:border-[#ee5d34] transition-colors flex flex-col justify-between">
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#ee5d34]">
+                      ↑ The Ascendant · The Shield
+                    </div>
+                    <div className="text-2xl font-serif text-[#eee5d3] my-1">
+                      {user?.risingSign || "Scorpio"}
+                    </div>
+                    <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
+                      The lens through which you meet the outside world, why you erect a defensive boundary when safety is threatened, and how you observe before speaking.
+                    </p>
                   </div>
-                  <div className="text-2xl font-serif text-[#eee5d3]">
-                    {user?.risingSign || "Scorpio"}
-                  </div>
-                  <p className="text-xs text-[#bfb7aa] font-light leading-relaxed">
-                    The lens through which you meet the outside world and the boundary you erect when safety is threatened.
-                  </p>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(
+                        "astrofindings_pending_inquiry",
+                        `Examine my ${user?.risingSign || "natal"} Ascendant: The lens through which I meet the world, why I erect an emotional boundary when safety is threatened, and how to step out of my comfort zone.`
+                      );
+                      onNavigate("askai");
+                    }}
+                    className="pt-2 text-[11px] font-mono text-[#ee5d34] hover:text-[#f58a6b] transition-colors cursor-pointer border-t border-[rgba(238,93,52,0.15)] mt-2"
+                  >
+                    Inscribe to Ask AstroFindings →
+                  </button>
                 </div>
               </div>
 
@@ -565,12 +607,26 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   Regarding your crossroads: the sky confirms that your current restlessness is not an impending breakdown. It is the friction of a soul shedding outgrown armor. Your <span className="text-[#eee5d3]">{user?.risingSign} Rising</span> is a shield built for sovereignty, and your <span className="text-[#eee5d3]">{user?.sunSign} Sun</span> is ready to stop performing.
                 </p>
 
-                <div className="pt-2 flex items-center gap-2 text-xs text-[#ee5d34] font-mono">
-                  <span>✦ 10 Natal Planets Mapped</span>
-                  <span>·</span>
-                  <span>✦ Whole-Sign Houses Calibrated</span>
-                  <span>·</span>
-                  <span>✦ Real Ephemeris Active</span>
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[rgba(238,93,52,0.12)]">
+                  <div className="flex items-center gap-2 text-xs text-[#ee5d34] font-mono">
+                    <span>✦ 10 Natal Planets Mapped</span>
+                    <span>·</span>
+                    <span>✦ Whole-Sign Houses Calibrated</span>
+                    <span>·</span>
+                    <span>✦ Real Ephemeris Active</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(
+                        "astrofindings_pending_inquiry",
+                        `Deep Natal Reading: Inquire into my core emotional conflict between my ${user?.sunSign} Sun, ${user?.moonSign} Moon, and ${user?.risingSign} Rising. Why do I oscillate between intense devotion and sudden cold detachment, and what subconscious emotional triggers am I ignoring?`
+                      );
+                      onNavigate("askai");
+                    }}
+                    className="px-4 py-2 bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] hover:bg-[#ee5d34] hover:text-[#0e0a17] text-[#eee5d3] text-xs font-mono rounded-sm transition-all cursor-pointer"
+                  >
+                    Consult Ask AstroFindings on My Emotional Pattern →
+                  </button>
                 </div>
               </div>
 

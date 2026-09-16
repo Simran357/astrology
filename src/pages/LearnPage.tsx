@@ -13,7 +13,6 @@ import { useApp } from "../context/AppContext";
 import { PLANETS_DATA } from "../data/planetsData";
 import { ZODIAC_SIGNS_DATA } from "../data/zodiacData";
 import { HOUSES_DATA } from "../data/housesData";
-import { NUMEROLOGY_DATA, calculateLifePath } from "../data/numerologyData";
 
 interface LearnPageProps {
   onNavigate: (page: string) => void;
@@ -27,8 +26,6 @@ type LibraryTab =
   | "placements"
   | "aspects"
   | "transits"
-  | "tarot"
-  | "numerology"
   | "palm";
 
 const LIBRARY_TABS: { id: LibraryTab; label: string; icon: string }[] = [
@@ -39,8 +36,6 @@ const LIBRARY_TABS: { id: LibraryTab; label: string; icon: string }[] = [
   { id: "placements", label: "Placements (P+S+H)", icon: "⚝" },
   { id: "aspects", label: "Aspects & Angles", icon: "△" },
   { id: "transits", label: "Shifts & Transits", icon: "☿" },
-  { id: "tarot", label: "Tarot Library", icon: "🎴" },
-  { id: "numerology", label: "Numerology", icon: "🔢" },
   { id: "palm", label: "Palm Lines", icon: "✋" },
 ];
 
@@ -56,8 +51,6 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
   const [placementPlanet, setPlacementPlanet] = useState("Venus");
   const [placementSign, setPlacementSign] = useState("Aries");
   const [placementHouse, setPlacementHouse] = useState(7);
-
-  const userLifePath = calculateLifePath(user.birthDate || "1994-08-09");
 
   const goToChartWithPlanet = (planet: string) => {
     navigateWithHighlight("chart", planet);
@@ -838,145 +831,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
           </div>
         )}
 
-        {/* ========================================================================= */}
-        {/* TAB 8: TAROT LIBRARY                                                     */}
-        {/* ========================================================================= */}
-        {activeTab === "tarot" && (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] p-6 md:p-8 rounded-sm space-y-6">
-              <div>
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34] tracking-wider block mb-1">
-                  Card Archetypes
-                </span>
-                <h2 className="font-serif text-3xl text-[#eee5d3]">The Tarot Reflection System</h2>
-                <p className="text-xs md:text-sm text-[#bfb7aa] mt-2 max-w-2xl leading-relaxed">
-                  Tarot is not fortune-telling; it is a visual language for the unconscious.
-                  When your rational mind is caught in an overthinking loop, choosing a card bypasses logic
-                  to reveal what your intuition already knows.
-                </p>
-              </div>
 
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="border border-[rgba(238,93,52,0.12)] p-4 rounded-sm bg-[rgba(20,15,35,0.6)] space-y-2">
-                  <span className="text-xs font-mono uppercase text-[#ee5d34]">1. The Major Arcana</span>
-                  <h3 className="font-serif text-base text-[#eee5d3]">The Soul's Crossroads (22 Cards)</h3>
-                  <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                    Represents major karmic shifts, life-altering decisions, and spiritual thresholds (The Tower, The Moon, Death, The Sun).
-                  </p>
-                </div>
-
-                <div className="border border-[rgba(238,93,52,0.12)] p-4 rounded-sm bg-[rgba(20,15,35,0.6)] space-y-2">
-                  <span className="text-xs font-mono uppercase text-[#ee5d34]">2. The Minor Arcana</span>
-                  <h3 className="font-serif text-base text-[#eee5d3]">Daily Realities (56 Cards)</h3>
-                  <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                    Four suits mirroring the four astrological elements: Wands (Fire), Cups (Water/Heartbreak), Swords (Air/Overthinking), Pentacles (Earth/Grounding).
-                  </p>
-                </div>
-
-                <div className="border border-[rgba(238,93,52,0.12)] p-4 rounded-sm bg-[rgba(20,15,35,0.6)] space-y-2">
-                  <span className="text-xs font-mono uppercase text-[#ee5d34]">3. Reading Spreads</span>
-                  <h3 className="font-serif text-base text-[#eee5d3]">Past, Present & Opening</h3>
-                  <p className="text-xs text-[#bfb7aa] leading-relaxed">
-                    How cards interact in relationship dilemmas, career crossroads, and releasing emotional attachments without guilt.
-                  </p>
-                </div>
-              </div>
-
-              {/* Curiosity Loop */}
-              <div className="p-4 border border-[rgba(238,93,52,0.25)] bg-[rgba(238,93,52,0.06)] rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="font-serif text-base text-[#eee5d3]">Have a specific question weighing on you?</h4>
-                  <p className="text-xs text-[#bfb7aa]">
-                    Draw a 3-card spread now to mirror your current crossroads.
-                  </p>
-                </div>
-                <button
-                  onClick={() => onNavigate("tarot")}
-                  className="button-primary cursor-pointer text-xs py-2 px-4 whitespace-nowrap"
-                >
-                  Consult the Cards →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* TAB 9: NUMEROLOGY                                                        */}
-        {/* ========================================================================= */}
-        {activeTab === "numerology" && (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] p-6 md:p-8 rounded-sm space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(238,93,52,0.12)] pb-4 gap-2">
-                <div>
-                  <span className="text-[10px] font-mono uppercase text-[#ee5d34] tracking-wider block mb-1">
-                    Vibrational Geometry
-                  </span>
-                  <h2 className="font-serif text-3xl text-[#eee5d3]">Life Path & Numerology</h2>
-                  <p className="text-xs text-[#bfb7aa] mt-1">
-                    Your birth date holds a vibrational sum that points toward your core life purpose.
-                  </p>
-                </div>
-
-                <div className="p-3 border border-[#ee5d34] bg-[rgba(238,93,52,0.1)] rounded-sm text-center">
-                  <span className="text-[10px] font-mono text-[#bfb7aa] uppercase block">Your Life Path</span>
-                  <span className="text-2xl font-serif text-[#ee5d34]">{userLifePath}</span>
-                </div>
-              </div>
-
-              {/* Number Detail from user's calculation */}
-              {(() => {
-                const info =
-                  NUMEROLOGY_DATA[String(userLifePath)] || NUMEROLOGY_DATA["7"];
-                return (
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="font-serif text-2xl text-[#eee5d3]">
-                        Life Path {info.number}: {info.archetype}
-                      </h3>
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {info.keywords.map((kw) => (
-                          <span
-                            key={kw}
-                            className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(238,93,52,0.12)] text-[#ee5d34] rounded-sm"
-                          >
-                            {kw}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <p className="text-xs md:text-sm text-[#eee5d3] leading-relaxed">{info.overview}</p>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
-                        <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          Strengths & Natural Power
-                        </span>
-                        <ul className="text-xs text-[#bfb7aa] space-y-1">
-                          {info.strengths.map((st, i) => (
-                            <li key={i}>✦ {st}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.5)]">
-                        <span className="text-xs font-mono uppercase text-[#ee5d34] block mb-1">
-                          Challenges & Unexplored Traps
-                        </span>
-                        <ul className="text-xs text-[#bfb7aa] space-y-1">
-                          {info.challenges.map((ch, i) => (
-                            <li key={i}>✦ {ch}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-        )}
 
         {/* ========================================================================= */}
         {/* TAB 10: PALM LINE MEANING                                                */}

@@ -265,10 +265,16 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                             </p>
                             <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
                               <button
-                                onClick={() => onNavigate("askai")}
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "astrofindings_pending_inquiry",
+                                    `Examine my ${planet.planet} in ${planet.sign} in House ${planet.house}: What unconscious triggers and emotional patterns am I not noticing, how did this form in my past, how does it affect my love and friendships today, and what future shift is coming?`
+                                  );
+                                  onNavigate("askai");
+                                }}
                                 className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
                               >
-                                Ask AI: "What does my {planet.planet} say about my triggers?" →
+                                Ask AstroFindings on {planet.planet} in {planet.sign} (House {planet.house}) →
                               </button>
                               <button
                                 onClick={() => navigateWithHighlight("learn", planet.planet)}

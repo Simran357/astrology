@@ -1,8 +1,13 @@
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useApp } from "../context/AppContext";
 import { calculateCompatibility, PersonProfile } from "../services/astrologyEngine";
-import { askAstrologyConsultant, AIResponse } from "../services/aiAstrologyService";
-import { TAROT_DECK } from "../data/tarotData";
+import {
+  askAstrologyConsultant,
+  AIResponse,
+  getAISettings,
+  saveAISettings,
+  AISettings,
+} from "../services/aiAstrologyService";
 import { TRANSIT_SHIFTS_DATA } from "../data/transitShiftsData";
 import { AFFIRMATIONS_DATA } from "../data/wellnessData";
 
@@ -807,169 +812,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
   );
 }
 
-/* ========================================================================= */
-/* 4. TAROT — CARD-BASED READINGS                                            */
-/* ========================================================================= */
 
-export function TarotPage({ onNavigate }: Props) {
-  const { savedTarotDraws, saveTarotDraw, user, liveTransits } = useApp();
-  const [spreadType, setSpreadType] = useState<"three_card" | "heartbreak" | "overthinking" | "truth">("three_card");
-  const [drawnCards, setDrawnCards] = useState<Array<{ name: string; position: string; meaning: string; glyph: string }> | null>(null);
-  const [aiTarotAnalysis, setAiTarotAnalysis] = useState<string | null>(null);
-  const [isConsultingTarotAI, setIsConsultingTarotAI] = useState(false);
-
-  const drawSpread = () => {
-    const shuffled = [...TAROT_DECK].sort(() => 0.5 - Math.random());
-    const picked = shuffled.slice(0, 3);
-
-    let positions = ["Past / Pressure", "Present / Choice", "Next / Opening"];
-    if (spreadType === "heartbreak") {
-      positions = ["The Deep Ache", "What to Release Without Guilt", "The Sacred Soft Corner"];
-    } else if (spreadType === "overthinking") {
-      positions = ["The Mental Loop", "The Hidden Truth", "The Grounding Action"];
-    } else if (spreadType === "truth") {
-      positions = ["My Projection", "Their State / Silence", "The Sacred Lesson"];
-    }
-
-    const cards = picked.map((c, i) => ({
-      name: c.name,
-      position: positions[i],
-      meaning: c.uprightMeaning || "A threshold of conscious attention.",
-      glyph: String(c.number >= 0 ? c.number : "✦"),
-    }));
-
-    setDrawnCards(cards);
-    setAiTarotAnalysis(null);
-
-    saveTarotDraw({
-      spreadType,
-      cardName: cards.map((c) => c.name).join(", "),
-      cardId: picked[0].id,
-      question: `${spreadType} reflection`,
-      insight: cards[1].meaning,
-    });
-  };
-
-  const handleConsultTarotAI = async () => {
-    if (!drawnCards) return;
-    setIsConsultingTarotAI(true);
-    try {
-      const summary = drawnCards.map((c) => `${c.position}: ${c.name}`).join(", ");
-      const res = await askAstrologyConsultant(
-        user,
-        liveTransits,
-        `Interpret my tarot spread (${spreadType}): ${summary}. Connect it to why I overthink, where I detach, and what my natal chart advises right now.`
-      );
-      setAiTarotAnalysis(res.text);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsConsultingTarotAI(false);
-    }
-  };
-
-  return (
-    <Shell
-      eyebrow="05 / Tarot Divination"
-      title="Card-based readings for the question logic cannot hold."
-      intro="I have a question → I choose cards → what do they represent? Free discovery card reveals, paid deep AI psychological interpretation."
-    >
-      {/* Spread Type Selector */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {[
-          { id: "three_card", label: "Three Card Threshold" },
-          { id: "heartbreak", label: "Heartbreak & Soft Corner" },
-          { id: "overthinking", label: "Overthinking & Clarity" },
-          { id: "truth", label: "Relationship Truth & Silence" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => {
-              setSpreadType(t.id as any);
-              setDrawnCards(null);
-            }}
-            className={`px-3 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
-              spreadType === t.id
-                ? "bg-[#ee5d34] text-[#0e0a17] font-semibold"
-                : "border border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.6)] text-[#eee5d3] hover:border-[#ee5d34]"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tarot Stage */}
-      <div className="tarot-stage text-center space-y-6">
-        <div className="tarot-cards flex justify-center gap-4 flex-wrap">
-          {[0, 1, 2].map((i) => {
-            const card = drawnCards ? drawnCards[i] : null;
-            return (
-              <div
-                key={i}
-                className={`w-32 sm:w-40 h-48 sm:h-56 border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.9)] rounded-sm flex flex-col items-center justify-center p-3 text-center transition-all cursor-pointer hover:border-[#ee5d34] ${
-                  card ? "border-[#ee5d34] shadow-lg" : ""
-                }`}
-                onClick={drawSpread}
-              >
-                <span className="text-2xl text-[#ee5d34] mb-2">{card ? card.glyph : "✦"}</span>
-                <small className="font-serif text-xs text-[#eee5d3] block leading-tight">
-                  {card ? card.name : `Card 0${i + 1}`}
-                </small>
-                {card && (
-                  <span className="text-[10px] font-mono text-[#bfb7aa] mt-2 block">
-                    {card.position}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        <button className="button-primary cursor-pointer py-2.5 px-6 text-xs font-medium" onClick={drawSpread}>
-          {drawnCards ? "Draw Again →" : "Reveal the Cards →"}
-        </button>
-      </div>
-
-      {/* Card Reveal Interpretation */}
-      {drawnCards && (
-        <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.85)] p-6 rounded-sm my-8 space-y-6">
-          <span className="text-xs font-mono uppercase text-[#ee5d34] block">Spread Synthesis</span>
-          <div className="grid md:grid-cols-3 gap-4">
-            {drawnCards.map((c, idx) => (
-              <div key={idx} className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.6)] space-y-2">
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34]">{c.position}</span>
-                <h4 className="font-serif text-base text-[#eee5d3]">{c.name}</h4>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed">{c.meaning}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-2 flex items-center justify-between flex-wrap gap-3 border-t border-[rgba(238,93,52,0.1)]">
-            <span className="text-xs text-[#bfb7aa]">
-              Free: Card meanings · Paid: Deep AI Astrological Synthesis
-            </span>
-            <button
-              onClick={handleConsultTarotAI}
-              className="button-primary cursor-pointer text-xs py-2 px-4"
-            >
-              {isConsultingTarotAI ? "Synthesizing..." : "Consult AI Tarot Interpretation →"}
-            </button>
-          </div>
-
-          {aiTarotAnalysis && (
-            <div className="p-4 border border-[#ee5d34] bg-[rgba(14,10,23,0.9)] rounded-sm text-xs text-[#eee5d3] leading-relaxed whitespace-pre-line">
-              <span className="font-mono text-[#ee5d34] uppercase text-[10px] block mb-2">
-                ✦ AI Tarot Mirror Grounded in Your Placements
-              </span>
-              {aiTarotAnalysis}
-            </div>
-          )}
-        </div>
-      )}
-    </Shell>
-  );
-}
 
 /* ========================================================================= */
 /* 5. WELLNESS / SPIRITUAL — AFFIRMATIONS, MEDITATION & PRACTICES           */
@@ -1196,7 +1039,7 @@ export function PalmReadingPage({ onNavigate }: Props) {
 }
 
 /* ========================================================================= */
-/* 7. ASK AI — DEEP CONSULTATION PAGE                                        */
+/* 7. ASK ASTROFINDINGS — CELESTIAL CONSULTATION & INSCRIPTION DOSSIER       */
 /* ========================================================================= */
 
 export function AskAIPage({ onNavigate }: Props) {
@@ -1204,101 +1047,504 @@ export function AskAIPage({ onNavigate }: Props) {
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<AIResponse | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const prompts = [
-    "Why do I detach and step back into silence when overwhelmed?",
-    "Why do I still hold a soft corner for someone who hurt me?",
-    "What triggers my overthinking and makes me feel completely alone?",
-    "What makes me suppress myself, and what actually makes me shine?",
-    "What is happening in my relationship timing right now?",
+  // Engine Settings State
+  const [showEngineModal, setShowEngineModal] = useState(false);
+  const [settings, setSettings] = useState<AISettings>(() => getAISettings());
+  const [showKeyInput, setShowKeyInput] = useState(false);
+  const [engineSavedNotice, setEngineSavedNotice] = useState(false);
+
+  const diagnosticInquiries = [
+    {
+      title: "Emotional Detachment",
+      prompt: "Why do I detach, withdraw my energy, and step back into total silence when emotionally overwhelmed?",
+      glyph: "☽",
+    },
+    {
+      title: "The Soft Corner & Betrayal",
+      prompt: "Why do I still hold a soft corner for someone who hurt or betrayed me, and what placement causes this guilt?",
+      glyph: "♀",
+    },
+    {
+      title: "Overthinking & Solitude",
+      prompt: "What astrological aspects trigger my midnight overthinking and make me feel completely alone even around people?",
+      glyph: "☿",
+    },
+    {
+      title: "Suppression vs. True Shine",
+      prompt: "Where in my natal houses am I suppressing myself to stay safe in my comfort zone, and what will make me truly shine?",
+      glyph: "☉",
+    },
+    {
+      title: "Current Sky & Threshold Timing",
+      prompt: "Based on today's planetary transits and retrogrades, what karmic cycle or relationship shift am I navigating right now?",
+      glyph: "♄",
+    },
   ];
 
   const handleConsult = async (qText?: string) => {
-    const textToSubmit = qText || question;
-    if (!textToSubmit.trim()) return;
+    const textToSubmit = (qText || question).trim();
+    if (!textToSubmit) return;
     setIsLoading(true);
     try {
       const res = await askAstrologyConsultant(user, liveTransits, textToSubmit);
       setResponse(res);
     } catch (e) {
-      console.error(e);
+      console.error("Consultation error:", e);
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    try {
+      const pending = localStorage.getItem("astrofindings_pending_inquiry");
+      if (pending) {
+        localStorage.removeItem("astrofindings_pending_inquiry");
+        setQuestion(pending);
+        handleConsult(pending);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const handleSaveSettings = () => {
+    saveAISettings(settings);
+    setEngineSavedNotice(true);
+    setTimeout(() => {
+      setEngineSavedNotice(false);
+      setShowEngineModal(false);
+    }, 1200);
+  };
+
+  const handleCopyDossier = () => {
+    if (!response) return;
+    const textToCopy = `ASTROFINDINGS CONSULTATION DOSSIER\nSubject: ${user.name || "Sovereign Inquirer"}\nNatal Coordinates: Sun in ${user.sunSign}, Moon in ${user.moonSign}, Rising in ${user.risingSign}\nInquiry: ${question}\nEngine: ${response.engineUsed}\n\n${response.text}`;
+    navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <Shell
-      eyebrow="03 / Astrological AI Consultation"
+      eyebrow="03 / Astrological Consultation & Inscription"
       title="Ask AstroFindings."
-      intro="The private salon consultation for specific questions about your existing chart, emotional reactions, and current sky."
+      intro="A chart-grounded astrological salon. Not an automated chatbot, but an epistolary dossier synthesized by cross-examining your exact natal coordinates against current planetary transits."
     >
-      <div className="ai-console space-y-4 max-w-2xl">
-        <div className="prompt-row flex flex-wrap gap-2">
-          {prompts.map((p) => (
+      {/* 1. STUDIED NATAL COORDINATES BANNER */}
+      <div className="border border-[rgba(238,93,52,0.22)] bg-[radial-gradient(ellipse_at_top,rgba(31,24,48,0.95),rgba(14,10,23,0.98))] p-5 rounded-sm mb-8 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(238,93,52,0.12)] pb-4 mb-4">
+          <div>
+            <span className="text-[10px] font-mono tracking-widest uppercase text-[#ee5d34] block">
+              ✦ Studied Natal Coordinates Anchored to Your Inquiry
+            </span>
+            <h3 className="font-serif text-lg text-[#eee5d3]">
+              {user.name || "Natal Blueprint"} · Born {user.birthDate || "Configured in Profile"}
+            </h3>
+          </div>
+
+          {/* Active Engine Badge & Switcher */}
+          <div className="flex items-center gap-2">
+            <div className="text-right hidden sm:block">
+              <span className="text-[9px] font-mono text-[#bfb7aa] uppercase block">Active Synthesis Engine</span>
+              <span className="text-xs font-mono text-[#d4af37]">
+                {settings.provider === "builtin" && "Free Built-in Ephemeris"}
+                {settings.provider === "groq" && "Groq Cloud (Free Llama 3.3)"}
+                {settings.provider === "gemini" && "Google Gemini (Free Tier)"}
+                {settings.provider === "openrouter" && "OpenRouter"}
+                {settings.provider === "openai" && "OpenAI Engine"}
+              </span>
+            </div>
             <button
-              key={p}
-              onClick={() => {
-                setQuestion(p);
-                handleConsult(p);
-              }}
-              className="text-xs px-3 py-1.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm transition-colors text-left cursor-pointer"
+              onClick={() => setShowEngineModal(true)}
+              className="px-3 py-1.5 border border-[rgba(238,93,52,0.3)] bg-[rgba(238,93,52,0.08)] hover:bg-[rgba(238,93,52,0.18)] text-[#eee5d3] text-xs font-mono rounded-sm transition-all cursor-pointer flex items-center gap-1.5"
             >
-              ✦ {p}
+              <span>⚙</span>
+              <span>Configure Engine & API</span>
             </button>
-          ))}
+          </div>
         </div>
 
-        <textarea
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Bring the question you keep making smaller: why you react this way, what triggers you, why you still have feelings..."
-          className="w-full h-32 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm p-4 text-xs md:text-sm text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
-        />
+        {/* Coordinate Pillars */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☉ Sun Luminary</span>
+            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.sunSign}</div>
+            <span className="text-[10px] text-[#bfb7aa] block">
+              {user.sunHouse ? `House ${user.sunHouse} · Conscious Will` : "Vital Purpose"}
+            </span>
+          </div>
 
-        <button
-          className="button-primary cursor-pointer disabled:opacity-50 py-3 px-6 text-xs font-medium"
-          disabled={isLoading || !question.trim()}
-          onClick={() => handleConsult()}
-        >
-          {isLoading ? "Consulting celestial blueprint..." : "Send Inquiry to AI →"}
-        </button>
+          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☽ Moon Core</span>
+            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.moonSign}</div>
+            <span className="text-[10px] text-[#bfb7aa] block">
+              {user.moonHouse ? `House ${user.moonHouse} · Instinct & Care` : "Subconscious Depths"}
+            </span>
+          </div>
 
-        {response && (
-          <div className="form-feedback border border-[#ee5d34] bg-[rgba(31,24,48,0.9)] p-6 rounded-sm mt-6 space-y-3 text-left">
-            <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.15)] pb-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
-                ✦ Chart-Anchored Interpretation ({response.category})
-              </span>
-              <span className="text-[10px] font-mono text-[#bfb7aa]">
-                {response.isApiGenerated ? "Live LLM Engine" : "Whole-Sign Ephemeris Engine"}
-              </span>
+          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">↑ Ascendant</span>
+            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.risingSign}</div>
+            <span className="text-[10px] text-[#bfb7aa] block">Sovereign Facade & Mask</span>
+          </div>
+
+          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+            <span className="text-[10px] font-mono text-[#d4af37] block uppercase">☿ Active Transits</span>
+            <div className="font-serif text-sm text-[#eee5d3] font-medium truncate">
+              {liveTransits.sunSign} Sun · {liveTransits.moonSign} Moon
             </div>
-            <div className="text-xs md:text-sm text-[#eee5d3] leading-relaxed whitespace-pre-line">
-              {response.text}
+            <span className="text-[10px] text-[#bfb7aa] block truncate">
+              {liveTransits.retrogrades.length} Retrograde(s)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. ENGINE & API CONFIGURATION MODAL / DRAWER */}
+      {showEngineModal && (
+        <div className="fixed inset-0 z-50 bg-[rgba(10,8,16,0.85)] backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#140f23] border border-[#ee5d34] rounded-sm max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
+            <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.2)] pb-3">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-[#ee5d34] tracking-wider block">
+                  AstroFindings Intelligence System
+                </span>
+                <h3 className="font-serif text-xl text-[#eee5d3]">Astrological Engine & API Provider</h3>
+              </div>
+              <button
+                onClick={() => setShowEngineModal(false)}
+                className="text-[#bfb7aa] hover:text-[#eee5d3] text-lg font-mono cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
-            {response.consultedPlanets && (
-              <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[rgba(238,93,52,0.1)]">
-                {response.consultedPlanets.map((p, idx) => (
-                  <span
-                    key={idx}
-                    className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(238,93,52,0.12)] text-[#bfb7aa] rounded-sm"
+
+            <div className="text-xs text-[#bfb7aa] leading-relaxed">
+              Choose between the free offline Ephemeris engine or plug in your personal API key (Groq, Gemini, OpenAI, OpenRouter) to unlock limitless deep psychological synthesis.
+            </div>
+
+            {/* Provider Selector */}
+            <div className="space-y-2">
+              <label className="text-xs font-mono text-[#eee5d3] block uppercase">Select Calculation Engine</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: "builtin", name: "Free Built-in Engine", desc: "100% Free · No API key needed" },
+                  { id: "groq", name: "Groq Cloud (Free)", desc: "Free key at console.groq.com" },
+                  { id: "gemini", name: "Google Gemini (Free)", desc: "Free tier at aistudio.google.com" },
+                  { id: "openrouter", name: "OpenRouter", desc: "Multi-model gateway" },
+                  { id: "openai", name: "OpenAI", desc: "GPT-4o / GPT-4o-mini" },
+                ].map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        provider: p.id as any,
+                        model:
+                          p.id === "groq"
+                            ? "llama-3.3-70b-versatile"
+                            : p.id === "gemini"
+                            ? "gemini-1.5-flash"
+                            : p.id === "openai"
+                            ? "gpt-4o-mini"
+                            : prev.model,
+                      }))
+                    }
+                    className={`p-2.5 text-left rounded-sm border transition-all cursor-pointer ${
+                      settings.provider === p.id
+                        ? "border-[#ee5d34] bg-[rgba(238,93,52,0.15)] text-[#eee5d3]"
+                        : "border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.5)] text-[#bfb7aa] hover:border-[#ee5d34]"
+                    }`}
                   >
-                    {p}
-                  </span>
+                    <div className="text-xs font-serif font-medium text-[#eee5d3]">{p.name}</div>
+                    <div className="text-[10px] text-[#bfb7aa] mt-0.5">{p.desc}</div>
+                  </button>
                 ))}
               </div>
+            </div>
+
+            {/* API Key Input (if not builtin) */}
+            {settings.provider !== "builtin" && (
+              <div className="space-y-2 pt-2 border-t border-[rgba(238,93,52,0.1)]">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono text-[#eee5d3] uppercase">
+                    {settings.provider.toUpperCase()} API Key
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowKeyInput(!showKeyInput)}
+                    className="text-[10px] font-mono text-[#ee5d34] hover:underline"
+                  >
+                    {showKeyInput ? "Hide Key" : "Show Key"}
+                  </button>
+                </div>
+                <input
+                  type={showKeyInput ? "text" : "password"}
+                  value={settings.apiKey}
+                  onChange={(e) => setSettings((prev) => ({ ...prev, apiKey: e.target.value }))}
+                  placeholder={
+                    settings.provider === "groq"
+                      ? "gsk_..."
+                      : settings.provider === "gemini"
+                      ? "AIzaSy..."
+                      : "sk-..."
+                  }
+                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(238,93,52,0.3)] rounded-sm p-2.5 text-xs font-mono text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                />
+                <div className="text-[11px] text-[#bfb7aa]">
+                  {settings.provider === "groq" && (
+                    <span>
+                      Get a free Groq key with thousands of fast requests daily at{" "}
+                      <a
+                        href="https://console.groq.com/keys"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#ee5d34] underline"
+                      >
+                        console.groq.com
+                      </a>
+                    </span>
+                  )}
+                  {settings.provider === "gemini" && (
+                    <span>
+                      Get a free Google Gemini key at{" "}
+                      <a
+                        href="https://aistudio.google.com/app/apikey"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#ee5d34] underline"
+                      >
+                        aistudio.google.com
+                      </a>
+                    </span>
+                  )}
+                  {settings.provider === "openai" && (
+                    <span>Stored strictly in your local browser storage. Never sent to any 3rd-party servers.</span>
+                  )}
+                </div>
+              </div>
             )}
+
+            {/* Model Field */}
+            {settings.provider !== "builtin" && (
+              <div className="space-y-1">
+                <label className="text-xs font-mono text-[#eee5d3] uppercase">Model Identifier</label>
+                <input
+                  type="text"
+                  value={settings.model}
+                  onChange={(e) => setSettings((prev) => ({ ...prev, model: e.target.value }))}
+                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(238,93,52,0.2)] rounded-sm p-2 text-xs font-mono text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                />
+              </div>
+            )}
+
+            {engineSavedNotice && (
+              <div className="text-xs font-mono text-[#ee5d34] bg-[rgba(238,93,52,0.1)] p-2 rounded-sm text-center">
+                ✓ Engine configuration saved successfully!
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowEngineModal(false)}
+                className="px-4 py-2 text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveSettings}
+                className="button-primary cursor-pointer text-xs py-2 px-5"
+              >
+                Save Engine Configuration →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. DIAGNOSTIC INQUIRIES & INSCRIPTION DESK */}
+      <div className="space-y-6">
+        <div>
+          <span className="text-[11px] font-mono uppercase tracking-widest text-[#ee5d34] block mb-2">
+            ✦ Diagnostic Natal Inquiries (Select to Inscribe)
+          </span>
+          <div className="grid md:grid-cols-3 gap-2.5">
+            {diagnosticInquiries.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setQuestion(item.prompt);
+                  handleConsult(item.prompt);
+                }}
+                className="border border-[rgba(238,93,52,0.18)] bg-[rgba(31,24,48,0.7)] hover:border-[#ee5d34] hover:bg-[rgba(31,24,48,0.95)] p-3.5 rounded-sm transition-all text-left cursor-pointer group"
+              >
+                <div className="flex items-center justify-between text-xs text-[#ee5d34] font-mono mb-1">
+                  <span>{item.title}</span>
+                  <span className="opacity-60 group-hover:opacity-100">{item.glyph}</span>
+                </div>
+                <p className="text-xs text-[#bfb7aa] group-hover:text-[#eee5d3] line-clamp-2 leading-relaxed">
+                  “{item.prompt}”
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Manuscript Input Field */}
+        <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(20,15,35,0.75)] p-5 rounded-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-mono text-[#eee5d3] uppercase tracking-wider">
+              Formulate Inscription for AstroFindings
+            </label>
+            <span className="text-[10px] font-mono text-[#bfb7aa]">
+              Cross-referenced with {user.sunSign} Sun · {user.moonSign} Moon · {user.risingSign} Rising
+            </span>
+          </div>
+
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Inscribe the truth you keep guarded: Why do I shut down during intimacy? Why am I terrified of being alone yet keep pushing people away? Why does this specific heartbreak feel physical?..."
+            className="w-full h-32 bg-[rgba(10,8,16,0.85)] border border-[rgba(238,93,52,0.25)] rounded-sm p-4 text-xs sm:text-sm text-[#eee5d3] placeholder:text-[#6e677c] focus:outline-none focus:border-[#ee5d34] leading-relaxed resize-y"
+          />
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <div className="text-[11px] font-mono text-[#bfb7aa]">
+              {settings.provider === "builtin" ? (
+                <span>⚡ Using Free Ephemeris Engine (Instant Offline Calculation)</span>
+              ) : (
+                <span className="text-[#d4af37]">
+                  ✦ Live Engine: {settings.provider.toUpperCase()} ({settings.model})
+                </span>
+              )}
+            </div>
+
+            <button
+              onClick={() => handleConsult()}
+              disabled={isLoading || !question.trim()}
+              className="button-primary cursor-pointer disabled:opacity-50 py-2.5 px-6 text-xs font-medium w-full sm:w-auto"
+            >
+              {isLoading ? "Studying Natal Ephemeris & Transits..." : "Inscribe Inquiry & Study Natal Blueprint →"}
+            </button>
+          </div>
+        </div>
+
+        {/* 4. THE CONSULTATION DOSSIER (NON-CHATBOT PARCHMENT LEDGER) */}
+        {isLoading && (
+          <div className="border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.9)] p-8 rounded-sm text-center space-y-4 animate-pulse">
+            <span className="text-2xl text-[#ee5d34] block animate-spin inline-block">✦</span>
+            <div className="font-serif text-lg text-[#eee5d3]">Studying Natal Coordinates & Whole-Sign Rulers</div>
+            <p className="text-xs font-mono text-[#bfb7aa] max-w-md mx-auto">
+              Calculating aspects between {user.sunSign} Sun, {user.moonSign} Moon, house rulers, and current sky retrogrades...
+            </p>
+          </div>
+        )}
+
+        {response && !isLoading && (
+          <div className="border border-[#ee5d34] bg-[radial-gradient(ellipse_at_top,rgba(31,24,48,0.95),rgba(14,10,23,0.98))] rounded-sm shadow-2xl p-6 sm:p-8 space-y-6">
+            {/* Dossier Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(238,93,52,0.2)] pb-4 gap-2">
+              <div>
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#ee5d34] block">
+                  ✦ ASTROFINDINGS CONSULTATION DOSSIER · EPHEMERIS VERIFIED
+                </span>
+                <h2 className="font-serif text-2xl text-[#eee5d3] mt-0.5">
+                  Astrological Reading on “{question.slice(0, 50)}
+                  {question.length > 50 ? "..." : ""}”
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCopyDossier}
+                  className="text-xs font-mono px-3 py-1.5 border border-[rgba(238,93,52,0.2)] hover:border-[#ee5d34] text-[#eee5d3] rounded-sm transition-colors cursor-pointer"
+                >
+                  {copied ? "✓ Inscription Copied" : "Copy Dossier"}
+                </button>
+              </div>
+            </div>
+
+            {/* Inscription Metadata strip */}
+            <div className="flex flex-wrap gap-2 text-[11px] font-mono text-[#bfb7aa] border-b border-[rgba(238,93,52,0.1)] pb-3">
+              <span className="px-2 py-0.5 bg-[rgba(238,93,52,0.1)] text-[#ee5d34] rounded-sm">
+                Subject: {user.name || "Sovereign Inquirer"}
+              </span>
+              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm">
+                Coordinates: {user.sunSign} Sun · {user.moonSign} Moon · {user.risingSign} Rising
+              </span>
+              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm">
+                Engine: {response.engineUsed}
+              </span>
+              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm text-[#d4af37]">
+                Archetype: {response.category}
+              </span>
+            </div>
+
+            {/* Reading Body */}
+            <div className="prose prose-invert max-w-none text-xs sm:text-sm text-[#eee5d3] leading-relaxed space-y-4 whitespace-pre-line font-serif font-normal">
+              {response.text}
+            </div>
+
+            {/* Consulted Planets Tag Cloud */}
+            {response.consultedPlanets && response.consultedPlanets.length > 0 && (
+              <div className="pt-4 border-t border-[rgba(238,93,52,0.15)] space-y-2">
+                <span className="text-[10px] font-mono uppercase text-[#ee5d34] block">
+                  Cross-Examined Ephemeris Bodies:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {response.consultedPlanets.map((p, idx) => (
+                    <span
+                      key={idx}
+                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(238,93,52,0.12)] border border-[rgba(238,93,52,0.2)] text-[#eee5d3] rounded-sm"
+                    >
+                      ✦ {p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Dossier Footer Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[rgba(238,93,52,0.15)]">
+              <button
+                onClick={() => {
+                  setResponse(null);
+                  setQuestion("");
+                }}
+                className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+              >
+                ← Inscribe Another Inquiry
+              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onNavigate("chart")}
+                  className="text-xs font-mono text-[#ee5d34] hover:underline cursor-pointer"
+                >
+                  Examine Natal Planetary Chart Wheel →
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      <div className="pt-6">
+      {/* Navigation Footer */}
+      <div className="pt-10 flex items-center justify-between border-t border-[rgba(238,93,52,0.12)] mt-12">
         <button
           className="button-quiet cursor-pointer text-xs text-[#bfb7aa] hover:text-[#eee5d3]"
           onClick={() => onNavigate("chart")}
         >
-          ← Read the birth chart first
+          ← Read Birth Chart Wheel
+        </button>
+        <button
+          className="button-quiet cursor-pointer text-xs text-[#bfb7aa] hover:text-[#eee5d3]"
+          onClick={() => onNavigate("timeline")}
+        >
+          Inspect Planetary Transits Timeline →
         </button>
       </div>
     </Shell>

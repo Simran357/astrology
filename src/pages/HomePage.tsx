@@ -28,48 +28,70 @@ interface DilemmaMirror {
 
 const DILEMMA_MIRRORS: DilemmaMirror[] = [
   {
-    id: "silence",
-    tag: "The Unsaid Words",
-    trigger: "They went quiet, and my pride won't let me text first.",
+    id: "golden_handcuffs",
+    tag: "The Golden Handcuffs",
+    trigger: "\"I earn great money, but every Sunday night feels like walking toward a prison sentence.\"",
     glimpseOfTruth:
-      "Silence between two people is never empty — it is active friction. You let them all the way into your private orbit, and when they pulled back, your instinct was not to ask, but to freeze. You pretend you don't care while replaying every sentence in the dark.",
+      "You didn't choose security—you bought comfortable numbness. Every year you trade for a company bonus is a year your true talent quietly decays.",
     lingeringQuestion:
-      "Are you genuinely waiting for them to reach out, or are you waiting for permission to stop holding space for a ghost?",
-    anchor: "7th House Descendant & Venus-Mars Boundary Axis",
-    stampNote: "POSTMARK // 7TH HOUSE POLARITY",
+      "Are you staying for financial prudence—or because you're terrified you have nothing else to offer the world?",
+    anchor: "2nd House Security vs. 10th House Purpose",
+    stampNote: "CAREER // THE GOLDEN CAGE",
   },
   {
-    id: "career_hollow",
-    tag: "The Career Crossroads",
-    trigger: "I perform competence at work, but I feel hollow and terrified of wasting my life.",
+    id: "sunk_cost_love",
+    tag: "The 5-Year Relationship",
+    trigger: "\"We've been together 5 years. We don't fight, but there is zero physical or emotional spark left.\"",
     glimpseOfTruth:
-      "You are exhausted not because you lack talent, but because you've been succeeding inside a container you outgrew twelve months ago. You are so terrified of failing at what you actually care about that you keep over-performing at things that don't matter to you at all.",
+      "Neither of you is evil, but you are slowly burning each other's finite youth out of habit, shared furniture, and fear of starting over.",
     lingeringQuestion:
-      "If you stopped worrying about looking foolish, what is the exact leap you would take by tomorrow morning?",
-    anchor: "10th House Midheaven & Saturn Threshold Cycles",
-    stampNote: "POSTMARK // 10TH HOUSE MIDHEAVEN",
+      "How many more years will you waste holding their hand just to avoid the five-week guilt of breaking up?",
+    anchor: "7th House Contracts vs. 8th House Severance",
+    stampNote: "LOVE // SUNK COST",
   },
   {
-    id: "detachment_armor",
-    tag: "The Ice Wall",
-    trigger: "I pull away the second someone gets close enough to see my real mess.",
+    id: "family_debt",
+    tag: "Parental Guilt & Control",
+    trigger: "\"My parents expect me to obey their career and marriage demands because they paid for my upbringing.\"",
     glimpseOfTruth:
-      "Your detachment isn't coldness — it is an emergency brake your nervous system built after being dropped in the past. You unclip your heart from the cable car before the other person has the chance to let go. It feels like control, but it leaves you standing in an empty cathedral.",
+      "Their sacrifices were their responsibility as parents—not a permanent mortgage on your adulthood. They will happily ruin your peace to protect their reputation.",
     lingeringQuestion:
-      "Who did you quietly cut the cord on before they even knew you were dangling by a thread?",
-    anchor: "12th House of Sanctuary & Chiron Silencing Aspects",
-    stampNote: "POSTMARK // 12TH HOUSE SANCTUARY",
+      "Can you accept being the 'ungrateful villain' in your family's story in order to live your own life?",
+    anchor: "4th House Lineage vs. 1st House Sovereignty",
+    stampNote: "FAMILY // EMOTIONAL BLACKMAIL",
   },
   {
-    id: "bond_doubts",
-    tag: "The Fragile Circles",
-    trigger: "If I stopped being the convenient listener, I wonder who would still check on me.",
+    id: "partner_betrayal",
+    tag: "Stolen Equity & Credit",
+    trigger: "\"I did the heavy building behind the scenes, but my co-founder took the investor spotlight and reduced my shares.\"",
     glimpseOfTruth:
-      "You learned early that inclusion had a price tag: cheerfulness, usefulness, and never being needy. So you became the anchor for everyone else. But love that requires continuous performance is not love — it's an unpaid job.",
+      "You built the engine; they played the politics. Swallowing the disrespect under the guise of 'keeping the peace' isn't wisdom—it is surrender.",
     lingeringQuestion:
-      "Which friend would you call at 3 AM if everything fell apart, and why have you been hiding your struggle from them?",
-    anchor: "11th House of Alliances & Tribal Belonging",
-    stampNote: "POSTMARK // 11TH HOUSE ALLIANCE",
+      "Is your silence really 'strategic maturity'—or are you simply terrified of standing up and fighting for what you built?",
+    anchor: "8th House Assets & Mars 10th House",
+    stampNote: "BUSINESS // STOLEN CREDIT",
+  },
+  {
+    id: "emotional_affair",
+    tag: "The Secret Emotional Affair",
+    trigger: "\"We haven't slept together, but this co-worker is the first person I text and the only one who understands me.\"",
+    glimpseOfTruth:
+      "Deleting your chat history and tilting your phone screen proves you know the truth. Starving your spouse to feed a workplace fantasy is already betrayal.",
+    lingeringQuestion:
+      "If your partner saw all your private chats with this person right now, could you look them in the eye without lying?",
+    anchor: "Venus-Neptune Axis & 5th House Secrets",
+    stampNote: "INFIDELITY // DOUBLE LIFE",
+  },
+  {
+    id: "geographic_reset",
+    tag: "Outgrown Childhood Friends",
+    trigger: "\"Every time I hit a new milestone, my childhood circle mocks my ambition and tries to drag me back down.\"",
+    glimpseOfTruth:
+      "They don't miss the old times. They miss the broken, smaller version of you that made them feel safe about their own stagnation.",
+    lingeringQuestion:
+      "Will you stay small to protect their fragile egos, or walk away and face the loneliness of new territory?",
+    anchor: "11th House Alliances vs. 9th House Exile",
+    stampNote: "FRIENDSHIP // TOXIC NOSTALGIA",
   },
 ];
 
@@ -114,7 +136,7 @@ const STORY_CHAPTERS = [
 
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedDilemma, setSelectedDilemma] = useState<string>("silence");
+  const [selectedDilemma, setSelectedDilemma] = useState<string>("golden_handcuffs");
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
   const activeDilemma = DILEMMA_MIRRORS.find((d) => d.id === selectedDilemma) || DILEMMA_MIRRORS[0];
@@ -196,7 +218,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div className="hero-actions">
               <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow/></button>
               <a className="button-quiet" href="#story">How I read <Down/></a>
-              <button className="button-quiet cursor-pointer" onClick={() => go("chart")}>Interactive birth wheel <Arrow/></button>
             </div>
             <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
           </div>
@@ -278,11 +299,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="section-shell">
             <div className="max-w-2xl mb-10 text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#0e0a17]/30 bg-[#eee5d3]/60 text-[10px] font-mono uppercase tracking-widest text-[#0e0a17] mb-3">
-                <span>03 / THE INTERACTIVE MIRROR</span>
+                <span>03 / REAL CROSSROADS</span>
               </div>
-              <h2 className="display" style={{ marginBottom: "28px" }}>Which unsaid ache is taking up space?</h2>
-              <p className="threshold-lede" style={{ marginTop: "20px" }}>
-                Select what you are secretly wrestling with tonight. You will receive an immediate glimpse of truth and the lingering question that guides your discovery.
+              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads. </h2>
+              <p className="threshold-lede text-base font-medium text-[#0e0a17]/90" style={{ marginTop: "10px" }}>
+                When staying destroys you and leaving costs everything. Select the standoff keeping you awake tonight:
               </p>
             </div>
 
@@ -292,10 +313,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <button
                   key={d.id}
                   onClick={() => setSelectedDilemma(d.id)}
-                  className={`px-4 py-2.5 rounded-sm text-xs font-serif transition-all duration-200 cursor-pointer ${
+                  className={`px-4 py-2.5 rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                     selectedDilemma === d.id
-                      ? "bg-[#0e0a17] text-[#eee5d3] shadow-md border-2 border-[#ee5d34]"
-                      : "bg-[#0e0a17]/10 hover:bg-[#0e0a17]/20 text-[#0e0a17] border border-[#0e0a17]/20"
+                      ? "bg-[#0e0a17] text-[#eee5d3] shadow-md border-2 border-[#ee5d34] font-bold"
+                      : "bg-[#0e0a17]/10 hover:bg-[#0e0a17]/20 text-[#0e0a17] border border-[#0e0a17]/20 font-semibold"
                   }`}>
                   {d.tag}
                 </button>
@@ -303,45 +324,53 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
 
             {/* Dilemma Mirror Box */}
-            <div className="editorial-card border border-[rgba(238,93,52,0.25)] bg-[#0e0a17] text-[#eee5d3] p-6 md:p-8 rounded-sm space-y-6 shadow-2xl relative">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(238,93,52,0.15)] pb-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider rotate-[-1deg]">
+            <div className="editorial-card border-2 border-[rgba(238,93,52,0.35)] bg-[#0e0a17] text-[#eee5d3] p-6 md:p-8 rounded-sm space-y-6 shadow-2xl relative">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(238,93,52,0.2)] pb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider font-bold">
                   <span>{activeDilemma.stampNote}</span>
                 </div>
-                <span className="text-[10px] font-mono text-[#bfb7aa] tracking-widest uppercase">
+                <span className="text-[10px] font-mono text-[#bfb7aa] tracking-widest uppercase font-bold">
                   {activeDilemma.anchor}
                 </span>
               </div>
 
-              <div className="space-y-3">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block">
-                  The Raw Situation
-                </span>
-                <h3 className="font-serif text-xl md:text-2xl text-[#eee5d3] leading-snug font-light">
-                  "{activeDilemma.trigger}"
-                </h3>
-                <p className="text-sm text-[#eee5d3] leading-relaxed font-light pt-1">
-                  {activeDilemma.glimpseOfTruth}
-                </p>
+              <div className="space-y-4">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
+                    The Real-World Dilemma
+                  </span>
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#eee5d3] leading-snug font-bold italic">
+                    {activeDilemma.trigger}
+                  </h3>
+                </div>
+
+                <div className="pt-1">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
+                    The Psychological Truth:
+                  </span>
+                  <p className="text-sm md:text-base text-[#eee5d3]/90 leading-relaxed font-normal">
+                    {activeDilemma.glimpseOfTruth}
+                  </p>
+                </div>
               </div>
 
-              <div className="p-5 rounded-sm border-l-2 border-[#ee5d34] bg-[rgba(238,93,52,0.06)] space-y-1.5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#ee5d34] block font-semibold">
-                  The Question That Lingers In The Dark
+              <div className="p-5 rounded-sm border-l-4 border-[#ee5d34] bg-[rgba(238,93,52,0.14)] space-y-2">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#ee5d34] block font-bold">
+                  The Hard Question You Keep Avoiding
                 </span>
-                <p className="font-serif text-base md:text-lg text-[#eee5d3] italic leading-relaxed">
+                <p className="font-serif text-xl md:text-2xl text-[#eee5d3] font-bold italic leading-snug">
                   "{activeDilemma.lingeringQuestion}"
                 </p>
               </div>
 
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p className="text-xs text-[#bfb7aa]">
-                  Your natal wheel contains the exact planetary degree governing this cycle.
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-4">
+                <p className="text-xs text-[#bfb7aa] font-mono">
+                  Your birth chart holds the exact planetary degrees driving this dynamic.
                 </p>
                 <button
                   onClick={() => go("onboarding")}
-                  className="button-primary cursor-pointer text-xs whitespace-nowrap">
-                  Decode This in Your Birth Sky →
+                  className="button-primary cursor-pointer text-xs font-bold whitespace-nowrap">
+                  Decode in Your Birth Sky →
                 </button>
               </div>
             </div>

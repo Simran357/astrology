@@ -1,11 +1,11 @@
 import { useApp } from "../context/AppContext";
 
-type Page = "home" | "dashboard" | "chart" | "reading" | "learn" | "profile" | "onboarding" | "login" | "signup" | "timeline" | "relationships" | "tarot" | "askai" | "wellness" | "palm";
+type Page = "home" | "dashboard" | "chart" | "reading" | "learn" | "profile" | "onboarding" | "login" | "signup" | "timeline" | "relationships" | "askai" | "wellness" | "palm";
 interface NavigationProps { currentPage: Page; onNavigate: (page: Page) => void; }
 const items:{id:Page;label:string}[]=[
  {id:"home",label:"Salon"},{id:"chart",label:"Wheel"},{id:"dashboard",label:"Today"},
- {id:"timeline",label:"Shifts"},{id:"relationships",label:"Bonds"},{id:"tarot",label:"Tarot"},
- {id:"wellness",label:"Wellness"},{id:"learn",label:"Library"},{id:"askai",label:"Consult"},{id:"profile",label:"Me"}
+ {id:"timeline",label:"Shifts"},{id:"relationships",label:"Bonds"},
+ {id:"wellness",label:"Wellness"},{id:"learn",label:"Library"},{id:"askai",label:"Ask AstroFindings"},{id:"profile",label:"Me"}
 ];
 export default function Navigation({currentPage,onNavigate}:NavigationProps){
  const { isLoggedIn } = useApp();

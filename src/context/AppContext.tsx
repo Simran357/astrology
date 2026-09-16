@@ -22,20 +22,9 @@ export type PageId =
   | "signup"
   | "timeline"
   | "relationships"
-  | "tarot"
   | "askai"
   | "wellness"
   | "palm";
-
-export interface TarotDrawResult {
-  id: string;
-  date: string;
-  spreadType: string;
-  cardName: string;
-  cardId: string;
-  question: string;
-  insight: string;
-}
 
 interface AppContextType {
   currentPage: PageId;
@@ -49,8 +38,6 @@ interface AppContextType {
   addPerson: (person: Omit<PersonProfile, "id">) => Promise<void>;
   updatePerson: (id: string, person: Partial<PersonProfile>) => Promise<void>;
   deletePerson: (id: string) => void;
-  savedTarotDraws: TarotDrawResult[];
-  saveTarotDraw: (draw: Omit<TarotDrawResult, "id" | "date">) => void;
   highlightedPlanet: string | null;
   setHighlightedPlanet: (planet: string | null) => void;
   navigateWithHighlight: (page: string, planet?: string) => void;
@@ -65,7 +52,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const USER_STORAGE_KEY = "astral_heretic_user_profile";
 const PEOPLE_STORAGE_KEY = "astral_heretic_people_profiles";
-const TAROT_STORAGE_KEY = "astral_heretic_tarot_history";
 const MEMBERSHIP_STORAGE_KEY = "astral_heretic_membership";
 
 export const AppProvider: React.FC<{
@@ -119,15 +105,6 @@ export const AppProvider: React.FC<{
     }
   });
 
-  // Saved Tarot Draws
-  const [savedTarotDraws, setSavedTarotDraws] = useState<TarotDrawResult[]>(() => {
-    try {
-      const saved = localStorage.getItem(TAROT_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
 
   // Membership state (free vs premium)
   const [isMembershipActive, setIsMembershipActive] = useState<boolean>(() => {
@@ -263,19 +240,6 @@ export const AppProvider: React.FC<{
     persistPeople(people.filter((p) => p.id !== id));
   };
 
-  // Save a Tarot draw
-  const saveTarotDraw = (draw: Omit<TarotDrawResult, "id" | "date">) => {
-    const newDraw: TarotDrawResult = {
-      ...draw,
-      id: `tarot-${Date.now()}`,
-      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    };
-    const updated = [newDraw, ...savedTarotDraws];
-    setSavedTarotDraws(updated);
-    try {
-      localStorage.setItem(TAROT_STORAGE_KEY, JSON.stringify(updated));
-    } catch {}
-  };
 
   // Cross-page navigation with highlight (e.g., "See your Moon" -> /chart with Moon highlighted)
   const navigateWithHighlight = (page: string, planet?: string) => {
@@ -299,8 +263,7 @@ export const AppProvider: React.FC<{
         addPerson,
         updatePerson,
         deletePerson,
-        savedTarotDraws,
-        saveTarotDraw,
+
         highlightedPlanet,
         setHighlightedPlanet,
         navigateWithHighlight,

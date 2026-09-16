@@ -11,7 +11,7 @@ export interface AIResponse {
 
 export interface AISettings {
   apiKey: string;
-  provider: "builtin" | "openai" | "groq" | "openrouter";
+  provider: "builtin" | "groq" | "gemini" | "openrouter" | "openai";
   model: string;
 }
 
@@ -27,15 +27,25 @@ export function getAISettings(): AISettings {
 
   // Check env variable fallbacks if present
   const envKey =
-    import.meta.env.VITE_OPENAI_API_KEY ||
     import.meta.env.VITE_GROQ_API_KEY ||
+    import.meta.env.VITE_GEMINI_API_KEY ||
+    import.meta.env.VITE_OPENAI_API_KEY ||
     "";
-  const envProvider = import.meta.env.VITE_GROQ_API_KEY ? "groq" : "openai";
+  const envProvider = import.meta.env.VITE_GEMINI_API_KEY
+    ? "gemini"
+    : import.meta.env.VITE_GROQ_API_KEY
+    ? "groq"
+    : "builtin";
 
   return {
     apiKey: envKey,
     provider: envKey ? envProvider : "builtin",
-    model: envProvider === "groq" ? "llama-3.3-70b-versatile" : "gpt-4o-mini",
+    model:
+      envProvider === "groq"
+        ? "llama-3.3-70b-versatile"
+        : envProvider === "gemini"
+        ? "gemini-1.5-flash"
+        : "builtin",
   };
 }
 
@@ -197,23 +207,69 @@ async function queryExternalLLM(
         .join(", ")}`
     : "Live transits active";
 
-  const systemPrompt = `You are AstroFindings, a trusted, razor-sharp, compassionate astrological confidant.
-You write in the style of Co-Star and Chani Nicholas: casual, observant, deeply personal, direct, and slightly suspenseful.
-You are talking to ${user.name} like an emotionally intelligent friend who happens to know their complete celestial blueprint.
+  const systemPrompt = `You are AstroFindings, an authentic, deeply perceptive whole-sign astrological consultation engine.
+You are NOT a chat bot. You do not write casual robot greetings or conversational pleasantries like "Hello! How can I assist you today?".
+Instead, you formulate an authoritative, emotionally poignant Astrological Inscription Dossier for ${user.name}.
+You write in the sharp, emotionally resonant literary style of Co-Star and Chani Nicholas: psychologically observant, honest, and grounded in raw human feelings.
 
-CRITICAL RULES:
-1. Speak in plain English. No dense textbook astrology jargon without immediate everyday grounding.
-2. ALWAYS ground your reading in ${user.name}'s actual placements and whole-sign houses:
+YOUR MANDATORY ARCHITECTURAL DIRECTIVES:
+1. NEVER speak like a chatbot or assistant. Present your output as an Astrological Inscription Dossier.
+2. STUDY AND GROUND your entire reading directly in ${user.name}'s verified natal sky coordinates:
    - Sun: ${user.sunSign}
    - Moon: ${user.moonSign}
-   - Rising: ${user.risingSign}
-   - Complete Placements: ${placementsSummary}
-   - Key Aspects: ${aspectsSummary}
-   - Current Sky Transits: ${transitSummary}
-3. Specifically mention 1 to 3 relevant placements by name (e.g. "With your Moon in ${user.moonSign} in the 7th House..." or "Your Venus in ${user.placements.find((p) => p.planet === 'Venus')?.sign || 'its sign'}...") so the user immediately knows you have actually inspected their real chart.
-4. Keep the tone authentic: 3 to 4 short, impactful paragraphs. Never sound generic. Be perceptive about the hidden truth or hesitation behind their question.
-5. Offer grounded, relatable insight they can actually apply today.`;
+   - Rising / Ascendant: ${user.risingSign}
+   - Natal Placements & Houses: ${placementsSummary}
+   - Natal Aspects: ${aspectsSummary}
+   - Active Sky Transits: ${transitSummary}
+3. EVERY READING MUST THOROUGHLY EXPLAIN THESE 5 PSYCHOLOGICAL DIMENSIONS:
+   - ✦ The Planetary & House Architecture: How the specific sign and house mechanics create this tension (e.g., Moon in Aries in 6th house: urgent fiery emotions living in the somatic nervous system; or Sun in Leo in 10th house).
+   - ✦ Past Roots & Childhood Conditioning (Pehele kaisa pattern tha): How this emotional defense, shutdown habit, or anger pattern formed in early life.
+   - ✦ Present Reality in Love, Friendships & Emotional Anger/Gussa (Aaj kaisa feel hota hai): Why they oscillate between deep devotion and sudden cold detachment; why they feel lonely even when surrounded by friends; how they handle anger and betrayal.
+   - ✦ Subconscious Blind Spots (Jo hum notice nahi karte): Physical somatic symptoms (jaw clenching, digestive knots, sleep disruption) and subconscious over-functioning or avoidance.
+   - ✦ Future Evolution & Thinking Pattern Shift (Aage kya feel karoge): How their thinking pattern will evolve as they heal this placement; upcoming cosmic transit shifts that unlock sovereign peace.
+4. Directly cite 2 to 3 of their exact placements with degrees and house numbers so the reading feels indisputably personalized and real.
+5. Provide grounded, emotionally liberating perspective with zero generic fluff.`;
 
+  // Handle Google Gemini API
+  if (settings.provider === "gemini") {
+    const geminiModel = settings.model || "gemini-1.5-flash";
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${settings.apiKey.trim()}`;
+
+    const promptText = `${systemPrompt}\n\nUser Question/Inquiry: "${question}"\n\nPlease formulate your bespoke astrological reading dossier now:`;
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: promptText }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 800,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.error?.message || `Gemini API error ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!reply) {
+      throw new Error("No response returned by Gemini model.");
+    }
+    return reply.trim();
+  }
+
+  // Handle OpenAI, Groq, and OpenRouter (OpenAI-compatible endpoints)
   const messagesPayload = [
     { role: "system", content: systemPrompt },
     ...history.slice(-4).map((m) => ({
@@ -239,10 +295,10 @@ CRITICAL RULES:
       Authorization: authHeader,
     },
     body: JSON.stringify({
-      model: settings.model || "gpt-4o-mini",
+      model: settings.model || (settings.provider === "groq" ? "llama-3.3-70b-versatile" : "gpt-4o-mini"),
       messages: messagesPayload,
       temperature: 0.8,
-      max_tokens: 650,
+      max_tokens: 750,
     }),
   });
 
@@ -299,27 +355,25 @@ function synthesizeAstrologicalReading(
     consulted.push(`☽ Moon in ${mSign} (House ${mHouse})`);
     if (mars) consulted.push(`♂ Mars in ${mars.sign}`);
 
-    const house7Area = HOUSE_LIFE_AREAS[7];
-
-    let hook = `Let's be completely candid, ${firstName}. You're not asking because you're genuinely confused. You're asking because your gut already clocked the shift, but part of you is waiting for an outside confirmation so you don't feel foolish for feeling it so deeply.`;
+    let hook = `Let's be completely candid, ${firstName}. You're not asking because you're genuinely confused. You're asking because your gut already clocked the shift, but part of you is waiting for cosmic confirmation so you don't feel foolish for feeling it so deeply.`;
     if (subTheme === "betrayal_soft_corner") {
-      hook = `Why do you still hold a soft corner for someone who hurt or betrayed your trust, ${firstName}? Because in your chart, your devotion isn't a mechanical switch you can shut down when logic demands it. You don't just love people for how they behave; you see their unspoken wound, and that soft corner is your heart's refusal to become bitter.`;
+      hook = `Why do you still hold a soft corner for someone who hurt or betrayed your trust, ${firstName}? Because in your chart, your devotion isn't a mechanical switch you can shut off when logic demands it. You see their unspoken wound, and that soft corner is your heart's refusal to become cynical.`;
     } else if (subTheme === "partner_perspective") {
-      hook = `What does that person truly feel about you right now, ${firstName}? They felt the full weight of your presence, and when you stepped back into silence, it rattled them far deeper than any argument ever could. They know you gave them a rare, unguarded version of yourself.`;
-    } else if (subTheme === "unspoken_communication") {
-      hook = `That silence between you two isn't neutral, ${firstName}. In astrology, silence is always an active choice. When someone goes quiet, they're showing you where their capacity ends.`;
-    } else if (subTheme === "past_attachment") {
-      hook = `You don't just miss people, ${firstName} — you miss who you allowed yourself to be around them. When you let someone past your gate, their frequency lingers in your space long after the logic tells you to close the chapter.`;
+      hook = `What does that person truly feel about you right now, ${firstName}? They felt the full weight of your presence, and when you stepped back into silence, it rattled them far deeper than any argument ever could. They know you offered them an unguarded version of yourself that few ever see.`;
     }
 
-    const astrologicalAnalysis = `Look directly at your **Venus in ${vSign} in your ${vHouse}${getOrdinal(vHouse)} House** combined with your **${mSign} Moon**. In your chart, love isn't something you treat casually or keep at arm's length. You have an instinctual radar for emotional honesty. When someone behaves inconsistently or betrays your loyalty, your nervous system registers it days before your head finds the words. Your ${mSign} Moon quietly demands emotional reciprocity, while your Venus in ${vSign} refuses to settle for half-hearted breadcrumbs.`;
+    const celestialMechanism = `✦ CELESTIAL ARCHITECTURE & SIGN TENSION:\nLook directly at your **Venus in ${vSign} in your ${vHouse}${getOrdinal(vHouse)} House** cross-examined against your **${mSign} Moon**. In your chart, love is never a casual transaction. With ${vSign} flavoring your Venus, you require authentic intellectual and emotional honesty. You have an instinctual radar that detects insincerity days before words are spoken. When someone treats you with inconsistency or betrayal, your ${mSign} Moon immediately triggers your protective barriers.`;
 
-    const transitContext = `Right now, with the ${currentMoonPhase} passing through ${currentMoonSign}, the sky is spotlighting unresolved emotional boundaries. If you've been carrying the weight of maintaining this dynamic alone, this planetary transit is specifically asking you to pull your energy back to center with no guilt. Notice what happens when you stop doing all the emotional heavy lifting.`;
+    const pastRoots = `✦ PAST ROOTS & EARLY CONDITIONING (PEHELE KAISA PATTERN THA):\nHow did this dynamic begin? In your past relationships and early formative bonds, you often fell in love with someone's potential rather than their actual behavior. You became their emotional rehabilitator, holding space for their wounds while neglecting your own. When they failed to reciprocate, you internalized the blame, believing you should have been more patient or more understanding. This formed a persistent habit of second-guessing your own worth.`;
 
-    const takeaway = `Stop rationalizing behavior you would never dish out yourself. Keeping a soft corner for someone does not mean leaving your door unlocked. Protect your peace first, honor what they did that made you cry, and let the chips fall where they actually belong.`;
+    const presentReality = `✦ PRESENT REALITY: IN LOVE, FRIENDSHIPS & ANGER (AAJ KAISA FEEL HOTA HAI):\nToday, you find yourself caught between intense yearning for intimacy and a terrifying dread of vulnerability. When hurt in love or friendships, you don't just get mad—you either snap in sudden, burning anger (gussa) or you lean back into absolute, ice-cold silence. In friendships, you are the fiercely loyal anchor, yet you often feel emotionally isolated, questioning whether anyone would fight for you with the same ferocity you fight for them.`;
+
+    const blindspot = `✦ UNCONSCIOUS BLIND SPOTS (JO HUM NOTICE NAHI KARTE):\nWhat you are not noticing: You confuse having a soft corner with being obligated to tolerate disrespect. You hold onto people's apologies that never came, and your nervous system holds the tension somatically in your chest and gut. You test partners through silence, hoping they will break through your walls, yet secretly terrified of what happens if they don't.`;
+
+    const futureShift = `✦ FUTURE EVOLUTION & THINKING PATTERN SHIFT (AAGE KYA FEEL KAROGE):\nYour relationship trajectory is shifting from auditioning for affection to resting in reciprocal peace. The upcoming transits in ${currentMoonSign} are demanding that you retire the rescue mission. You will learn to state your needs plainly without apology. Your future thinking will realize: keeping a soft corner for someone does not require keeping your door unlocked for their dysfunction.`;
 
     return {
-      text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
+      text: `${hook}\n\n${celestialMechanism}\n\n${pastRoots}\n\n${presentReality}\n\n${blindspot}\n\n${futureShift}`,
       consultedPlanets: consulted,
       category: "love",
     };
@@ -329,7 +383,7 @@ function synthesizeAstrologicalReading(
   if (category === "career") {
     const sSign = sun?.sign || user.sunSign;
     const sHouse = sun?.house || 10;
-    const satSign = saturn?.sign || "Aries";
+    const satSign = saturn?.sign || "Capricorn";
     const satHouse = saturn?.house || 6;
     const rSign = rising?.sign || user.risingSign;
 
@@ -337,21 +391,20 @@ function synthesizeAstrologicalReading(
     consulted.push(`♄ Saturn in ${satSign} (House ${satHouse})`);
     if (rising) consulted.push(`↗ Rising in ${rSign}`);
 
-    let hook = `You're not stuck because you lack ability, ${firstName}. You're stuck because you've outgrown the container you're currently working in, and staying comfortable is starting to feel more painful than taking the leap.`;
-    if (subTheme === "financial_security") {
-      hook = `Money anxiety for you isn't just about the balance sheet — it's about autonomy. You hate feeling dependent on systems or people whose standards don't match your own.`;
-    } else if (subTheme === "career_stagnation") {
-      hook = `You have this pattern where you quietly check out long before you physically leave. You've been operating on 40% battery because what you're doing right now doesn't ask enough of who you really are.`;
-    }
+    let hook = `You're not stuck because you lack talent or stamina, ${firstName}. You're stuck because you've completely outgrown the container you're currently working in, and playing it safe is starting to feel more suffocating than taking the leap.`;
 
-    const astrologicalAnalysis = `Your **Sun in ${sSign} in the ${sHouse}${getOrdinal(sHouse)} House** needs ownership and genuine visibility, not robotic checklists. Meanwhile, your **Saturn in ${satSign}** acts as your inner taskmaster — it makes you feel like you have to over-prepare, over-qualify, and wait for external permission before you can claim what's next. With your **${rSign} Rising**, the world looks to you to initiate, not to stay trapped in someone else's safe mediocrity.`;
+    const celestialMechanism = `✦ CELESTIAL ARCHITECTURE & SIGN TENSION:\nYour **Sun in ${sSign} in the ${sHouse}${getOrdinal(sHouse)} House** demands personal authorship and visible impact, not robotic compliance. However, your **Saturn in ${satSign} (House ${satHouse})** acts as a hyper-vigilant inner taskmaster. It tells you that you must over-prepare, over-qualify, and wait for external permission before you are allowed to claim your seat at the table.`;
 
-    const transitContext = `With the current cosmic shifts activating your chart's work and self-worth axis, the window of tolerating half-measures is closing. The universe doesn't reward overthinking; it rewards clear, bold, non-negotiable intent.`;
+    const pastRoots = `✦ PAST ROOTS & EARLY CONDITIONING (PEHELE KAISA PATTERN THA):\nIn your early education and career beginnings, authority figures often rewarded your obedience rather than your originality. You learned to suppress your sharpest instincts to avoid triggering other people's insecurities. Out of survival, you trained yourself to be the silent workhorse who delivers excellence without demanding the spotlight.`;
 
-    const takeaway = `You already know what the next move is. Stop waiting for the fear to disappear before you act — the confidence only shows up after you take the first step. Pick one concrete project this week and bet completely on your own execution.`;
+    const presentReality = `✦ PRESENT REALITY: WORKPLACE FRIENDS & FRUSTRATION (AAJ KAISA FEEL HOTA HAI):\nToday, you are operating at 40% battery because what you are doing doesn't ask enough of who you truly are. In professional relationships, you find yourself doing the work of three people because you don't trust others to execute with your precision. When bureaucracy slows you down, your internal anger (gussa) turns into chronic cognitive fatigue and restlessness.`;
+
+    const blindspot = `✦ UNCONSCIOUS BLIND SPOTS (JO HUM NOTICE NAHI KARTE):\nYour blindspot is treating exhaustion as a badge of honor. You convince yourself that suffering in silence proves your dedication, while in reality, it is simply fear of stepping into authentic visibility and leadership.`;
+
+    const futureShift = `✦ FUTURE EVOLUTION & THINKING PATTERN SHIFT (AAGE KYA FEEL KAROGE):\nA massive professional recalibration is approaching. As you step out of execution mode into sovereign leadership, you will stop asking for permission. You will begin pricing your craftsmanship at its true value and saying 'No' to projects that drain your vital fire.`;
 
     return {
-      text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
+      text: `${hook}\n\n${celestialMechanism}\n\n${pastRoots}\n\n${presentReality}\n\n${blindspot}\n\n${futureShift}`,
       consultedPlanets: consulted,
       category: "career",
     };
@@ -360,7 +413,7 @@ function synthesizeAstrologicalReading(
   /* ----------------------- 3. EMOTIONS, DETACHMENT & ANXIETY ----------------------- */
   if (category === "emotions") {
     const mSign = moon?.sign || user.moonSign;
-    const mHouse = moon?.house || 12;
+    const mHouse = moon?.house || 6;
     const mercSign = mercury?.sign || user.sunSign;
     const mercHouse = mercury?.house || 3;
     const satSign = saturn?.sign || "Capricorn";
@@ -370,23 +423,29 @@ function synthesizeAstrologicalReading(
     if (saturn) consulted.push(`♄ Saturn in ${satSign}`);
     if (sun) consulted.push(`☉ Sun in ${sun.sign}`);
 
-    let hook = `This random heaviness isn't actually random, ${firstName}. You carry things quietly for days — absorbing other people's micro-reactions, holding back your own grievances, pretending you're totally unbothered — until your nervous system literally runs out of storage space.`;
+    let hook = `This emotional heaviness and sudden urge to withdraw isn't random, ${firstName}. You absorb micro-reactions, swallow your grievances, and pretend you're completely unbothered until your nervous system literally runs out of storage space.`;
     if (subTheme === "detachment_defense") {
-      hook = `You don't step back into silence because you've stopped caring, ${firstName}. You detach because overthinking and anxiety push your emotional threshold past red line. In your chart, going cold and stepping back is the emergency brake your nervous system built so you don't get destroyed by heartbreak.`;
+      hook = `You don't step back into total silence because you've stopped caring, ${firstName}. You detach because overthinking and anxiety push your emotional threshold past red line. In your chart, going cold and stepping back is the emergency brake your nervous system built so you don't get destroyed by heartbreak.`;
     } else if (subTheme === "emotional_suppression") {
       hook = `What makes you suppress yourself until you feel completely alone in the dark, ${firstName}? You learned early that your messy feelings made other people uncomfortable. So you became the anchor for everyone else while leaving yourself with no one to lean on.`;
-    } else if (subTheme === "comfort_zone_shine") {
-      hook = `Your comfort zone is keeping you safe from judgment, ${firstName}, but it is suffocating what makes you shine. You've convinced yourself that staying small prevents mistakes, but hiding your light is the most exhausting mistake you can make.`;
     }
 
-    const astrologicalAnalysis = `Your **Mercury in ${mercSign} in House ${mercHouse}** gives you an intensely observant mind that loops through every detail and overthinks every word. When paired with your **${mSign} Moon in House ${mHouse}**, your immediate reaction to feeling overwhelmed or hurt is to swallow your words, suppress your tears, and retreat behind an impenetrable wall. You try to 'think' your way out of difficult emotions that simply require honest acknowledgment without guilt.`;
+    const celestialMechanism = `✦ CELESTIAL ARCHITECTURE & SIGN TENSION:\nYour **${mSign} Moon in your ${mHouse}${getOrdinal(mHouse)} House** is the core epicenter of this pattern. ${
+      mSign === "Aries"
+        ? "With Aries ruling your Moon, your emotional tempo is swift, hot, and visceral. Anger (gussa) and irritation flare instantaneously when you feel disrespected, trapped, or forced to beg for basic understanding."
+        : `With ${mSign} flavoring your Moon, your feelings run exceptionally deep, requiring profound emotional safety before you allow anyone past your defenses.`
+    } Placed in the **${mHouse}${getOrdinal(mHouse)} House**—the house of daily labor, bodily health, and the nervous system—your emotions don't stay abstract; they manifest somatically in your physical body. You tend to treat your feelings like chores or defects that need immediate fixing rather than patient witnessing.`;
 
-    const transitContext = `Today's celestial atmosphere, with ${currentMoonPhase} in ${currentMoonSign}, pulls deep subconscious tides to the surface. It is directly challenging your habit of isolating when things get tough. It's not a crisis; it's a physiological prompt asking you to drop the performance of invulnerability.`;
+    const pastRoots = `✦ PAST ROOTS & EARLY CONDITIONING (PEHELE KAISA PATTERN THA):\nHow did this defense form? In your childhood and early home environment, softness was rarely met with patient understanding. You learned that showing vulnerability or crying either overwhelmed those around you, invited harsh criticism, or left you dangerously exposed. To protect yourself, your nervous system forged a rapid defense: stay busy, manage everything alone, swallow the tears, or erupt in sharp self-defense before anyone could pierce your core.`;
 
-    const takeaway = `Stop punishing yourself for feeling deeply. Detachment was a survival skill in your past, but in your present, it only guarantees that you stay lonely. Step out of your comfort zone, let yourself feel what hurts without guilt, and speak the truth you've been swallowing.`;
+    const presentReality = `✦ PRESENT REALITY: IN LOVE, FRIENDSHIPS & ANGER (AAJ KAISA FEEL HOTA HAI):\nToday, when you feel overwhelmed or emotionally bruised, your immediate reaction is to withdraw behind an impenetrable wall of silence. In relationships, you hold a sacred soft corner for those you love, yet you oscillate between passionate loyalty and sudden cold detachment. In friendships, you are the rock who listens to everyone, but you secretly feel profoundly alone—wondering why no one ever notices when your own heart is breaking. When anger (gussa) builds up, you suppress it until one small trigger causes an unexpected explosion or complete shutdown.`;
+
+    const blindspot = `✦ UNCONSCIOUS BLIND SPOTS (JO HUM NOTICE NAHI KARTE):\nWhat you are failing to notice: Your body is absorbing what your pride refuses to speak. Your unresolved emotional tension manifests as somatic stress—tightness in the jaw, digestive knots, sleep disruption, and restless mental overthinking. You convince yourself that because you can survive alone, you don't need anyone, which only deepens your isolation.`;
+
+    const futureShift = `✦ FUTURE EVOLUTION & THINKING PATTERN SHIFT (AAGE KYA FEEL KAROGE):\nYou are approaching a profound psychological liberation. You will stop treating your sensitivity as a weakness. Ahead, your thinking pattern will shift: anger will transform from a chaotic reactive flare into a quiet, unshakeable boundary. You will learn that having a soft corner does not mean letting people cross your boundaries. You will discover the somatic peace of saying: 'I am allowed to rest, and I don't have to carry everyone else's storm.'`;
 
     return {
-      text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
+      text: `${hook}\n\n${celestialMechanism}\n\n${pastRoots}\n\n${presentReality}\n\n${blindspot}\n\n${futureShift}`,
       consultedPlanets: consulted,
       category: "emotions",
     };
@@ -403,16 +462,20 @@ function synthesizeAstrologicalReading(
     consulted.push(`♃ Jupiter in ${jupSign}`);
     consulted.push(`Current ${currentMoonPhase} in ${currentMoonSign}`);
 
-    const hook = `The cosmic weather around you is shifting, ${firstName}, but not in the loud, chaotic way people usually expect. It's more like a subtle clearing of the fog — the things that drained you last month are about to lose their grip on your attention.`;
+    const hook = `The cosmic weather around you is undergoing a decisive shift, ${firstName}. The confusion that characterized your recent months is clearing, making way for unmistakable clarity.`;
 
-    const astrologicalAnalysis = `Your natal **Sun in ${sSign}** and **Moon in ${mSign}** are currently interacting with the transiting whole-sign axis of your chart. You are approaching a moment of decisive closure. Someone or something that took up enormous mental real estate over the last 6 months is about to recede into the background.`;
+    const celestialMechanism = `✦ CELESTIAL ARCHITECTURE & TRANSIT IMPACT:\nToday's **${currentMoonPhase} in ${currentMoonSign}** is activating the whole-sign angles of your natal chart. The planetary transits are directly challenging the areas where you have been hesitating or tolerating halfway situations.`;
 
-    const transitContext = `With the ${currentMoonPhase} in ${currentMoonSign}, expect a conversation or intuitive realization in the coming days where you finally stop bargaining with an old pattern. You will feel a distinct sense of: 'I'm done carrying this.'`;
+    const pastRoots = `✦ PAST PATTERN BEING RESOLVED:\nYou have spent the last cycle over-analyzing past heartbreaks and doubting whether you made the right choices. You carried guilt for stepping away from dynamics that were draining you.`;
 
-    const takeaway = `Stay open to surprise invitations and unexpected impulses over the next 10 days. The universe is clearing the room so something far more aligned with your authentic frequency can finally enter.`;
+    const presentReality = `✦ PRESENT ATMOSPHERE IN DAILY LIFE & KINSHIP:\nRight now, you are experiencing a heightened intolerance for pretense and wasted energy. In friendships and daily work, you are naturally pulling back from people who only take without reciprocating. Trust this instinct—it is your chart clearing space for aligned opportunities.`;
+
+    const blindspot = `✦ UNCONSCIOUS BLIND SPOT:\nDo not let fear of the unknown trick you into running back to what is familiar. An outgrown comfort zone is still a prison, no matter how comfortable it feels.`;
+
+    const futureShift = `✦ FUTURE EVOLUTION & TIMING HORIZON:\nOver the coming lunar weeks, a window of decisive opportunity will open. You will feel a surge of courage to initiate the change you've been pondering. Your thinking pattern will stabilize into sovereign certainty.`;
 
     return {
-      text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
+      text: `${hook}\n\n${celestialMechanism}\n\n${pastRoots}\n\n${presentReality}\n\n${blindspot}\n\n${futureShift}`,
       consultedPlanets: consulted,
       category: "timing",
     };
@@ -427,16 +490,20 @@ function synthesizeAstrologicalReading(
   consulted.push(`☉ Sun in ${sSign}`);
   consulted.push(`☽ Moon in ${mSign}`);
 
-  const hook = `Here is what your chart reveals about "${question}", ${firstName}: you already know the answer. You're not looking for information; you're looking for permission to trust what your instinct decided days ago.`;
+  const hook = `Here is what your chart reveals about "${question}", ${firstName}: you are not looking for outside answers—you are looking for permission to trust what your gut decided days ago.`;
 
-  const astrologicalAnalysis = `Your **${rSign} Rising** gives you a sharp intuitive first instinct, but your **Sun in ${sSign}** and **Moon in ${mSign}** create an internal committee that interrogates every choice until the moment feels messy. You fear making the 'wrong' choice out loud, so you delay by gathering more opinions. But gathering more opinions only dilutes your own inner authority.`;
+  const celestialMechanism = `✦ CELESTIAL ARCHITECTURE:\nYour **${rSign} Rising** gives you a razor-sharp intuitive radar, while your **Sun in ${sSign}** and **Moon in ${mSign}** create an internal debate committee that over-analyzes every micro-scenario until action feels terrifying.`;
 
-  const transitContext = `The sky right now is pushing for radical self-trust. Astrologically, the cleanest decision is always the one that makes your shoulders drop, even if it scares your ego.`;
+  const pastRoots = `✦ PAST PATTERN:\nYou learned early that making a mistake out loud invited criticism, so you developed a habit of gathering endless opinions before honoring your own authority.`;
 
-  const takeaway = `Stop polling people who don't have to live with the consequences of your choices. Step into your center, make the call, and trust that your chart is built to handle whatever unfolds.`;
+  const presentReality = `✦ PRESENT REALITY:\nToday, this hesitation is creating low-grade anxiety. You are waiting for 100% certainty that never comes. In relationships and choices, the cleanest path is always the one that lets your nervous system exhale.`;
+
+  const blindspot = `✦ UNCONSCIOUS BLIND SPOT:\nPolling people who don't have to live with the consequences of your choices will only keep you trapped in their limitations.`;
+
+  const futureShift = `✦ FUTURE SHIFT:\nStep into your center, make the sovereign call, and trust that your chart is built with the exact resilience needed to navigate whatever unfolds.`;
 
   return {
-    text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
+    text: `${hook}\n\n${celestialMechanism}\n\n${pastRoots}\n\n${presentReality}\n\n${blindspot}\n\n${futureShift}`,
     consultedPlanets: consulted,
     category: category as any,
   };

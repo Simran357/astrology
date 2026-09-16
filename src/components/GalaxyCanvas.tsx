@@ -5,58 +5,91 @@ interface GalaxyCanvasProps {
   opacity?: number;
 }
 
-const STARS = [
-  [8, 14, 0.28], [15, 27, 0.18], [22, 10, 0.2], [31, 18, 0.25], [42, 9, 0.18], [54, 13, 0.2], [67, 8, 0.18], [80, 18, 0.22], [91, 11, 0.18],
-  [5, 42, 0.2], [13, 57, 0.24], [22, 70, 0.18], [31, 88, 0.22], [45, 78, 0.2], [61, 91, 0.18], [77, 83, 0.2], [91, 68, 0.22],
-  [4, 82, 0.16], [18, 91, 0.2], [86, 42, 0.18], [96, 54, 0.18], [72, 31, 0.16], [37, 45, 0.18], [64, 54, 0.2], [27, 38, 0.16],
-];
+const BACKGROUND_STARS = Array.from({ length: 52 }, (_, index) => {
+  const x = (index * 47 + 13) % 100;
+  const y = (index * 71 + 9) % 100;
+  return { x, y, r: index % 9 === 0 ? 0.28 : 0.12 + (index % 4) * 0.04, opacity: 0.28 + (index % 5) * 0.1 };
+});
 
-const GALAXY_PARTICLES = Array.from({ length: 92 }, (_, index) => {
+const GALAXY_PARTICLES = Array.from({ length: 430 }, (_, index) => {
   const arm = index % 2 === 0 ? 1 : -1;
-  const distance = 7 + (index % 23) * 1.42;
-  const angle = index * 0.72 + distance * 0.11 * arm;
-  const spread = ((index * 17) % 9) - 4;
+  const distance = 1.5 + ((index * 29) % 100) * 0.47;
+  const angle = index * 0.205 + distance * 0.105 * arm;
+  const scatter = (((index * 19) % 17) - 8) * (0.12 + distance * 0.008);
+  const flatten = 0.43;
+  const x = 50 + Math.cos(angle) * distance + scatter;
+  const y = 50 + Math.sin(angle) * distance * flatten + scatter * 0.45;
+  const edgeFade = Math.max(0.18, 1 - distance / 58);
   return {
-    x: 50 + Math.cos(angle) * (distance * 0.92) + spread * 0.34,
-    y: 50 + Math.sin(angle) * (distance * 0.42) + spread * 0.22,
-    r: index % 11 === 0 ? 0.48 : index % 4 === 0 ? 0.34 : 0.22,
-    opacity: index % 5 === 0 ? 0.9 : 0.56,
+    x,
+    y,
+    r: index % 31 === 0 ? 0.36 : index % 7 === 0 ? 0.23 : 0.105 + (index % 3) * 0.035,
+    opacity: edgeFade * (0.42 + (index % 5) * 0.11),
   };
 });
 
 export default function GalaxyCanvas({ className = "", opacity = 1 }: GalaxyCanvasProps) {
   const id = useId().replace(/:/g, "");
-  const glowId = `${id}-glow`;
+  const coreId = `${id}-core`;
+  const hazeId = `${id}-haze`;
 
   return (
-    <svg className={className} style={{ opacity }} viewBox="0 0 100 100" role="img" aria-label="A still astrological galaxy made from starlight and crystal forms" preserveAspectRatio="xMidYMid slice">
+    <svg
+      className={className}
+      style={{ opacity }}
+      viewBox="0 0 100 100"
+      role="img"
+      aria-label="A still particle galaxy shaped like an astrological chart"
+      preserveAspectRatio="xMidYMid slice"
+    >
       <defs>
-        <radialGradient id={glowId} cx="50%" cy="50%" r="50%">
-          <stop offset="0" stopColor="#fff4d0" stopOpacity=".95" />
-          <stop offset=".18" stopColor="#d9b8ff" stopOpacity=".72" />
-          <stop offset=".6" stopColor="#8152c8" stopOpacity=".16" />
+        <radialGradient id={coreId} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff9e9" stopOpacity="1" />
+          <stop offset="0.12" stopColor="#f2d6ff" stopOpacity="0.96" />
+          <stop offset="0.34" stopColor="#bd83e8" stopOpacity="0.4" />
+          <stop offset="1" stopColor="#6e3caf" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={hazeId} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#d7a9ff" stopOpacity="0.2" />
+          <stop offset="0.55" stopColor="#7b43c3" stopOpacity="0.08" />
           <stop offset="1" stopColor="#05030a" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <rect width="100" height="100" rx="3" fill="#05030a" />
-      <g className="galaxy-stars" fill="#f5efff">
-        {STARS.map(([cx, cy, r], index) => <circle key={`star-${index}`} cx={cx} cy={cy} r={r} opacity={0.45 + (index % 3) * 0.15} />)}
-      </g>
-      <g className="galaxy-particles" fill="#fff9ec">
-        {GALAXY_PARTICLES.map((particle, index) => <circle key={`particle-${index}`} cx={particle.x} cy={particle.y} r={particle.r} opacity={particle.opacity} />)}
-      </g>
-      <g fill="none" strokeLinecap="round">
-        <path d="M21 40C31 23 58 18 76 30C86 37 81 50 69 58C52 70 29 68 22 56C18 49 19 44 21 40Z" stroke="#d9b7ff" strokeOpacity=".2" strokeWidth="1.4" />
-        <path d="M27 32C42 19 65 24 73 37C80 48 67 60 53 63C37 67 25 58 28 48" stroke="#8f63cf" strokeOpacity=".24" strokeWidth="1" />
-        <ellipse cx="50" cy="50" rx="35" ry="13" transform="rotate(-18 50 50)" stroke="#ecd29b" strokeOpacity=".25" strokeWidth=".35" />
-      </g>
-      <circle cx="50" cy="50" r="9" fill={`url(#${glowId})`} />
-      <circle cx="50" cy="50" r="1.45" fill="#fff2c7" />
-      <g transform="translate(78 76)" stroke="#ead7ff" strokeWidth=".4">
-        <path d="M0 8 4-5 10 1 7 13Z" fill="#89d1c0" fillOpacity=".8" />
-        <path d="m4-5 3 6-3 4-4 3Z" fill="#d5fff1" fillOpacity=".5" />
-        <path d="M11 12 14 1 20 5 17 16Z" fill="#c884e7" fillOpacity=".75" />
-        <path d="m14 1 3 4-3 4-3 3Z" fill="#f2d7ff" fillOpacity=".5" />
+      <g className="galaxy-particles">
+        <rect width="100" height="100" fill="#05030a" />
+        <g fill="#eee6ff">
+          {BACKGROUND_STARS.map((star, index) => (
+            <circle key={`background-star-${index}`} cx={star.x} cy={star.y} r={star.r} opacity={star.opacity} />
+          ))}
+        </g>
+        <ellipse cx="50" cy="50" rx="44" ry="25" fill={`url(#${hazeId})`} transform="rotate(-18 50 50)" />
+        <g fill="#f7efff">
+          {GALAXY_PARTICLES.map((particle, index) => (
+            <circle key={`galaxy-particle-${index}`} cx={particle.x} cy={particle.y} r={particle.r} opacity={particle.opacity} />
+          ))}
+        </g>
+        <g fill="none" strokeLinecap="round">
+          <ellipse cx="50" cy="50" rx="38" ry="14" transform="rotate(-18 50 50)" stroke="#c99bf6" strokeOpacity=".22" strokeWidth=".22" />
+          <ellipse cx="50" cy="50" rx="31" ry="10" transform="rotate(-18 50 50)" stroke="#f0caff" strokeOpacity=".16" strokeWidth=".18" />
+          <path d="M19 44C29 26 57 18 77 31C86 38 78 51 66 58C51 67 28 65 22 54" stroke="#b776e6" strokeOpacity=".23" strokeWidth=".3" />
+        </g>
+        <circle cx="50" cy="50" r="12" fill={`url(#${coreId})`} />
+        <circle cx="50" cy="50" r="1.05" fill="#fff8dc" />
+        <g fill="none" stroke="#d9b5f6" strokeOpacity=".34" strokeWidth=".22">
+          <circle cx="50" cy="50" r="22" />
+          <path d="M50 27V73M27 50H73" />
+        </g>
+        <g fill="#d9bbf6" fillOpacity=".5" fontFamily="serif" fontSize="3.4" textAnchor="middle">
+          <text x="50" y="24">✦</text>
+          <text x="77" y="52">♒</text>
+          <text x="50" y="79">♍</text>
+        </g>
+        <g fill="none" stroke="#e4c8ff" strokeWidth=".3" strokeOpacity=".42">
+          <path d="M15 73 19 60 24 69 21 82Z" fill="#9d70c9" fillOpacity=".22" />
+          <path d="M79 24 83 14 88 22 85 32Z" fill="#b88de5" fillOpacity=".2" />
+          <path d="M15 73 19 60 21 70 21 82Z" />
+          <path d="M79 24 83 14 85 23 85 32Z" />
+        </g>
       </g>
     </svg>
   );

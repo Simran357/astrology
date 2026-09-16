@@ -158,7 +158,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <a href="#why">Against the Script</a>
           <a href="#story">The 6 Movements</a>
           <a href="#dilemmas">The Dilemmas</a>
-          <a href="#readings">Readings</a>
+          <a href="#about">The Philosophy</a>
           <a href="#questions">FAQ</a>
         </nav>
 
@@ -175,7 +175,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <a href="#why" onClick={() => setMobileOpen(false)}>Against the Script</a>
           <a href="#story" onClick={() => setMobileOpen(false)}>The 6 Movements</a>
           <a href="#dilemmas" onClick={() => setMobileOpen(false)}>The Dilemmas</a>
-          <a href="#readings" onClick={() => setMobileOpen(false)}>Readings</a>
+          <a href="#about" onClick={() => setMobileOpen(false)}>The Philosophy</a>
           <a href="#questions" onClick={() => setMobileOpen(false)}>FAQ</a>
           <button className="button-primary w-full cursor-pointer" onClick={() => go("onboarding")}>
             Begin Discovery →
@@ -194,9 +194,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <h1 className="display">Your chart<br/>is not your <em>fate.</em></h1>
             <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
             <div className="hero-actions">
-              <a className="button-primary" href="#readings">Explore readings <Down/></a>
+              <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow/></button>
               <a className="button-quiet" href="#story">How I read <Down/></a>
-              <button className="button-quiet cursor-pointer" onClick={() => go("chart")}>Calculate your birth chart <Arrow/></button>
+              <button className="button-quiet cursor-pointer" onClick={() => go("chart")}>Interactive birth wheel <Arrow/></button>
             </div>
             <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
           </div>
@@ -349,75 +349,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 04 / READINGS (ORIGINAL SECTION + APP ACCESS GRID)                 */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="readings" id="readings">
-          <div className="section-shell">
-            <div className="readings-intro">
-              <div>
-                <span className="eyebrow">04 / Self-guided interpretive catalog</span>
-                <h2 className="display">Choose your<br /><em className="serif">trouble.</em></h2>
-              </div>
-              <p>Direct, personal whole-sign chart calculations — without expensive consultation fees.</p>
-            </div>
-
-            <div className="reading-stack">
-              {[
-                ["I. The Aperture", "A first encounter with the machinery of your chart, Sun, Moon, and Rising.", "Instant digital synthesis", "Included"],
-                ["II. The Undertow", "A focused excavation of one question or relational dilemma that will not leave you alone.", "Interactive dilemma mirror", "Included"],
-                ["III. The Long Night", "A full natal portrait for the season when the old story stops working.", "Complete natal wheel & transits", "Included"],
-              ].map((r, i) => (
-                <article className="reading-card" key={r[0]}>
-                  <div className="reading-index">0{i + 1}</div>
-                  <div className="reading-main">
-                    <h3>{r[0]}</h3>
-                    <p>{r[1]}</p>
-                  </div>
-                  <div className="reading-details">
-                    <span>Format</span>
-                    <p>{r[2]}. Complete astrological cartography archive.</p>
-                  </div>
-                  <div className="reading-price">
-                    <strong>{r[3]}</strong>
-                    <button className="button-quiet cursor-pointer" onClick={() => go("onboarding")}>
-                      Explore <Arrow />
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="app-access-grid">
-              <button onClick={() => go("chart")} className="cursor-pointer">
-                <span>WHEEL</span>
-                <strong>Interactive Birth Chart</strong>
-                <small>Read the geometry of your natal sky →</small>
-              </button>
-              <button onClick={() => go("dashboard")} className="cursor-pointer">
-                <span>TODAY</span>
-                <strong>Sky Weather</strong>
-                <small>Tension, opportunity, and live transits →</small>
-              </button>
-              <button onClick={() => go("reading")} className="cursor-pointer">
-                <span>CONSULT</span>
-                <strong>AI Salon Inquiry</strong>
-                <small>Ask the Heretic about your chart →</small>
-              </button>
-              <button onClick={() => go("learn")} className="cursor-pointer">
-                <span>LIBRARY</span>
-                <strong>Learn the language</strong>
-                <small>Explore signs, planets, houses, and aspects →</small>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 05 / A NOTE FROM THE DESK                                          */}
+        {/* 04 / A NOTE FROM THE DESK                                          */}
         {/* ------------------------------------------------------------------ */}
         <section className="interlude" id="about">
           <div className="section-shell interlude-copy">
-            <span className="eyebrow">05 / A note from the desk</span>
+            <span className="eyebrow">04 / A note from the desk</span>
             <p>I am not here to make the universe seem nicer than it is. I am here to make your relationship to uncertainty more interesting.</p>
             <p className="pull-quote">“The chart is an argument. We get to edit the footnotes.”</p>
           </div>
@@ -428,12 +364,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 06 / BEFORE YOU CROSS THE THRESHOLD                                */}
+        {/* 05 / BEFORE YOU CROSS THE THRESHOLD                                */}
         {/* ------------------------------------------------------------------ */}
         <section className="threshold" id="threshold">
           <div className="section-shell">
             <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>
-              06 / Before you cross the threshold
+              05 / Before you cross the threshold
             </span>
             <h2 className="display">Bring the question you keep making smaller.</h2>
             <div className="threshold-grid">
@@ -453,12 +389,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 07 / FAQ                                                           */}
+        {/* 06 / FAQ                                                           */}
         {/* ------------------------------------------------------------------ */}
         <section className="faq" id="questions">
           <div className="section-shell faq-grid">
             <div className="faq-intro">
-              <span className="eyebrow">07 / Questions at the threshold</span>
+              <span className="eyebrow">06 / Questions at the threshold</span>
               <h2 className="display">Still skeptical?<br />Good.</h2>
               <p className="text-xs text-[#bfb7aa] mt-2 leading-relaxed">
                 AstroFindings (astrofindings.com) is dedicated to clean, honest self-inquiry without cosmic pretension.

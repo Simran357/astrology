@@ -23,7 +23,9 @@ export type PageId =
   | "timeline"
   | "relationships"
   | "tarot"
-  | "askai";
+  | "askai"
+  | "wellness"
+  | "palm";
 
 export interface TarotDrawResult {
   id: string;

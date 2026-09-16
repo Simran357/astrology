@@ -21,66 +21,66 @@ const YES_QUESTIONS = [
   {
     stepIndex: 4,
     qNumber: 1,
-    tag: "RELATIONAL DEFENSE · THE ICE WALL",
+    tag: "DETACHMENT · OVERTHINKING PATTERNS",
     question:
-      "Do you find yourself pulling away, going cold, and disappearing into silence the moment someone gets close enough to see your real mess — because detaching feels safer than being dropped?",
-    subtext: "Acknowledge the defense mechanism your nervous system built to protect your heart.",
+      "Do you detach and step back into silence the moment overthinking triggers your anxiety — because numbness feels safer than heartbreak?",
+    subtext: "Why you react this way: unearthing the planet placement where your defense mechanism was born.",
     options: [
       {
         id: "yes_retreat",
-        label: "YES — That is my exact defense. I retreat before I can be abandoned.",
+        label: "YES — I detach and step back. Overthinking triggers me to pull away before I get hurt.",
         whisper:
-          "Your detachment isn't coldness. It is an emergency brake built from past falls. Your chart will locate where safety was mistaken for silence.",
+          "Your detachment isn't coldness. Your chart locates the exact planet placement making you retreat when anxiety spikes.",
       },
       {
         id: "yes_freeze",
-        label: "YES — I freeze, go silent, and observe from behind an impenetrable wall.",
+        label: "YES — Anxiety freezes me. What triggers me makes me go silent and step back.",
         whisper:
-          "Silence was the only fortress that never gave them ammunition. In your birth sky, your Moon and 12th House hold the key to easing this vigilance.",
+          "Silence was built to avoid overwhelm. Your Moon and Saturn hold the blueprint of this thinking pattern.",
       },
     ],
   },
   {
     stepIndex: 5,
     qNumber: 2,
-    tag: "UNSEEN HEAVINESS · EMOTIONAL ISOLATION",
+    tag: "HEARTBREAK · SUPPRESSED EMOTIONS",
     question:
-      "Do you often feel like the unpaid emotional anchor for everyone else — absorbing their crises, listening to their problems — while secretly wondering if anyone would ever notice how heavy your own silence is?",
-    subtext: "Isolation is being surrounded by people who only love the version of you that serves them.",
+      "Do you keep a soft corner for people who hurt you, while feeling completely alone and suppressing your own tears?",
+    subtext: "Why you still have feelings, and what makes you suppress yourself without guilt.",
     options: [
       {
         id: "yes_anchor",
-        label: "YES — Painfully accurate. I carry everyone's weight while mine remains invisible.",
+        label: "YES — I hold soft corners and still have feelings, even through betrayal and heartbreak.",
         whisper:
-          "Belonging that requires continuous performance is an unpaid debt, not intimacy. Your 7th and 11th houses reveal why you attract one-sided bonds.",
+          "Your Venus and 7th House reveal why your feelings get hurt so easily and why you forgive betrayal.",
       },
       {
         id: "yes_alone",
-        label: "YES — I am always the strong one, but I feel completely alone in the dark.",
+        label: "YES — I suppress myself completely. I feel alone and carry difficult emotions in silence.",
         whisper:
-          "You learned early that being needy had consequences. Your chart proves you were built for reciprocal devotion, not endless caretaking.",
+          "Your chart proves that feeling alone is not a flaw — it reveals what they do which makes you cry.",
       },
     ],
   },
   {
     stepIndex: 6,
     qNumber: 3,
-    tag: "CAREER & SOUL CROSSROADS",
+    tag: "COMFORT ZONE · WHAT MAKES YOU SHINE",
     question:
-      "Are you quietly terrified that you are performing competence and keeping the peace inside a life or relationship you've already outgrown, while your real voice stays locked away?",
-    subtext: "The discomfort you feel is not a defect. It is your soul refusing to die inside an old container.",
+      "Are you trapped in your comfort zone, overwhelmed by why you react this way instead of stepping into what makes you shine?",
+    subtext: "Moving from emotional overwhelm and fear into your true celestial power.",
     options: [
       {
         id: "yes_hollow",
-        label: "YES — Constantly. I feel hollow inside and crave the unvarnished truth.",
+        label: "YES — Overwhelm keeps me in my comfort zone while what makes me shine stays locked inside.",
         whisper:
-          "A hollow throne. Your Midheaven and Saturn cycles will reveal the sacred vocation that will make your spirit come alive again.",
+          "Your Sun, Mars, and Midheaven expose the exact triggers keeping you small and how to break free.",
       },
       {
         id: "yes_leap",
-        label: "YES — I need the courage and cosmic timing to take the big leap.",
+        label: "YES — I need to understand why I react this way so I can finally step into what makes me shine.",
         whisper:
-          "Your restlessness is not recklessness; it is readiness. Transiting planets will pinpoint the exact window to step into your sovereign power.",
+          "Planetary shifts and transits are aligning right now to release unexplored emotions with no guilt.",
       },
     ],
   },
@@ -167,9 +167,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
         birthTime: data.birthTime || "12:00",
         birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
         interests: [
-          "The Ice Wall Defense",
-          "Unpaid Emotional Anchor",
-          "Sacred Career Crossroads",
+          "Detachment & Overthinking Patterns",
+          "Heartbreak & Suppressed Emotions",
+          "Comfort Zone & Stepping Into Power",
         ],
       });
       setStep(7);

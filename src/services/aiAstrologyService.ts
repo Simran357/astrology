@@ -58,7 +58,7 @@ interface QuestionContext {
 function classifyQuestion(question: string): QuestionContext {
   const q = question.toLowerCase();
 
-  // Love & Relationships
+  // Love, Relationships & Difficult Bonds
   if (
     q.includes("them") ||
     q.includes("him") ||
@@ -75,13 +75,21 @@ function classifyQuestion(question: string): QuestionContext {
     q.includes("miss") ||
     q.includes("silent") ||
     q.includes("ghost") ||
-    q.includes("feelings for") ||
+    q.includes("feelings") ||
     q.includes("cheating") ||
-    q.includes("trust") ||
-    q.includes("breakup")
+    q.includes("betray") ||
+    q.includes("soft corner") ||
+    q.includes("hurt") ||
+    q.includes("heartbreak") ||
+    q.includes("what they feel") ||
+    q.includes("how they see me")
   ) {
     let subTheme = "connection_status";
-    if (q.includes("text") || q.includes("silent") || q.includes("reach out") || q.includes("ghost")) {
+    if (q.includes("soft corner") || q.includes("still have feelings") || q.includes("betray") || q.includes("cheating") || q.includes("heartbreak")) {
+      subTheme = "betrayal_soft_corner";
+    } else if (q.includes("what they feel") || q.includes("how they see me") || q.includes("person might feel")) {
+      subTheme = "partner_perspective";
+    } else if (q.includes("text") || q.includes("silent") || q.includes("reach out") || q.includes("ghost")) {
       subTheme = "unspoken_communication";
     } else if (q.includes("ex") || q.includes("miss") || q.includes("let go")) {
       subTheme = "past_attachment";
@@ -91,37 +99,7 @@ function classifyQuestion(question: string): QuestionContext {
     return { category: "love", keywords: ["love", "partner", "feelings"], subTheme };
   }
 
-  // Career, Money & Purpose
-  if (
-    q.includes("career") ||
-    q.includes("job") ||
-    q.includes("stuck") ||
-    q.includes("work") ||
-    q.includes("money") ||
-    q.includes("income") ||
-    q.includes("finances") ||
-    q.includes("business") ||
-    q.includes("purpose") ||
-    q.includes("calling") ||
-    q.includes("boss") ||
-    q.includes("promotion") ||
-    q.includes("quit") ||
-    q.includes("interview") ||
-    q.includes("project") ||
-    q.includes("goals") ||
-    q.includes("success") ||
-    q.includes("fail")
-  ) {
-    let subTheme = "purpose_direction";
-    if (q.includes("stuck") || q.includes("unmotivated") || q.includes("burnout")) {
-      subTheme = "career_stagnation";
-    } else if (q.includes("money") || q.includes("finances") || q.includes("income")) {
-      subTheme = "financial_security";
-    }
-    return { category: "career", keywords: ["career", "direction", "purpose"], subTheme };
-  }
-
-  // Emotions, Anxiety & Mental State
+  // Emotions, Detachment, Suppression & Mental State
   if (
     q.includes("anxious") ||
     q.includes("anxiety") ||
@@ -134,16 +112,28 @@ function classifyQuestion(question: string): QuestionContext {
     q.includes("drained") ||
     q.includes("sad") ||
     q.includes("cry") ||
-    q.includes("weird") ||
-    q.includes("head") ||
-    q.includes("restless") ||
+    q.includes("makes you cry") ||
+    q.includes("alone") ||
+    q.includes("lonely") ||
+    q.includes("loneliness") ||
+    q.includes("detach") ||
+    q.includes("step back") ||
+    q.includes("suppress") ||
+    q.includes("react this way") ||
+    q.includes("triggers") ||
+    q.includes("comfort zone") ||
+    q.includes("shine") ||
     q.includes("why do i feel")
   ) {
     let subTheme = "nervous_system";
-    if (q.includes("overthink") || q.includes("head") || q.includes("racing")) {
+    if (q.includes("detach") || q.includes("step back") || q.includes("react this way")) {
+      subTheme = "detachment_defense";
+    } else if (q.includes("suppress") || q.includes("alone") || q.includes("lonely") || q.includes("cry")) {
+      subTheme = "emotional_suppression";
+    } else if (q.includes("comfort zone") || q.includes("shine") || q.includes("step into")) {
+      subTheme = "comfort_zone_shine";
+    } else if (q.includes("overthink") || q.includes("head") || q.includes("racing") || q.includes("triggers")) {
       subTheme = "mental_loops";
-    } else if (q.includes("tired") || q.includes("drained") || q.includes("burnout")) {
-      subTheme = "energy_depletion";
     }
     return { category: "emotions", keywords: ["emotions", "nervous system", "inner world"], subTheme };
   }
@@ -312,17 +302,21 @@ function synthesizeAstrologicalReading(
     const house7Area = HOUSE_LIFE_AREAS[7];
 
     let hook = `Let's be completely candid, ${firstName}. You're not asking because you're genuinely confused. You're asking because your gut already clocked the shift, but part of you is waiting for an outside confirmation so you don't feel foolish for feeling it so deeply.`;
-    if (subTheme === "unspoken_communication") {
+    if (subTheme === "betrayal_soft_corner") {
+      hook = `Why do you still hold a soft corner for someone who hurt or betrayed your trust, ${firstName}? Because in your chart, your devotion isn't a mechanical switch you can shut down when logic demands it. You don't just love people for how they behave; you see their unspoken wound, and that soft corner is your heart's refusal to become bitter.`;
+    } else if (subTheme === "partner_perspective") {
+      hook = `What does that person truly feel about you right now, ${firstName}? They felt the full weight of your presence, and when you stepped back into silence, it rattled them far deeper than any argument ever could. They know you gave them a rare, unguarded version of yourself.`;
+    } else if (subTheme === "unspoken_communication") {
       hook = `That silence between you two isn't neutral, ${firstName}. In astrology, silence is always an active choice. When someone goes quiet, they're showing you where their capacity ends.`;
     } else if (subTheme === "past_attachment") {
       hook = `You don't just miss people, ${firstName} — you miss who you allowed yourself to be around them. When you let someone past your gate, their frequency lingers in your space long after the logic tells you to close the chapter.`;
     }
 
-    const astrologicalAnalysis = `Look directly at your **Venus in ${vSign} in your ${vHouse}${getOrdinal(vHouse)} House** combined with your **${mSign} Moon**. In your chart, love isn't something you treat casually or keep at arm's length. You have an instinctual radar for emotional honesty. When someone behaves inconsistently, your nervous system registers it days before your head finds the words. Your ${mSign} Moon quietly demands emotional reciprocity, while your Venus in ${vSign} refuses to settle for half-hearted breadcrumbs.`;
+    const astrologicalAnalysis = `Look directly at your **Venus in ${vSign} in your ${vHouse}${getOrdinal(vHouse)} House** combined with your **${mSign} Moon**. In your chart, love isn't something you treat casually or keep at arm's length. You have an instinctual radar for emotional honesty. When someone behaves inconsistently or betrays your loyalty, your nervous system registers it days before your head finds the words. Your ${mSign} Moon quietly demands emotional reciprocity, while your Venus in ${vSign} refuses to settle for half-hearted breadcrumbs.`;
 
-    const transitContext = `Right now, with the ${currentMoonPhase} passing through ${currentMoonSign}, the sky is spotlighting unresolved emotional boundaries. If you've been carrying the weight of maintaining this dynamic alone, this planetary transit is specifically asking you to pull your energy back to center. Notice what happens when you stop doing all the emotional heavy lifting.`;
+    const transitContext = `Right now, with the ${currentMoonPhase} passing through ${currentMoonSign}, the sky is spotlighting unresolved emotional boundaries. If you've been carrying the weight of maintaining this dynamic alone, this planetary transit is specifically asking you to pull your energy back to center with no guilt. Notice what happens when you stop doing all the emotional heavy lifting.`;
 
-    const takeaway = `Stop rationalizing behavior you would never dish out yourself. The person meant for your life won't require you to decode every silence like an ancient script. Protect your peace first, and let the chips fall where they actually belong.`;
+    const takeaway = `Stop rationalizing behavior you would never dish out yourself. Keeping a soft corner for someone does not mean leaving your door unlocked. Protect your peace first, honor what they did that made you cry, and let the chips fall where they actually belong.`;
 
     return {
       text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,
@@ -363,24 +357,33 @@ function synthesizeAstrologicalReading(
     };
   }
 
-  /* ----------------------- 3. EMOTIONS & ANXIETY ----------------------- */
+  /* ----------------------- 3. EMOTIONS, DETACHMENT & ANXIETY ----------------------- */
   if (category === "emotions") {
     const mSign = moon?.sign || user.moonSign;
     const mHouse = moon?.house || 12;
     const mercSign = mercury?.sign || user.sunSign;
     const mercHouse = mercury?.house || 3;
+    const satSign = saturn?.sign || "Capricorn";
 
     consulted.push(`☽ Moon in ${mSign} (House ${mHouse})`);
     consulted.push(`☿ Mercury in ${mercSign} (House ${mercHouse})`);
+    if (saturn) consulted.push(`♄ Saturn in ${satSign}`);
     if (sun) consulted.push(`☉ Sun in ${sun.sign}`);
 
-    const hook = `This random heaviness isn't actually random, ${firstName}. You carry things quietly for days — absorbing other people's micro-reactions, holding back your own grievances, pretending you're totally unbothered — until your nervous system literally runs out of storage space.`;
+    let hook = `This random heaviness isn't actually random, ${firstName}. You carry things quietly for days — absorbing other people's micro-reactions, holding back your own grievances, pretending you're totally unbothered — until your nervous system literally runs out of storage space.`;
+    if (subTheme === "detachment_defense") {
+      hook = `You don't step back into silence because you've stopped caring, ${firstName}. You detach because overthinking and anxiety push your emotional threshold past red line. In your chart, going cold and stepping back is the emergency brake your nervous system built so you don't get destroyed by heartbreak.`;
+    } else if (subTheme === "emotional_suppression") {
+      hook = `What makes you suppress yourself until you feel completely alone in the dark, ${firstName}? You learned early that your messy feelings made other people uncomfortable. So you became the anchor for everyone else while leaving yourself with no one to lean on.`;
+    } else if (subTheme === "comfort_zone_shine") {
+      hook = `Your comfort zone is keeping you safe from judgment, ${firstName}, but it is suffocating what makes you shine. You've convinced yourself that staying small prevents mistakes, but hiding your light is the most exhausting mistake you can make.`;
+    }
 
-    const astrologicalAnalysis = `Your **Mercury in ${mercSign} in House ${mercHouse}** gives you an intensely observant mind that processes multiple timelines at once. But when paired with your **${mSign} Moon**, your instinct when overwhelmed is to internalize and over-analyze rather than speak up immediately. You try to 'think' your way out of a feeling that simply needs to be physically felt, rested, or released.`;
+    const astrologicalAnalysis = `Your **Mercury in ${mercSign} in House ${mercHouse}** gives you an intensely observant mind that loops through every detail and overthinks every word. When paired with your **${mSign} Moon in House ${mHouse}**, your immediate reaction to feeling overwhelmed or hurt is to swallow your words, suppress your tears, and retreat behind an impenetrable wall. You try to 'think' your way out of difficult emotions that simply require honest acknowledgment without guilt.`;
 
-    const transitContext = `Today's celestial atmosphere, with ${currentMoonPhase} in ${currentMoonSign}, pulls deep subconscious tides to the surface. It's not a crisis; it's a physiological check engine light asking you to pause.`;
+    const transitContext = `Today's celestial atmosphere, with ${currentMoonPhase} in ${currentMoonSign}, pulls deep subconscious tides to the surface. It is directly challenging your habit of isolating when things get tough. It's not a crisis; it's a physiological prompt asking you to drop the performance of invulnerability.`;
 
-    const takeaway = `Stop holding yourself to superhuman standards today. Drink water, step away from the notifications, and let yourself do absolutely nothing productive for an hour without feeling guilty. You don't have to earn your right to rest.`;
+    const takeaway = `Stop punishing yourself for feeling deeply. Detachment was a survival skill in your past, but in your present, it only guarantees that you stay lonely. Step out of your comfort zone, let yourself feel what hurts without guilt, and speak the truth you've been swallowing.`;
 
     return {
       text: `${hook}\n\n${astrologicalAnalysis}\n\n${transitContext}\n\n${takeaway}`,

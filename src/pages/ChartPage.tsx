@@ -12,6 +12,7 @@ import {
 } from "../components/icons/CelestialIcons";
 import { useApp } from "../context/AppContext";
 import { HOUSE_LIFE_AREAS } from "../data/houseLifeAreas";
+import { askAstrologyConsultant, AIResponse } from "../services/aiAstrologyService";
 
 interface ChartPageProps {
   onNavigate: (page: string) => void;
@@ -30,9 +31,26 @@ const PLANET_ICON_MAP: Record<string, (props: { size?: number; className?: strin
 };
 
 export default function ChartPage({ onNavigate }: ChartPageProps) {
-  const { user, highlightedPlanet, setHighlightedPlanet, isLoggedIn } = useApp();
+  const { user, highlightedPlanet, setHighlightedPlanet, isLoggedIn, liveTransits, navigateWithHighlight } = useApp();
   const [activeTab, setActiveTab] = useState(0);
   const [expandedPlanet, setExpandedPlanet] = useState<string | null>(null);
+  const [psychQuestion, setPsychQuestion] = useState("");
+  const [isAskingAI, setIsAskingAI] = useState(false);
+  const [aiAnswer, setAiAnswer] = useState<AIResponse | null>(null);
+
+  const handleAskPsychAI = async (qText?: string) => {
+    const text = qText || psychQuestion;
+    if (!text.trim()) return;
+    setIsAskingAI(true);
+    try {
+      const res = await askAstrologyConsultant(user, liveTransits, text);
+      setAiAnswer(res);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAskingAI(false);
+    }
+  };
 
   if (!isLoggedIn) {
     return (
@@ -189,42 +207,79 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
             {/* Tab content */}
             {activeTab === 0 && (
-              <div className="space-y-1">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-[11px] font-mono pb-2 border-b border-[rgba(238,93,52,0.12)]">
+                  <span className="text-[#bfb7aa]">FREE: Spatial Coordinates</span>
+                  <span className="text-[#ee5d34]">PAID: Psychological Synthesis</span>
+                </div>
                 {placements.map((planet) => {
                   const iconRenderer = PLANET_ICON_MAP[planet.planet] || ((p: any) => <SunSymbol {...p} />);
                   const isHighlighted = highlightedPlanet?.toLowerCase() === planet.planet.toLowerCase();
+                  const isExpanded = expandedPlanet === planet.planet;
                   return (
-                    <div key={planet.planet}>
+                    <div key={planet.planet} className="border border-[rgba(238,93,52,0.1)] bg-[rgba(31,24,48,0.6)] rounded-sm overflow-hidden">
                       <button
                         onClick={() => {
-                          const next = expandedPlanet === planet.planet ? null : planet.planet;
+                          const next = isExpanded ? null : planet.planet;
                           setExpandedPlanet(next);
                           setHighlightedPlanet(next);
                         }}
-                        className={`w-full flex items-center gap-4 py-3 px-3 transition-colors rounded-sm group text-left cursor-pointer ${
+                        className={`w-full flex items-center gap-4 py-3 px-3 transition-colors text-left cursor-pointer ${
                           isHighlighted ? "bg-[rgba(238,93,52,0.1)] border-l-2 border-[#ee5d34]" : "hover:bg-[rgba(238,93,52,0.04)]"
                         }`}>
                         <div className="shrink-0">{iconRenderer({ size: 18 })}</div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline gap-2 flex-wrap">
-                            <span className="text-sm text-[#eee5d3]">{planet.planet}</span>
-                            <span className="font-mono text-xs text-[#bfb7aa]">{planet.sign} {Math.round(planet.degrees % 30)}°</span>
+                            <span className="text-sm font-serif text-[#eee5d3]">{planet.planet}</span>
+                            <span className="font-mono text-xs text-[#ee5d34]">{planet.sign} {Math.round(planet.degrees % 30)}°</span>
                           </div>
-                          <p className="text-xs text-[#bfb7aa] mt-0.5">{planet.house}th House</p>
+                          <p className="text-xs text-[#bfb7aa] mt-0.5">{planet.house}th House · {HOUSE_LIFE_AREAS[planet.house]?.domainLabel || "Life Area"}</p>
                         </div>
-                        <span className={`text-[#bfb7aa] text-xs transition-transform ${expandedPlanet === planet.planet ? "rotate-180" : ""}`}>▾</span>
+                        <span className={`text-[#bfb7aa] text-xs transition-transform ${isExpanded ? "rotate-180" : ""}`}>▾</span>
                       </button>
-                      {expandedPlanet === planet.planet && (
-                        <div className="px-4 pb-3 ml-10">
-                          <p className="text-sm text-[#bfb7aa] leading-relaxed">
-                            {planet.meaning || `${planet.planet} in ${planet.sign} in your ${planet.house}th House.`}
-                          </p>
-                          <button onClick={() => onNavigate("reading")} className="mt-2 text-xs text-[#ee5d34] hover:text-[#f58a6b] transition-colors cursor-pointer">
-                            Deep dive →
-                          </button>
+
+                      {isExpanded && (
+                        <div className="px-4 pb-4 pt-2 border-t border-[rgba(238,93,52,0.08)] bg-[rgba(20,15,35,0.6)] space-y-3">
+                          {/* Free Layer */}
+                          <div>
+                            <span className="text-[10px] font-mono text-[#bfb7aa] uppercase block">
+                              Free Discovery · Placement Location
+                            </span>
+                            <p className="text-xs text-[#eee5d3] leading-relaxed mt-0.5">
+                              {planet.planet} sits in {planet.sign} in your {planet.house}th House. {planet.meaning}
+                            </p>
+                          </div>
+
+                          {/* Paid Deep Layer */}
+                          <div className="p-3 border border-[rgba(238,93,52,0.25)] bg-[rgba(238,93,52,0.06)] rounded-sm space-y-1.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-mono text-[#ee5d34] uppercase font-semibold">
+                                ✦ Deep Psychological Meaning (Planet + Sign + House)
+                              </span>
+                              <span className="text-[9px] font-mono px-1.5 py-0.5 bg-[rgba(238,93,52,0.2)] text-[#ee5d34] rounded-sm">
+                                AI SYNTHESIS
+                              </span>
+                            </div>
+                            <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                              This exact combination explains why you react this way under pressure: your {planet.planet} instinct filters through {planet.sign}'s defense mechanisms inside your {planet.house}th House realm. It triggers your overthinking and dictates where you hold an unspoken soft corner.
+                            </p>
+                            <div className="pt-1 flex items-center justify-between gap-2 flex-wrap">
+                              <button
+                                onClick={() => onNavigate("askai")}
+                                className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
+                              >
+                                Ask AI: "What does my {planet.planet} say about my triggers?" →
+                              </button>
+                              <button
+                                onClick={() => navigateWithHighlight("learn", planet.planet)}
+                                className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                              >
+                                Learn more about {planet.planet} →
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       )}
-                      <div className="h-px bg-[rgba(238,93,52,0.06)] mx-3"/>
                     </div>
                   );
                 })}
@@ -286,12 +341,96 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                 <p className="text-sm text-[#bfb7aa] leading-relaxed">
                   Your <strong className="text-[#eee5d3]">{user.risingSign} Ascendant</strong> shapes how you first meet the world — offering a perceptive and protective presence that guards your inner sanctuary.
                 </p>
-                <button onClick={() => onNavigate("reading")}
-                  className="mt-2 px-6 py-3 bg-[#ee5d34] text-[#0e0a17] text-sm font-medium hover:bg-[#f58a6b] transition-colors rounded-sm w-full cursor-pointer">
+                <button
+                  onClick={() => onNavigate("reading")}
+                  className="mt-2 px-6 py-3 bg-[#ee5d34] text-[#0e0a17] text-sm font-medium hover:bg-[#f58a6b] transition-colors rounded-sm w-full cursor-pointer"
+                >
                   Read the full interpretation →
                 </button>
               </div>
             )}
+            <div className="mt-8 border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.85)] p-5 rounded-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.12)] pb-2">
+                <span className="text-xs font-mono uppercase text-[#ee5d34] tracking-wider">
+                  ✦ Deep Psychological Chart Inquiry
+                </span>
+                <span className="text-[10px] font-mono text-[#bfb7aa]">
+                  Grounded in Whole-Sign Ephemeris
+                </span>
+              </div>
+              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                Tap an unspoken inquiry below or ask your own question to understand why you react this way through your natal placements:
+              </p>
+
+              {/* Psychological Chips */}
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "Why do I detach and step back into silence?",
+                  "What triggers my overthinking and anxiety?",
+                  "Why do I still hold a soft corner for those who hurt me?",
+                  "What makes me suppress myself, and what makes me shine?",
+                  "What triggers make me cry, and what is my comfort zone?",
+                ].map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => {
+                      setPsychQuestion(q);
+                      handleAskPsychAI(q);
+                    }}
+                    className="text-[11px] px-2.5 py-1.5 border border-[rgba(238,93,52,0.15)] bg-[rgba(20,15,35,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm transition-colors text-left cursor-pointer"
+                  >
+                    ✦ {q}
+                  </button>
+                ))}
+              </div>
+
+              {/* Input row */}
+              <div className="flex gap-2 pt-1">
+                <input
+                  type="text"
+                  value={psychQuestion}
+                  onChange={(e) => setPsychQuestion(e.target.value)}
+                  placeholder="Ask why you react this way, or what triggers your heart..."
+                  className="flex-1 bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.25)] rounded-sm px-3 py-2 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                />
+                <button
+                  disabled={isAskingAI || !psychQuestion.trim()}
+                  onClick={() => handleAskPsychAI()}
+                  className="button-primary cursor-pointer text-xs py-2 px-3 whitespace-nowrap disabled:opacity-50"
+                >
+                  {isAskingAI ? "Consulting..." : "Send Inquiry →"}
+                </button>
+              </div>
+
+              {/* AI Response Display */}
+              {aiAnswer && (
+                <div className="mt-4 p-4 border border-[#ee5d34] bg-[rgba(20,15,35,0.9)] rounded-sm space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.15)] pb-1.5">
+                    <span className="text-[11px] font-mono text-[#ee5d34] uppercase font-semibold">
+                      ✦ Astrological Mirror ({aiAnswer.category})
+                    </span>
+                    <button
+                      onClick={() => setAiAnswer(null)}
+                      className="text-[10px] text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
+                  <p className="text-xs text-[#eee5d3] leading-relaxed whitespace-pre-line">
+                    {aiAnswer.text}
+                  </p>
+                  {aiAnswer.consultedPlanets && (
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {aiAnswer.consultedPlanets.map((p, idx) => (
+                        <span key={idx} className="text-[9px] font-mono px-1.5 py-0.5 bg-[rgba(238,93,52,0.12)] text-[#bfb7aa] rounded-sm">
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

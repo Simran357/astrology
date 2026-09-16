@@ -246,6 +246,10 @@
 .button-quiet:hover svg { transform: translateY(3px); }
 .hero-note { border-left: 1px solid var(--rust); color: var(--paper-dim); font: italic 1rem/1.5 var(--app-font-serif); margin-top: 64px; max-width: 310px; padding-left: 16px; }
 .hero-art { align-items: center; animation: rise-in 1.1s .25s both cubic-bezier(.2,.8,.2,1); display: flex; justify-content: center; min-height: 530px; position: relative; }
+.hero-galaxy { height: min(50vw, 650px); left: 50%; max-height: 650px; max-width: 650px; pointer-events: none; position: absolute; top: 50%; transform: translate(-50%, -50%); width: min(50vw, 650px); z-index: 0; }
+.galaxy-spiral { animation: galaxy-drift 28s linear infinite; transform-origin: center; }
+.galaxy-orbits { animation: galaxy-drift-reverse 36s linear infinite; transform-origin: 50px 50px; }
+.galaxy-crystals { animation: crystal-float 5s ease-in-out infinite; transform-origin: 78px 76px; }
 .orbit { border: 1px solid hsl(42 33% 89% / .22); border-radius: 50%; height: min(39vw, 530px); position: absolute; transform: rotate(-18deg); width: min(39vw, 530px); }
 .orbit::before, .orbit::after { border: 1px solid hsl(163 31% 58% / .45); border-radius: 50%; content: ''; inset: 12%; position: absolute; }
 .orbit::after { border-color: hsl(16 79% 61% / .45); inset: 29%; }
@@ -379,6 +383,13 @@
 .footer-line { align-items: center; border-top: 1px solid hsl(259 30% 8% / .25); display: flex; justify-content: space-between; margin-top: 112px; padding-top: 22px; }
 .footer-line span { font: 500 .62rem/1 var(--app-font-mono); letter-spacing: .1em; text-transform: uppercase; }
 
+@keyframes galaxy-drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes galaxy-drift-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes crystal-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@media (prefers-reduced-motion: reduce) {
+  .galaxy-spiral, .galaxy-orbits, .galaxy-crystals { animation: none; }
+}
+
 @keyframes rise-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -428,7 +439,7 @@
 }
 /* Shared app shell */
 .app-page { min-height:100vh; background:var(--ink); color:var(--paper); }
-.app-page .text-[#05060f], .app-page .text-\[\#05060f\] { color:var(--ink) !important; }
+  .app-page .text-\[\#05060f\] { color:var(--ink) !important; }
 .app-page button { cursor:pointer; }
 .app-page a { transition: color .2s ease, border-color .2s ease, background .2s ease; }
 @media (max-width: 768px) {

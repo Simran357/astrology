@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import GalaxyCanvas from "../components/GalaxyCanvas";
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -224,6 +225,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
           </div>
           <div className="hero-art">
+            <GalaxyCanvas className="hero-galaxy" opacity={0.92} />
             <div className="orbit"><span className="orbit-line"/><span className="orbit-dot"/><span className="orbit-dot sage"/></div>
             <span className="hero-side-label">A study in contradiction</span>
             <div className="chart-card">

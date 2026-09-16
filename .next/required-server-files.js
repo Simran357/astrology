@@ -105,7 +105,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Users/zestgeek-31/Downloads/The-Astral-Heretic-Premium-UI-Complete",
+    "outputFileTracingRoot": "/vercel/share/v0-project",
     "enablePrerenderSourceMaps": true,
     "cacheComponents": false,
     "cacheLife": {
@@ -320,13 +320,13 @@ self.__SERVER_FILES_MANIFEST={
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.mjs",
-    "repoRoot": "/Users/zestgeek-31/Downloads/The-Astral-Heretic-Premium-UI-Complete",
+    "repoRoot": "/vercel/share/v0-project",
     "turbopack": {
-      "root": "/Users/zestgeek-31/Downloads/The-Astral-Heretic-Premium-UI-Complete"
+      "root": "/vercel/share/v0-project"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "/Users/zestgeek-31/Downloads/The-Astral-Heretic-Premium-UI-Complete",
+  "appDir": "/vercel/share/v0-project",
   "relativeAppDir": "",
   "files": [
     ".next/package.json",

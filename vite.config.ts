@@ -99,8 +99,11 @@ function astrologyServerPlugin(): Plugin {
         const urlPath = req.url?.split('?')[0];
         if (urlPath?.endsWith('/api/astrology/reading') && req.method === 'POST') {
           try {
-            const mod = await server.ssrLoadModule('./src/server/astrologyApiServer.ts');
-            return mod.astrologyApiMiddleware()(req, res, next);
+            const ssrLoad = (server as any).ssrLoadModule;
+            if (ssrLoad) {
+              const mod = await ssrLoad('./src/server/astrologyApiServer.ts');
+              return mod.astrologyApiMiddleware()(req, res, next);
+            }
           } catch (err: any) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');

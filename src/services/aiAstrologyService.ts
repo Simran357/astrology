@@ -552,7 +552,7 @@ export async function getPersonalizedAstrologyReading({
           { planet: "Sun", sign: user.sunSign, house: user.placements.find((p) => p.planet === "Sun")?.house || 1, influence: "Conscious Will" },
           { planet: "Moon", sign: user.moonSign, house: user.placements.find((p) => p.planet === "Moon")?.house || 4, influence: "Emotional Sanctuary" },
         ],
-        relevantTransits: liveTransits?.activeShifts?.slice(0, 2).map((s) => ({ transit: s.transit, impact: s.impact })) || [],
+        relevantTransits: liveTransits?.activeShifts?.slice(0, 2).map((s) => ({ transit: s.transit || "", impact: s.impact || "" })) || [],
         engineUsed: `${settings.provider.toUpperCase()} (${settings.model})`,
         isApiGenerated: true,
       };
@@ -623,7 +623,7 @@ export async function getPersonalizedAstrologyReading({
       house: 1,
       influence: cp,
     })),
-    relevantTransits: liveTransits?.activeShifts?.slice(0, 2).map((s) => ({ transit: s.transit, impact: s.impact })) || [],
+    relevantTransits: liveTransits?.activeShifts?.slice(0, 2).map((s) => ({ transit: s.transit || "", impact: s.impact || "" })) || [],
     engineUsed: "Free Built-in Ephemeris Synthesis",
     isApiGenerated: false,
   };

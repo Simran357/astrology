@@ -408,7 +408,10 @@ export const AppProvider: React.FC<{
         toggleMembership,
         isLoggedIn,
         login,
+        signup,
+        loginWithGoogle,
         logout,
+        isSupabaseReady,
       }}
     >
       {children}

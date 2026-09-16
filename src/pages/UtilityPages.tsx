@@ -1534,39 +1534,49 @@ export function AskAIPage({ onNavigate }: Props) {
         </div>
 
         {/* Coordinate Pillars */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☉ Sun Luminary</span>
-            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.sunSign}</div>
-            <span className="text-[10px] text-[#bfb7aa] block">
-              {user.sunHouse ? `House ${user.sunHouse} · Conscious Will` : "Vital Purpose"}
-            </span>
-          </div>
+        {(() => {
+          const sunHouse = user.placements?.find((p) => p.planet === "Sun")?.house;
+          const moonHouse = user.placements?.find((p) => p.planet === "Moon")?.house;
+          const transSunSign = liveTransits.transitingPlacements?.find((p) => p.planet === "Sun")?.sign || "Virgo";
+          const transMoonSign = liveTransits.moonPhase?.sign || "Scorpio";
+          const retroCount = (liveTransits.retrogrades || []).length;
 
-          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☽ Moon Core</span>
-            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.moonSign}</div>
-            <span className="text-[10px] text-[#bfb7aa] block">
-              {user.moonHouse ? `House ${user.moonHouse} · Instinct & Care` : "Subconscious Depths"}
-            </span>
-          </div>
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☉ Sun Luminary</span>
+                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.sunSign}</div>
+                <span className="text-[10px] text-[#bfb7aa] block">
+                  {sunHouse ? `House ${sunHouse} · Conscious Will` : "Vital Purpose"}
+                </span>
+              </div>
 
-          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-            <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">↑ Ascendant</span>
-            <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.risingSign}</div>
-            <span className="text-[10px] text-[#bfb7aa] block">Sovereign Facade & Mask</span>
-          </div>
+              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☽ Moon Core</span>
+                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.moonSign}</div>
+                <span className="text-[10px] text-[#bfb7aa] block">
+                  {moonHouse ? `House ${moonHouse} · Instinct & Care` : "Subconscious Depths"}
+                </span>
+              </div>
 
-          <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-            <span className="text-[10px] font-mono text-[#d4af37] block uppercase">☿ Active Transits</span>
-            <div className="font-serif text-sm text-[#eee5d3] font-medium truncate">
-              {liveTransits.sunSign} Sun · {liveTransits.moonSign} Moon
+              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">↑ Ascendant</span>
+                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.risingSign}</div>
+                <span className="text-[10px] text-[#bfb7aa] block">Sovereign Facade & Mask</span>
+              </div>
+
+              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+                <span className="text-[10px] font-mono text-[#d4af37] block uppercase">☿ Active Transits</span>
+                <div className="font-serif text-sm text-[#eee5d3] font-medium truncate">
+                  {transSunSign} Sun · {transMoonSign} Moon
+                </div>
+                <span className="text-[10px] text-[#bfb7aa] block truncate">
+                  {retroCount} Retrograde(s)
+                </span>
+              </div>
             </div>
-            <span className="text-[10px] text-[#bfb7aa] block truncate">
-              {liveTransits.retrogrades.length} Retrograde(s)
-            </span>
-          </div>
-        </div>
+          );
+        })()}
       </div>
 
       {/* 2. ENGINE & API CONFIGURATION MODAL / DRAWER */}

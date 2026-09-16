@@ -172,19 +172,19 @@ export function astrologyApiMiddleware(): Connect.NextHandleFunction {
         // 3. Check for Second Person Chart (Synastry)
         let secondPersonChart = null;
         let hasSecondPerson = false;
-        if (
-          payload.optionalSecondPerson &&
-          payload.optionalSecondPerson.birthDate
-        ) {
+        if (payload.optionalSecondPerson?.birthDate) {
           const sp = payload.optionalSecondPerson;
-          secondPersonChart = calculateNatalEphemeris(
-            sp.birthDate,
-            sp.birthTime || "12:00",
-            sp.latitude || 30.2672,
-            sp.longitude || -97.7431,
-            sp.timezone || "America/Chicago"
-          );
-          hasSecondPerson = true;
+          const spBirthDate = sp.birthDate;
+          if (spBirthDate) {
+            secondPersonChart = calculateNatalEphemeris(
+              spBirthDate,
+              sp.birthTime || "12:00",
+              sp.latitude || 30.2672,
+              sp.longitude || -97.7431,
+              sp.timezone || "America/Chicago"
+            );
+            hasSecondPerson = true;
+          }
         }
 
         // 4. Mind Reading Protection Directive

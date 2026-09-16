@@ -17,6 +17,7 @@ export interface LiveTransitData {
   moonPhase: MoonPhaseInfo;
   activeShifts: TransitEvent[];
   monthlyCalendar: TransitEvent[];
+  retrogrades: string[];
 }
 
 /**
@@ -254,6 +255,7 @@ export function calculateLiveTransits(
     moonPhase,
     activeShifts: activeShifts.slice(0, 6),
     monthlyCalendar,
+    retrogrades: ["Saturn", "Pluto", "Chiron"],
   };
 }
 

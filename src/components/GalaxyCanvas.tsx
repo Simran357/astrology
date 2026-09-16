@@ -5,91 +5,79 @@ interface GalaxyCanvasProps {
   opacity?: number;
 }
 
-const BACKGROUND_STARS = Array.from({ length: 52 }, (_, index) => {
-  const x = (index * 47 + 13) % 100;
-  const y = (index * 71 + 9) % 100;
-  return { x, y, r: index % 9 === 0 ? 0.28 : 0.12 + (index % 4) * 0.04, opacity: 0.28 + (index % 5) * 0.1 };
-});
+const stars = Array.from({ length: 84 }, (_, index) => ({
+  x: (index * 47 + 11) % 100,
+  y: (index * 73 + 7) % 100,
+  r: index % 17 === 0 ? 0.22 : 0.07 + (index % 4) * 0.035,
+  opacity: 0.24 + (index % 6) * 0.1,
+}));
 
-const GALAXY_PARTICLES = Array.from({ length: 430 }, (_, index) => {
-  const arm = index % 2 === 0 ? 1 : -1;
-  const distance = 1.5 + ((index * 29) % 100) * 0.47;
-  const angle = index * 0.205 + distance * 0.105 * arm;
-  const scatter = (((index * 19) % 17) - 8) * (0.12 + distance * 0.008);
-  const flatten = 0.43;
-  const x = 50 + Math.cos(angle) * distance + scatter;
-  const y = 50 + Math.sin(angle) * distance * flatten + scatter * 0.45;
-  const edgeFade = Math.max(0.18, 1 - distance / 58);
+const particles = Array.from({ length: 560 }, (_, index) => {
+  const radius = 3 + ((index * 37) % 100) * 0.48;
+  const arm = index % 2 ? 1 : -1;
+  const angle = index * 0.19 + radius * 0.12 * arm;
+  const spread = (((index * 23) % 19) - 9) * (0.08 + radius * 0.006);
+  const x = 50 + Math.cos(angle) * radius + spread;
+  const y = 50 + Math.sin(angle) * radius * 0.46 + spread * 0.34;
   return {
     x,
     y,
-    r: index % 31 === 0 ? 0.36 : index % 7 === 0 ? 0.23 : 0.105 + (index % 3) * 0.035,
-    opacity: edgeFade * (0.42 + (index % 5) * 0.11),
+    r: index % 37 === 0 ? 0.24 : index % 9 === 0 ? 0.16 : 0.055 + (index % 3) * 0.025,
+    opacity: Math.max(0.18, 0.86 - radius / 70) * (0.62 + (index % 5) * 0.08),
   };
 });
 
+function Crystal({ x, y, scale = 1, rotate = 0 }: { x: number; y: number; scale?: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate}) scale(${scale})`} fill="none" stroke="#d9caff" strokeWidth=".22" strokeLinejoin="round">
+      <path d="M0-9 2.5-4 2 8 0 11-2 8-2.5-4Z" fill="#bda7f4" fillOpacity=".7" />
+      <path d="M0-9 2.5-4 0-2-2.5-4Z" fill="#f0e9ff" fillOpacity=".8" />
+      <path d="M0-2 2 8 0 11-1.1 2Z" fill="#8f7bda" fillOpacity=".62" />
+      <path d="M0-2-2 8-1.1 2Z" fill="#ded5ff" fillOpacity=".55" />
+    </g>
+  );
+}
+
 export default function GalaxyCanvas({ className = "", opacity = 1 }: GalaxyCanvasProps) {
   const id = useId().replace(/:/g, "");
-  const coreId = `${id}-core`;
-  const hazeId = `${id}-haze`;
-
   return (
-    <svg
-      className={className}
-      style={{ opacity }}
-      viewBox="0 0 100 100"
-      role="img"
-      aria-label="A still particle galaxy shaped like an astrological chart"
-      preserveAspectRatio="xMidYMid slice"
-    >
+    <svg className={className} style={{ opacity }} viewBox="0 0 100 100" role="img" aria-label="A still purple astrological galaxy with stars, planets, zodiac symbols, and crystals" preserveAspectRatio="xMidYMid slice">
       <defs>
-        <radialGradient id={coreId} cx="50%" cy="50%" r="50%">
-          <stop offset="0" stopColor="#fff9e9" stopOpacity="1" />
-          <stop offset="0.12" stopColor="#f2d6ff" stopOpacity="0.96" />
-          <stop offset="0.34" stopColor="#bd83e8" stopOpacity="0.4" />
-          <stop offset="1" stopColor="#6e3caf" stopOpacity="0" />
+        <radialGradient id={`${id}-core`} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff9df" />
+          <stop offset=".13" stopColor="#ffd9c8" stopOpacity=".98" />
+          <stop offset=".36" stopColor="#d69bff" stopOpacity=".58" />
+          <stop offset="1" stopColor="#6f3fd0" stopOpacity="0" />
         </radialGradient>
-        <radialGradient id={hazeId} cx="50%" cy="50%" r="50%">
-          <stop offset="0" stopColor="#d7a9ff" stopOpacity="0.2" />
-          <stop offset="0.55" stopColor="#7b43c3" stopOpacity="0.08" />
-          <stop offset="1" stopColor="#05030a" stopOpacity="0" />
+        <radialGradient id={`${id}-mist`} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#c48cff" stopOpacity=".28" />
+          <stop offset=".62" stopColor="#6244d5" stopOpacity=".1" />
+          <stop offset="1" stopColor="#02040d" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id={`${id}-planet`} x1="0" x2="1" y1="0" y2="1"><stop stopColor="#f0d7ff" /><stop offset="1" stopColor="#8160df" /></linearGradient>
       </defs>
+      <rect width="100" height="100" fill="#02040d" />
       <g className="galaxy-particles">
-        <rect width="100" height="100" fill="#05030a" />
-        <g fill="#eee6ff">
-          {BACKGROUND_STARS.map((star, index) => (
-            <circle key={`background-star-${index}`} cx={star.x} cy={star.y} r={star.r} opacity={star.opacity} />
-          ))}
+        <g fill="#f5edff">{stars.map((star, index) => <circle key={`star-${index}`} cx={star.x} cy={star.y} r={star.r} opacity={star.opacity} />)}</g>
+        <ellipse cx="50" cy="50" rx="48" ry="27" fill={`url(#${id}-mist)`} transform="rotate(-18 50 50)" />
+        <g fill="#c6a9ff">{particles.map((particle, index) => <circle key={`particle-${index}`} cx={particle.x} cy={particle.y} r={particle.r} opacity={particle.opacity} />)}</g>
+        <g fill="none" stroke="#a47bea" strokeOpacity=".38" strokeWidth=".2">
+          <ellipse cx="50" cy="50" rx="43" ry="16" transform="rotate(-18 50 50)" />
+          <ellipse cx="50" cy="50" rx="35" ry="12" transform="rotate(-18 50 50)" />
+          <ellipse cx="50" cy="50" rx="48" ry="29" transform="rotate(-18 50 50)" />
         </g>
-        <ellipse cx="50" cy="50" rx="44" ry="25" fill={`url(#${hazeId})`} transform="rotate(-18 50 50)" />
-        <g fill="#f7efff">
-          {GALAXY_PARTICLES.map((particle, index) => (
-            <circle key={`galaxy-particle-${index}`} cx={particle.x} cy={particle.y} r={particle.r} opacity={particle.opacity} />
-          ))}
+        <circle cx="50" cy="50" r="15" fill={`url(#${id}-core)`} />
+        <circle cx="50" cy="50" r="1.4" fill="#fff8db" />
+        <g fill="#f2e8ff" stroke="#bea8e9" strokeWidth=".16" textAnchor="middle" fontFamily="serif">
+          <circle cx="60" cy="12" r="3.2" fill="none" /><text x="60" y="13.4" fontSize="4">♊</text>
+          <circle cx="19" cy="78" r="3.2" fill="none" /><text x="19" y="79.5" fontSize="4">♓</text>
+          <circle cx="87" cy="70" r="3.2" fill="none" /><text x="87" y="71.5" fontSize="4">♒</text>
         </g>
-        <g fill="none" strokeLinecap="round">
-          <ellipse cx="50" cy="50" rx="38" ry="14" transform="rotate(-18 50 50)" stroke="#c99bf6" strokeOpacity=".22" strokeWidth=".22" />
-          <ellipse cx="50" cy="50" rx="31" ry="10" transform="rotate(-18 50 50)" stroke="#f0caff" strokeOpacity=".16" strokeWidth=".18" />
-          <path d="M19 44C29 26 57 18 77 31C86 38 78 51 66 58C51 67 28 65 22 54" stroke="#b776e6" strokeOpacity=".23" strokeWidth=".3" />
-        </g>
-        <circle cx="50" cy="50" r="12" fill={`url(#${coreId})`} />
-        <circle cx="50" cy="50" r="1.05" fill="#fff8dc" />
-        <g fill="none" stroke="#d9b5f6" strokeOpacity=".34" strokeWidth=".22">
-          <circle cx="50" cy="50" r="22" />
-          <path d="M50 27V73M27 50H73" />
-        </g>
-        <g fill="#d9bbf6" fillOpacity=".5" fontFamily="serif" fontSize="3.4" textAnchor="middle">
-          <text x="50" y="24">✦</text>
-          <text x="77" y="52">♒</text>
-          <text x="50" y="79">♍</text>
-        </g>
-        <g fill="none" stroke="#e4c8ff" strokeWidth=".3" strokeOpacity=".42">
-          <path d="M15 73 19 60 24 69 21 82Z" fill="#9d70c9" fillOpacity=".22" />
-          <path d="M79 24 83 14 88 22 85 32Z" fill="#b88de5" fillOpacity=".2" />
-          <path d="M15 73 19 60 21 70 21 82Z" />
-          <path d="M79 24 83 14 85 23 85 32Z" />
-        </g>
+        <path d="M25 24a4.2 4.2 0 1 0 4.8 6.9A5.4 5.4 0 1 1 25 24Z" fill="#dca6ff" />
+        <g transform="translate(85 31)"><circle r="3.2" fill="#f2d9ff" /><path d="M0-6 1-3 3-5 2-2 5-3 3 0 6 1 3 2 5 5 2 3 1 6 0 3-2 5-1 2-4 3-2 0-5-1-2-2-3-5-1-3Z" fill="#e5c9ff" /></g>
+        <g transform="translate(84 54)"><circle r="3.5" fill={`url(#${id}-planet)`} /><ellipse rx="6" ry="1.2" fill="none" stroke="#c8b4ff" strokeWidth=".45" transform="rotate(-22)" /></g>
+        <Crystal x={13} y={36} scale={1.1} rotate={5} /><Crystal x={73} y={77} scale={1.2} rotate={16} />
+        <g fill="#f2d5ff"><path d="m42 87 1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1Z" /><path d="m48 31 .7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7Z" /><path d="m19 52 .6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6Z" /></g>
       </g>
     </svg>
   );

@@ -18,11 +18,11 @@ const DEFAULT_PLANETS = [
   { name: "Mars", glyph: "♂", sign: 8, degree: 22, house: 1, color: "#e07070" },
   { name: "Jupiter", glyph: "♃", sign: 11, degree: 3, house: 3, color: "#f0c060" },
   { name: "Saturn", glyph: "♄", sign: 6, degree: 18, house: 12, color: "#8aabcc" },
-  { name: "Asc", glyph: "AC", sign: 8, degree: 14, house: 1, color: "#ee5d34" },
+  { name: "Asc", glyph: "AC", sign: 8, degree: 14, house: 1, color: "#EAC157" },
 ];
 
 const DEFAULT_ASPECTS = [
-  { p1: 0, p2: 2, type: "conjunction", color: "rgba(238,93,52,0.5)" },
+  { p1: 0, p2: 2, type: "conjunction", color: "rgba(234,193,87,0.5)" },
   { p1: 0, p2: 4, type: "trine", color: "rgba(100,180,100,0.4)" },
   { p1: 1, p2: 3, type: "sextile", color: "rgba(100,160,220,0.4)" },
   { p1: 1, p2: 6, type: "opposition", color: "rgba(220,100,100,0.35)" },
@@ -59,8 +59,8 @@ const PLANET_COLOR_MAP: Record<string, string> = {
   Pluto: "#c77dff",
   Chiron: "#e9c46a",
   "North Node": "#f4a261",
-  Ascendant: "#ee5d34",
-  Asc: "#ee5d34",
+  Ascendant: "#EAC157",
+  Asc: "#EAC157",
 };
 
 interface BirthChartProps {
@@ -97,7 +97,7 @@ export default function BirthChart({
           sign: signIdx >= 0 ? signIdx : p.signIndex || 0,
           degree: Math.round(p.degrees % 30),
           house: p.house || 1,
-          color: PLANET_COLOR_MAP[p.planet] || p.color || "#eee5d3",
+          color: PLANET_COLOR_MAP[p.planet] || p.color || "#FAF9F6",
         };
       })
     : DEFAULT_PLANETS;
@@ -313,7 +313,7 @@ export default function BirthChart({
           if (isHighlighted) {
             ctx.beginPath();
             ctx.arc(px, py, 11, 0, Math.PI * 2);
-            ctx.strokeStyle = "#ee5d34";
+            ctx.strokeStyle = "#EAC157";
             ctx.lineWidth = 2;
             ctx.stroke();
 
@@ -327,7 +327,7 @@ export default function BirthChart({
           // Dot
           ctx.beginPath();
           ctx.arc(px, py, isHighlighted ? 4 : 3, 0, Math.PI * 2);
-          ctx.fillStyle = isHighlighted ? "#ee5d34" : planet.color;
+          ctx.fillStyle = isHighlighted ? "#EAC157" : planet.color;
           ctx.globalAlpha = planetAlpha;
           ctx.fill();
           ctx.globalAlpha = 1;
@@ -337,7 +337,7 @@ export default function BirthChart({
           ctx.globalAlpha = planetAlpha;
           ctx.translate(px, py - 11);
           ctx.font = `bold ${size * 0.028}px serif`;
-          ctx.fillStyle = isHighlighted ? "#ee5d34" : planet.color;
+          ctx.fillStyle = isHighlighted ? "#EAC157" : planet.color;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(planet.glyph, 0, 0);

@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <AppProvider currentPage={currentPage} onNavigate={navigate}>
-      <div className="min-h-full bg-[#0e0a17] text-[#eee5d3]">
+      <div className="min-h-full bg-[#052036] text-[#FAF9F6]">
         <Navigation currentPage={currentPage} onNavigate={navigate as (page: Page) => void}/>
 
         <main className={isAppPage ? "md:ml-16 pb-20 md:pb-0" : ""}>

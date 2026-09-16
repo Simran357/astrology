@@ -137,8 +137,8 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         planetName: "Transits",
         sign: liveTransits.moonPhase?.sign || "Active",
         house: 1,
-        icon: <ZodiacIcon sign="aquarius" size={18} className="text-[#ee5d34]" />,
-        accent: "#ee5d34",
+        icon: <ZodiacIcon sign="aquarius" size={18} className="text-[#EAC157]" />,
+        accent: "#EAC157",
         headline: `The Current Celestial Sky: Active Transits & Retrogrades Triggering Your Chart`,
         highlight: `The current planetary transits are spotlighting the exact boundary between holding on and letting go.`,
         celestialMechanism: `Astrology is never static: the planets in the sky right now are constantly forming dynamic angles to your birth coordinates. Today, with the Moon in ${liveTransits.moonPhase?.sign || "the sky"} (${liveTransits.moonPhase?.phaseName || "Active Phase"}) and ${(liveTransits.retrogrades || []).length} retrogrades (${(liveTransits.retrogrades || []).join(", ") || "Direct Motion"}), the sky is exerting a clarifying gravitational pull on your emotional and relational axes.`,
@@ -164,42 +164,42 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0e0a17] text-[#eee5d3] selection:bg-[#ee5d34] selection:text-[#0e0a17]">
+    <div className="min-h-screen bg-[#052036] text-[#FAF9F6] selection:bg-[#EAC157] selection:text-[#052036]">
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 45% 60% at 80% 25%, rgba(50,25,110,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse 45% 60% at 80% 25%, rgba(234,193,87,0.06) 0%, transparent 70%)",
         }}
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-8 md:py-12">
         {/* Header */}
-        <div className="mb-8 border-b border-[rgba(238,93,52,0.15)] pb-6">
+        <div className="mb-8 border-b border-[rgba(234,193,87,0.2)] pb-6">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <p className="text-[11px] font-mono text-[#ee5d34] tracking-widest uppercase">
+            <p className="text-[11px] font-sans text-[#EAC157] tracking-widest uppercase font-semibold">
               ✦ Deep Psychological Chart Reading · Whole-Sign Ephemeris
             </p>
             <button
               onClick={() => onNavigate("chart")}
-              className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+              className="text-xs font-sans text-[#c5d3df] hover:text-[#EAC157] transition-colors cursor-pointer"
             >
               ← Inspect Planetary Wheel
             </button>
           </div>
-          <h1 className="font-serif text-3xl md:text-5xl font-light text-[#eee5d3] mb-2 leading-tight">
+          <h1 className="font-serif text-3xl md:text-5xl font-semibold text-[#FFFFFF] mb-2 leading-tight">
             {user.name ? `${user.name}'s Soul Architecture` : "Your Deep Natal Reading"}
           </h1>
-          <p className="text-xs sm:text-sm text-[#bfb7aa] max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#c5d3df] max-w-2xl leading-relaxed">
             Sun in {user.sunSign} · Moon in {user.moonSign} · {user.risingSign} Rising. A comprehensive examination of your emotional patterns, early roots, love and friendships, unconscious blind spots, and future thinking shifts.
           </p>
         </div>
 
         {/* Free vs Paid Banner */}
-        <div className="flex flex-wrap items-center justify-between p-3.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] rounded-sm mb-6 gap-3">
+        <div className="flex flex-wrap items-center justify-between p-4 border border-[rgba(234,193,87,0.3)] bg-[#082842] rounded-xl mb-6 gap-3 shadow-lg">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#ee5d34]">✦</span>
-            <span className="text-xs font-mono text-[#bfb7aa]">
+            <span className="text-xs text-[#EAC157]">✦</span>
+            <span className="text-xs font-sans text-[#c5d3df]">
               {isMembershipActive
                 ? "PREMIUM ACTIVE: All 6 Deep Psychological Chapters Unlocked"
                 : "FREE TIER: Core Energy & Emotional Patterns Unlocked · Chapters 3–6 Require Access"}
@@ -208,13 +208,13 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleMembership}
-              className="text-xs font-mono px-2.5 py-1 bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] text-[#eee5d3] hover:bg-[#ee5d34] hover:text-[#0e0a17] transition-all rounded-sm cursor-pointer"
+              className="text-xs font-sans font-semibold px-4 py-1.5 bg-[#EAC157] text-[#052036] hover:bg-[#FFFFFF] transition-all rounded-full cursor-pointer shadow-sm"
             >
               {isMembershipActive ? "Switch to Free View" : "Simulate Premium Unlock ✦"}
             </button>
             <button
               onClick={() => onNavigate("askai")}
-              className="text-xs text-[#ee5d34] font-mono hover:underline cursor-pointer"
+              className="text-xs text-[#EAC157] font-sans font-semibold hover:text-[#FFFFFF] transition-colors cursor-pointer"
             >
               Ask AI about your chart →
             </button>
@@ -224,8 +224,8 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Navigation sidebar */}
           <div className="lg:col-span-1">
-            <div className="space-y-1.5 sticky top-8">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#bfb7aa] block mb-2 px-2">
+            <div className="space-y-2 sticky top-8">
+              <span className="text-[10px] font-sans uppercase tracking-wider text-[#EAC157] block mb-2 px-2 font-semibold">
                 Reading Domains
               </span>
 
@@ -235,44 +235,44 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                   <button
                     key={section.id}
                     onClick={() => setActiveSection(section.id)}
-                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-sm text-left transition-all duration-200 cursor-pointer border ${
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-left transition-all duration-200 cursor-pointer border ${
                       activeSection === section.id
-                        ? "bg-[rgba(238,93,52,0.12)] border-[#ee5d34] text-[#eee5d3] shadow-md"
-                        : "border-transparent text-[#bfb7aa] hover:text-[#eee5d3] hover:bg-[rgba(31,24,48,0.5)]"
+                        ? "bg-[#082842] border-[#EAC157] text-[#FAF9F6] shadow-md font-semibold"
+                        : "border-transparent text-[#c5d3df] hover:text-[#FAF9F6] hover:bg-[#082842]/60"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className={activeSection === section.id ? "opacity-100" : "opacity-60"}>
+                      <div className={activeSection === section.id ? "opacity-100 text-[#EAC157]" : "opacity-60"}>
                         {section.icon}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
                           <span className="text-xs font-serif font-medium">{section.label}</span>
-                          <span className={`text-[9px] font-mono px-1 rounded-sm ${
+                          <span className={`text-[9px] font-sans px-2 py-0.5 rounded-full font-semibold ${
                             isSectionLocked
-                              ? "bg-[rgba(238,93,52,0.2)] text-[#ee5d34]"
+                              ? "bg-[rgba(234,193,87,0.15)] text-[#EAC157]"
                               : "bg-[rgba(100,180,100,0.15)] text-[rgba(140,210,140,0.9)]"
                           }`}>
                             {isSectionLocked ? "PAID 🔒" : "FREE"}
                           </span>
                         </div>
-                        <div className="text-[10px] font-mono text-[#bfb7aa]">
+                        <div className="text-[10px] font-sans text-[#c5d3df]">
                           {section.planetName === "Transits" ? "Live Sky" : `${section.sign} · H${section.house}`}
                         </div>
                       </div>
                     </div>
                     {activeSection === section.id && (
-                      <span className="text-xs text-[#ee5d34] font-mono">✦</span>
+                      <span className="text-xs text-[#EAC157] font-sans font-bold">✦</span>
                     )}
                   </button>
                 );
               })}
 
-              <div className="h-px bg-[rgba(238,93,52,0.12)] my-4" />
+              <div className="h-px bg-[rgba(234,193,87,0.2)] my-4" />
 
               <button
                 onClick={() => handleLaunchConsultation(current.consultationPrompt)}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-sm bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] text-xs font-mono text-[#eee5d3] hover:bg-[#ee5d34] hover:text-[#0e0a17] transition-colors cursor-pointer text-center"
+                className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-full bg-[rgba(234,193,87,0.15)] border border-[#EAC157] text-xs font-sans font-semibold text-[#FAF9F6] hover:bg-[#EAC157] hover:text-[#052036] transition-all cursor-pointer text-center shadow-sm"
               >
                 <span>Ask AstroFindings on this →</span>
               </button>
@@ -281,21 +281,21 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
 
           {/* Reading Content */}
           <div className="lg:col-span-3 space-y-8">
-            <div className="border border-[rgba(238,93,52,0.22)] bg-[radial-gradient(ellipse_at_top,rgba(31,24,48,0.9),rgba(14,10,23,0.95))] p-6 sm:p-8 rounded-sm shadow-xl space-y-8">
+            <div className="border border-[rgba(234,193,87,0.25)] bg-[#082842] p-6 sm:p-9 rounded-xl shadow-xl space-y-8">
               {/* Header Badge */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(238,93,52,0.12)] pb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(234,193,87,0.2)] pb-4">
                 <div className="flex items-center gap-2.5">
                   {current.icon}
                   <span
-                    className="text-xs font-mono tracking-widest uppercase font-semibold"
-                    style={{ color: current.accent }}
+                    className="text-xs font-sans tracking-widest uppercase font-semibold"
+                    style={{ color: "#EAC157" }}
                   >
                     {current.label} · {current.planetName} in {current.sign} ({current.house}th House)
                   </span>
                 </div>
                 <button
                   onClick={() => handleLaunchConsultation(current.consultationPrompt)}
-                  className="text-xs font-mono text-[#ee5d34] hover:underline cursor-pointer flex items-center gap-1"
+                  className="text-xs font-sans text-[#EAC157] hover:text-[#FFFFFF] transition-colors cursor-pointer flex items-center gap-1 font-semibold"
                 >
                   <span>✦ Inscribe to Ask AstroFindings</span>
                   <span>→</span>
@@ -303,18 +303,18 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
               </div>
 
               {/* Headline */}
-              <h2 className="font-serif text-2xl sm:text-3xl font-light text-[#eee5d3] leading-snug">
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#FFFFFF] leading-snug">
                 {current.headline}
               </h2>
 
               {/* Highlight Insight Banner */}
               <div
-                className="border-l-2 p-4 bg-[rgba(238,93,52,0.05)] rounded-r-sm"
-                style={{ borderColor: current.accent }}
+                className="border-l-2 p-4 bg-[rgba(234,193,87,0.08)] rounded-r-xl"
+                style={{ borderColor: "#EAC157" }}
               >
                 <p
                   className="font-serif italic text-base sm:text-lg font-light leading-relaxed"
-                  style={{ color: current.accent }}
+                  style={{ color: "#EAC157" }}
                 >
                   “{current.highlight}”
                 </p>
@@ -322,69 +322,69 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
 
               {/* 1. Celestial Mechanism */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                <div className="flex items-center gap-2 text-xs font-sans uppercase tracking-wider text-[#EAC157] font-semibold">
                   <span>01</span>
                   <span>✦ The Celestial Mechanism & Sign Architecture</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#eee5d3] leading-relaxed font-light font-serif">
+                <p className="text-xs sm:text-sm text-[#FAF9F6] leading-relaxed font-normal font-sans">
                   {current.celestialMechanism}
                 </p>
               </div>
 
               {/* Free vs Paid Gate for Chapters 02–05 */}
               {["relationships", "career", "challenges", "current"].includes(current.id) && !isMembershipActive ? (
-                <div className="relative mt-8 pt-8 border-t border-[rgba(238,93,52,0.15)] min-h-[380px]">
+                <div className="relative mt-8 pt-8 border-t border-[rgba(234,193,87,0.2)] min-h-[380px]">
                   {/* Blurred preview background */}
                   <div className="space-y-6 filter blur-[5px] select-none opacity-30 pointer-events-none">
                     <div className="space-y-2">
-                      <span className="text-xs font-mono uppercase text-[#ee5d34]">02 ✦ Past Roots & Childhood Pattern</span>
-                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.pastRoots}</p>
+                      <span className="text-xs font-sans uppercase text-[#EAC157] font-semibold">02 ✦ Past Roots & Childhood Pattern</span>
+                      <p className="text-xs text-[#c5d3df] leading-relaxed font-sans">{current.pastRoots}</p>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-xs font-mono uppercase text-[#ee5d34]">03 ✦ Present Reality in Love & Friendship</span>
-                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.presentLoveAndFriendship}</p>
+                      <span className="text-xs font-sans uppercase text-[#EAC157] font-semibold">03 ✦ Present Reality in Love & Friendship</span>
+                      <p className="text-xs text-[#c5d3df] leading-relaxed font-sans">{current.presentLoveAndFriendship}</p>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-xs font-mono uppercase text-[#ee5d34]">04 ✦ Somatic Anger & Subconscious Blindspots</span>
-                      <p className="text-xs text-[#bfb7aa] leading-relaxed font-serif">{current.emotionalAngerAndBlindspot}</p>
+                      <span className="text-xs font-sans uppercase text-[#EAC157] font-semibold">04 ✦ Somatic Anger & Subconscious Blindspots</span>
+                      <p className="text-xs text-[#c5d3df] leading-relaxed font-sans">{current.emotionalAngerAndBlindspot}</p>
                     </div>
                   </div>
 
                   {/* Floating Competitor-Style Paywall Box */}
                   <div className="absolute inset-0 flex items-center justify-center p-4">
-                    <div className="w-full max-w-xl border-2 border-dashed border-[#ee5d34] bg-[rgba(14,10,23,0.97)] p-6 md:p-8 rounded-sm text-center space-y-4 shadow-2xl backdrop-blur-md">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-[rgba(238,93,52,0.15)] border border-[#ee5d34] text-[10px] font-mono text-[#ee5d34] uppercase tracking-widest rounded-sm">
+                    <div className="w-full max-w-xl border-2 border-dashed border-[#EAC157] bg-[#052036]/95 p-6 md:p-8 rounded-xl text-center space-y-4 shadow-2xl backdrop-blur-md">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-[rgba(234,193,87,0.15)] border border-[#EAC157] text-[10px] font-sans text-[#EAC157] uppercase tracking-widest rounded-full font-bold">
                         <span>🔒 PREMIUM CHAPTER · PAID DOSSIER REQUIRED</span>
                       </div>
-                      <h3 className="font-serif text-2xl md:text-3xl text-[#eee5d3]">
+                      <h3 className="font-serif text-2xl md:text-3xl text-[#FFFFFF] font-semibold">
                         Unlock The Complete {current.label} Synthesis
                       </h3>
-                      <p className="text-xs text-[#bfb7aa] max-w-md mx-auto leading-relaxed">
+                      <p className="text-xs text-[#c5d3df] max-w-md mx-auto leading-relaxed">
                         Free tier covers your Core Energy and Emotional Foundation. This chapter reveals 
                         <strong> why you still hold a soft corner, what makes you suppress yourself, your subconscious blind spots</strong>, and how upcoming planetary shifts will reshape your thinking pattern.
                       </p>
 
                       <div className="grid grid-cols-2 gap-2 text-left pt-2 pb-1">
-                        <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] p-2.5 rounded-sm">
-                          <span className="text-[10px] font-mono text-[#ee5d34] block">✦ Chapter 02–03</span>
-                          <p className="text-[11px] text-[#eee5d3] font-medium">Past Roots & Love Dynamics</p>
+                        <div className="border border-[rgba(234,193,87,0.2)] bg-[#082842] p-3 rounded-lg">
+                          <span className="text-[10px] font-sans text-[#EAC157] block font-semibold">✦ Chapter 02–03</span>
+                          <p className="text-[11px] text-[#FAF9F6] font-medium">Past Roots & Love Dynamics</p>
                         </div>
-                        <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] p-2.5 rounded-sm">
-                          <span className="text-[10px] font-mono text-[#f0c870] block">✦ Chapter 04–05</span>
-                          <p className="text-[11px] text-[#eee5d3] font-medium">Blind Spots & Breakthroughs</p>
+                        <div className="border border-[rgba(234,193,87,0.2)] bg-[#082842] p-3 rounded-lg">
+                          <span className="text-[10px] font-sans text-[#EAC157] block font-semibold">✦ Chapter 04–05</span>
+                          <p className="text-[11px] text-[#FAF9F6] font-medium">Blind Spots & Breakthroughs</p>
                         </div>
                       </div>
 
                       <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                         <button
                           onClick={toggleMembership}
-                          className="w-full sm:w-auto py-3 px-6 bg-[#ee5d34] text-[#0e0a17] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#f58a6b] transition-all rounded-sm cursor-pointer shadow-lg"
+                          className="w-full sm:w-auto py-3 px-6 bg-[#EAC157] text-[#052036] text-xs font-sans uppercase tracking-widest font-bold hover:bg-[#FFFFFF] transition-all rounded-full cursor-pointer shadow-lg"
                         >
                           Unlock Full Reading ($19 / Full Access) →
                         </button>
                         <button
                           onClick={() => handleLaunchConsultation(current.consultationPrompt)}
-                          className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                          className="text-xs font-sans text-[#c5d3df] hover:text-[#EAC157] transition-colors cursor-pointer font-medium"
                         >
                           Ask AI on this placement →
                         </button>
@@ -395,45 +395,45 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
               ) : (
                 <>
                   {/* 2. Past Roots & Childhood Pattern */}
-                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                  <div className="space-y-2 border-t border-[rgba(234,193,87,0.2)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-sans uppercase tracking-wider text-[#EAC157] font-semibold">
                       <span>02</span>
                       <span>✦ Past Roots: How This Defense Formed </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                    <p className="text-xs sm:text-sm text-[#c5d3df] leading-relaxed font-normal font-sans">
                       {current.pastRoots}
                     </p>
                   </div>
 
                   {/* 3. Present Love & Friendships */}
-                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                  <div className="space-y-2 border-t border-[rgba(234,193,87,0.2)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-sans uppercase tracking-wider text-[#EAC157] font-semibold">
                       <span>03</span>
                       <span>✦ Present Reality: In Love, Friendships & Daily Life</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                    <p className="text-xs sm:text-sm text-[#c5d3df] leading-relaxed font-normal font-sans">
                       {current.presentLoveAndFriendship}
                     </p>
                   </div>
 
                   {/* 4. Emotional Anger & Subconscious Blindspots */}
-                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#ee5d34]">
+                  <div className="space-y-2 border-t border-[rgba(234,193,87,0.2)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-sans uppercase tracking-wider text-[#EAC157] font-semibold">
                       <span>04</span>
                       <span>✦ Emotional Anger & Somatic Blindspots</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#bfb7aa] leading-relaxed font-light font-serif">
+                    <p className="text-xs sm:text-sm text-[#c5d3df] leading-relaxed font-normal font-sans">
                       {current.emotionalAngerAndBlindspot}
                     </p>
                   </div>
 
                   {/* 5. Future Shift & Thinking Pattern Evolution */}
-                  <div className="space-y-2 border-t border-[rgba(238,93,52,0.1)] pt-6">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d4af37]">
+                  <div className="space-y-2 border-t border-[rgba(234,193,87,0.2)] pt-6">
+                    <div className="flex items-center gap-2 text-xs font-sans uppercase tracking-wider text-[#EAC157] font-semibold">
                       <span>05</span>
                       <span>✦ Future Evolution: Upcoming Shifts & Thinking Pattern Transformation</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#eee5d3] leading-relaxed font-light font-serif">
+                    <p className="text-xs sm:text-sm text-[#FAF9F6] leading-relaxed font-normal font-sans">
                       {current.futureShiftAndThinking}
                     </p>
                   </div>
@@ -441,32 +441,32 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
               )}
 
               {/* Bottom Consultation Banner */}
-              <div className="p-5 border border-[#ee5d34] bg-[rgba(238,93,52,0.08)] rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+              <div className="p-5 border border-[#EAC157] bg-[rgba(234,193,87,0.1)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#ee5d34] block">
+                  <span className="text-[10px] font-sans uppercase tracking-widest text-[#EAC157] block font-bold">
                     ✦ Have Specific Questions On This Placement?
                   </span>
-                  <p className="text-xs text-[#eee5d3] mt-0.5">
+                  <p className="text-xs text-[#FAF9F6] mt-0.5 font-sans">
                     Consult Ask AstroFindings directly to examine real-time aspects, synastry, and deeper timing for {current.label}.
                   </p>
                 </div>
                 <button
                   onClick={() => handleLaunchConsultation(current.consultationPrompt)}
-                  className="button-primary cursor-pointer text-xs py-2.5 px-5 whitespace-nowrap"
+                  className="button-primary cursor-pointer text-xs py-2.5 px-6 rounded-full whitespace-nowrap font-bold"
                 >
                   Consult Ask AstroFindings →
                 </button>
               </div>
 
               {/* Navigation Footer for Sections */}
-              <div className="flex items-center justify-between pt-6 border-t border-[rgba(238,93,52,0.12)]">
+              <div className="flex items-center justify-between pt-6 border-t border-[rgba(234,193,87,0.2)]">
                 {sections.findIndex((s) => s.id === activeSection) > 0 ? (
                   <button
                     onClick={() => {
                       const idx = sections.findIndex((s) => s.id === activeSection);
                       setActiveSection(sections[idx - 1].id);
                     }}
-                    className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                    className="text-xs font-sans text-[#c5d3df] hover:text-[#EAC157] transition-colors cursor-pointer font-medium"
                   >
                     ← Previous: {sections[sections.findIndex((s) => s.id === activeSection) - 1].label}
                   </button>
@@ -478,7 +478,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                       const idx = sections.findIndex((s) => s.id === activeSection);
                       setActiveSection(sections[idx + 1].id);
                     }}
-                    className="text-xs font-mono text-[#ee5d34] hover:underline cursor-pointer"
+                    className="text-xs font-sans text-[#EAC157] hover:text-[#FFFFFF] transition-colors cursor-pointer font-semibold"
                   >
                     Next: {sections[sections.findIndex((s) => s.id === activeSection) + 1].label} →
                   </button>

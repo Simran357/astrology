@@ -121,7 +121,7 @@ export default function CelestialCollageArt() {
             <stop offset="25%" stopColor="#ee7c44" stopOpacity="0.5" />
             <stop offset="55%" stopColor="#5d2c6e" stopOpacity="0.25" />
             <stop offset="85%" stopColor="#140f26" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#0e0a17" stopOpacity="0" />
+            <stop offset="100%" stopColor="#052036" stopOpacity="0" />
           </radialGradient>
 
           <linearGradient id="milky-way-band" x1="10%" y1="90%" x2="90%" y2="10%">
@@ -131,7 +131,7 @@ export default function CelestialCollageArt() {
             <stop offset="54%" stopColor="#f3deb0" stopOpacity="0.8" />
             <stop offset="62%" stopColor="#d56b3e" stopOpacity="0.5" />
             <stop offset="80%" stopColor="#2a1645" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#0e0a17" stopOpacity="0" />
+            <stop offset="100%" stopColor="#052036" stopOpacity="0" />
           </linearGradient>
 
           {/* 2. Crystal Facet Shading Gradients (Prismatic Quartz & Amethyst) */}
@@ -162,7 +162,7 @@ export default function CelestialCollageArt() {
 
           <linearGradient id="prism-ray-grad" x1="50%" y1="100%" x2="50%" y2="0%">
             <stop offset="0%" stopColor="#f5dd98" stopOpacity="0.65" />
-            <stop offset="35%" stopColor="#ee5d34" stopOpacity="0.35" />
+            <stop offset="35%" stopColor="#EAC157" stopOpacity="0.35" />
             <stop offset="75%" stopColor="#8be4d8" stopOpacity="0.2" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
@@ -300,10 +300,10 @@ export default function CelestialCollageArt() {
             {/* Crescent Moon Disc */}
             <g transform="translate(132 220)">
               <circle cx="0" cy="0" r="7" fill="#d2c9e3" />
-              <circle cx="2.5" cy="-1.5" r="6" fill="#0e0a17" />
+              <circle cx="2.5" cy="-1.5" r="6" fill="#052036" />
             </g>
             {/* Mars Node */}
-            <circle cx="270" cy="82" r="4.5" fill="#ee5d34" filter="url(#soft-shimmer)" />
+            <circle cx="270" cy="82" r="4.5" fill="#EAC157" filter="url(#soft-shimmer)" />
             {/* Venus Node */}
             <circle cx="270" cy="358" r="4" fill="#69cbb8" filter="url(#soft-shimmer)" />
           </g>
@@ -556,7 +556,7 @@ export default function CelestialCollageArt() {
           x="32"
           y="42"
           fontSize="7.5"
-          fill="#ee5d34"
+          fill="#EAC157"
           fontFamily="monospace"
           letterSpacing="2"
           opacity="0.8"

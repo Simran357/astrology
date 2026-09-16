@@ -31,15 +31,15 @@ function Shell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="app-page-shell astral-app-surface min-h-screen selection:bg-[#ee5d34] selection:text-[#0e0a17]">
+    <div className="app-page-shell astral-app-surface min-h-screen selection:bg-[#EAC157] selection:text-[#052036]">
       <div className="section-shell max-w-5xl mx-auto px-5 sm:px-8 py-8 md:py-12">
-        <div className="eyebrow mb-3 text-xs font-mono uppercase tracking-widest text-[#ee5d34]">
+        <div className="eyebrow mb-3 text-xs font-mono uppercase tracking-widest text-[#EAC157]">
           {eyebrow}
         </div>
-        <h1 className="display app-display-title font-serif text-3xl md:text-5xl text-[#eee5d3] leading-tight mb-3">
+        <h1 className="display app-display-title font-serif text-3xl md:text-5xl text-[#FAF9F6] leading-tight mb-3">
           {title}
         </h1>
-        <p className="app-page-intro text-sm md:text-base text-[#bfb7aa] max-w-2xl mb-8 leading-relaxed">
+        <p className="app-page-intro text-sm md:text-base text-[#c5d3df] max-w-2xl mb-8 leading-relaxed">
           {intro}
         </p>
         {children}
@@ -139,15 +139,15 @@ export function LoginPage({ onNavigate }: Props) {
           <span className="eyebrow text-xs font-sans text-[#EAC157] font-semibold uppercase tracking-wider">
             Private access
           </span>
-          <span className="text-[10px] font-mono text-[#bfb7aa]">
+          <span className="text-[10px] font-mono text-[#c5d3df]">
             {isSupabaseReady ? "✦ Supabase Cloud Active" : "✦ Local Auth Ready"}
           </span>
         </div>
 
-        <h1 className="display font-serif text-2xl md:text-3xl text-[#eee5d3]">
+        <h1 className="display font-serif text-2xl md:text-3xl text-[#FAF9F6]">
           Return to the salon.
         </h1>
-        <p className="app-page-intro text-xs text-[#bfb7aa] leading-relaxed">
+        <p className="app-page-intro text-xs text-[#c5d3df] leading-relaxed">
           Sign in to access your birth wheel, synastry bonds, daily transits, and private inquiries.
         </p>
 
@@ -156,7 +156,7 @@ export function LoginPage({ onNavigate }: Props) {
           type="button"
           disabled={isLoading}
           onClick={handleGoogleLogin}
-          className="w-full py-3 px-4 rounded-sm border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.8)] hover:bg-[rgba(238,93,52,0.12)] hover:border-[#ee5d34] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#eee5d3] cursor-pointer shadow-md disabled:opacity-50"
+          className="w-full py-3 px-4 rounded-xl border border-[rgba(234,193,87,0.3)] bg-[rgba(6,28,48,0.8)] hover:bg-[rgba(234,193,87,0.12)] hover:border-[#EAC157] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#FAF9F6] cursor-pointer shadow-md disabled:opacity-50"
         >
           <GoogleIcon />
           <span>Continue with Google</span>
@@ -164,21 +164,21 @@ export function LoginPage({ onNavigate }: Props) {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
-          <span className="text-[10px] font-mono text-[#bfb7aa] uppercase tracking-widest">
+          <div className="h-px flex-1 bg-[rgba(234,193,87,0.15)]" />
+          <span className="text-[10px] font-mono text-[#c5d3df] uppercase tracking-widest">
             or email
           </span>
-          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+          <div className="h-px flex-1 bg-[rgba(234,193,87,0.15)]" />
         </div>
 
         {errorMsg && (
-          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-sm text-xs text-[#ff9999] leading-relaxed">
+          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-xl text-xs text-[#ff9999] leading-relaxed">
             {errorMsg}
           </div>
         )}
 
         <form onSubmit={handleEmailSubmit} className="form-stack space-y-4">
-          <label className="block text-xs font-mono text-[#bfb7aa]">
+          <label className="block text-xs font-mono text-[#c5d3df]">
             Email Address
             <input
               required
@@ -186,10 +186,10 @@ export function LoginPage({ onNavigate }: Props) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
           </label>
-          <label className="block text-xs font-mono text-[#bfb7aa]">
+          <label className="block text-xs font-mono text-[#c5d3df]">
             Password
             <input
               required
@@ -197,7 +197,7 @@ export function LoginPage({ onNavigate }: Props) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
           </label>
 
@@ -211,13 +211,13 @@ export function LoginPage({ onNavigate }: Props) {
         </form>
 
         {submitted && (
-          <div className="form-feedback text-xs text-[#ee5d34] p-2 border border-[#ee5d34] bg-[rgba(238,93,52,0.1)] rounded-sm text-center">
+          <div className="form-feedback text-xs text-[#EAC157] p-2 border border-[#EAC157] bg-[rgba(234,193,87,0.1)] rounded-xl text-center">
             Sign-in verified. Opening your celestial coordinates...
           </div>
         )}
 
         <button
-          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full pt-1"
+          className="button-quiet text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer block text-center w-full pt-1"
           onClick={() => onNavigate("signup")}
         >
           New seeker? Create an account →
@@ -294,15 +294,15 @@ export function SignupPage({ onNavigate }: Props) {
           <span className="eyebrow text-xs font-sans text-[#EAC157] font-semibold uppercase tracking-wider">
             Begin a private practice
           </span>
-          <span className="text-[10px] font-mono text-[#bfb7aa]">
+          <span className="text-[10px] font-mono text-[#c5d3df]">
             {isSupabaseReady ? "✦ Supabase Cloud Active" : "✦ Local Auth Ready"}
           </span>
         </div>
 
-        <h1 className="display font-serif text-2xl md:text-3xl text-[#eee5d3]">
+        <h1 className="display font-serif text-2xl md:text-3xl text-[#FAF9F6]">
           Make room for the question.
         </h1>
-        <p className="app-page-intro text-xs text-[#bfb7aa] leading-relaxed">
+        <p className="app-page-intro text-xs text-[#c5d3df] leading-relaxed">
           Create your account to calculate true whole-sign placements, daily transit forecasts, and synastry bonds.
         </p>
 
@@ -311,7 +311,7 @@ export function SignupPage({ onNavigate }: Props) {
           type="button"
           disabled={isLoading}
           onClick={handleGoogleSignup}
-          className="w-full py-3 px-4 rounded-sm border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.8)] hover:bg-[rgba(238,93,52,0.12)] hover:border-[#ee5d34] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#eee5d3] cursor-pointer shadow-md disabled:opacity-50"
+          className="w-full py-3 px-4 rounded-xl border border-[rgba(234,193,87,0.3)] bg-[rgba(6,28,48,0.8)] hover:bg-[rgba(234,193,87,0.12)] hover:border-[#EAC157] transition-all flex items-center justify-center gap-3 text-xs font-mono text-[#FAF9F6] cursor-pointer shadow-md disabled:opacity-50"
         >
           <GoogleIcon />
           <span>Continue with Google</span>
@@ -319,31 +319,31 @@ export function SignupPage({ onNavigate }: Props) {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
-          <span className="text-[10px] font-mono text-[#bfb7aa] uppercase tracking-widest">
+          <div className="h-px flex-1 bg-[rgba(234,193,87,0.15)]" />
+          <span className="text-[10px] font-mono text-[#c5d3df] uppercase tracking-widest">
             or register with email
           </span>
-          <div className="h-px flex-1 bg-[rgba(238,93,52,0.15)]" />
+          <div className="h-px flex-1 bg-[rgba(234,193,87,0.15)]" />
         </div>
 
         {errorMsg && (
-          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-sm text-xs text-[#ff9999] leading-relaxed">
+          <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-xl text-xs text-[#ff9999] leading-relaxed">
             {errorMsg}
           </div>
         )}
 
         <form onSubmit={handleSignupSubmit} className="form-stack space-y-4">
-          <label className="block text-xs font-mono text-[#bfb7aa]">
+          <label className="block text-xs font-mono text-[#c5d3df]">
             Your Name
             <input
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Julian Vance"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
           </label>
-          <label className="block text-xs font-mono text-[#bfb7aa]">
+          <label className="block text-xs font-mono text-[#c5d3df]">
             Email Address
             <input
               required
@@ -351,10 +351,10 @@ export function SignupPage({ onNavigate }: Props) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
           </label>
-          <label className="block text-xs font-mono text-[#bfb7aa]">
+          <label className="block text-xs font-mono text-[#c5d3df]">
             Password
             <input
               required
@@ -363,7 +363,7 @@ export function SignupPage({ onNavigate }: Props) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
-              className="w-full mt-1 bg-[rgba(14,10,23,0.85)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2.5 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full mt-1 bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
           </label>
 
@@ -377,13 +377,13 @@ export function SignupPage({ onNavigate }: Props) {
         </form>
 
         {submitted && (
-          <div className="form-feedback text-xs text-[#ee5d34] p-2 border border-[#ee5d34] bg-[rgba(238,93,52,0.1)] rounded-sm text-center">
+          <div className="form-feedback text-xs text-[#EAC157] p-2 border border-[#EAC157] bg-[rgba(234,193,87,0.1)] rounded-xl text-center">
             Account created. Navigating to your personal sky...
           </div>
         )}
 
         <button
-          className="button-quiet text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer block text-center w-full pt-1"
+          className="button-quiet text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer block text-center w-full pt-1"
           onClick={() => onNavigate("login")}
         >
           Already a member? Sign in →
@@ -423,20 +423,20 @@ export function TimelinePage({ onNavigate }: Props) {
       intro="What is happening today? What happened before? When will the emotional fog lift? All time-related experiences unified in one living calendar."
     >
       {/* Free vs Paid Banner */}
-      <div className="flex flex-wrap items-center justify-between p-3 border border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] rounded-sm mb-6 gap-2">
-        <span className="text-xs font-mono text-[#bfb7aa]">
+      <div className="flex flex-wrap items-center justify-between p-3 border border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.7)] rounded-xl mb-6 gap-2">
+        <span className="text-xs font-mono text-[#c5d3df]">
           FREE: Calendar & Moon Shifts · PAID: Deep Transit Interpretations & Hope Timing
         </span>
         <button
           onClick={() => onNavigate("askai")}
-          className="text-xs text-[#ee5d34] font-mono hover:underline cursor-pointer"
+          className="text-xs text-[#EAC157] font-mono hover:underline cursor-pointer"
         >
           Ask AI about current timing →
         </button>
       </div>
 
       {/* Timeline View Switcher Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8 border-b border-[rgba(238,93,52,0.12)] pb-3">
+      <div className="flex flex-wrap gap-2 mb-8 border-b border-[rgba(234,193,87,0.12)] pb-3">
         {[
           { id: "today", label: "Today's Sky Weather" },
           { id: "7days", label: "Next 7 Days" },
@@ -449,10 +449,10 @@ export function TimelinePage({ onNavigate }: Props) {
             <button
               key={tab.id}
               onClick={() => setTimelineView(tab.id as any)}
-              className={`px-3 py-1.5 text-xs font-mono rounded-sm transition-all cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-mono rounded-xl transition-all cursor-pointer ${
                 active
-                  ? "bg-[#ee5d34] text-[#0e0a17] font-semibold"
-                  : "border border-[rgba(238,93,52,0.12)] text-[#bfb7aa] hover:border-[#ee5d34] hover:text-[#eee5d3]"
+                  ? "bg-[#EAC157] text-[#052036] font-semibold"
+                  : "border border-[rgba(234,193,87,0.12)] text-[#c5d3df] hover:border-[#EAC157] hover:text-[#FAF9F6]"
               }`}
             >
               {tab.label}
@@ -465,17 +465,17 @@ export function TimelinePage({ onNavigate }: Props) {
       {timelineView === "today" && (
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.8)] p-6 rounded-sm space-y-4">
+            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.8)] p-6 rounded-xl space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase text-[#ee5d34]">Today's Theme</span>
-                <span className="text-xs font-mono text-[#bfb7aa]">
+                <span className="text-xs font-mono uppercase text-[#EAC157]">Today's Theme</span>
+                <span className="text-xs font-mono text-[#c5d3df]">
                   {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                 </span>
               </div>
-              <h2 className="font-serif text-2xl text-[#eee5d3]">
+              <h2 className="font-serif text-2xl text-[#FAF9F6]">
                 Moon in {liveTransits.moonPhase?.sign || "Scorpio"} ({liveTransits.moonPhase?.phaseName || "Waxing"})
               </h2>
-              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+              <p className="text-xs text-[#c5d3df] leading-relaxed">
                 Today's celestial atmosphere pulls unspoken feelings to the surface.
                 Your {user.sunSign} Sun registers a need to step back from overthinking, while the lunar transit asks you to honor what is quietly draining your battery.
               </p>
@@ -488,32 +488,32 @@ export function TimelinePage({ onNavigate }: Props) {
                 </button>
                 <button
                   onClick={() => navigateWithHighlight("chart", "Moon")}
-                  className="text-xs text-[#ee5d34] hover:text-[#f58a6b] font-mono cursor-pointer"
+                  className="text-xs text-[#EAC157] hover:text-[#d9b048] font-mono cursor-pointer"
                 >
                   Locate Moon in my chart →
                 </button>
               </div>
             </div>
 
-            <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.8)] p-6 rounded-sm space-y-4">
-              <span className="text-xs font-mono uppercase text-[#ee5d34]">Active Personal Transits</span>
+            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.8)] p-6 rounded-xl space-y-4">
+              <span className="text-xs font-mono uppercase text-[#EAC157]">Active Personal Transits</span>
               <div className="space-y-3">
-                <div className="border-l-2 border-[#ee5d34] pl-3">
-                  <h4 className="text-sm font-serif text-[#eee5d3]">Venus Transit Influence</h4>
-                  <p className="text-xs text-[#bfb7aa] mt-0.5">
+                <div className="border-l-2 border-[#EAC157] pl-3">
+                  <h4 className="text-sm font-serif text-[#FAF9F6]">Venus Transit Influence</h4>
+                  <p className="text-xs text-[#c5d3df] mt-0.5">
                     Influencing an important area of your relational sky. You may feel a pull to revisit an old soft corner or establish a cleaner boundary without guilt.
                   </p>
                 </div>
                 <div className="border-l-2 border-[#f0c870] pl-3">
-                  <h4 className="text-sm font-serif text-[#eee5d3]">Mercury Thought Current</h4>
-                  <p className="text-xs text-[#bfb7aa] mt-0.5">
+                  <h4 className="text-sm font-serif text-[#FAF9F6]">Mercury Thought Current</h4>
+                  <p className="text-xs text-[#c5d3df] mt-0.5">
                     Heightened mental vigilance. Notice if you are trying to 'think' your way out of a feeling that simply needs rest.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => onNavigate("chart")}
-                className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
               >
                 Inspect my complete natal wheel →
               </button>
@@ -525,10 +525,10 @@ export function TimelinePage({ onNavigate }: Props) {
       {/* VIEW 2: NEXT 7 DAYS (SHORT-TERM THEMES) */}
       {timelineView === "7days" && (
         <div className="space-y-4">
-          <div className="p-4 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] rounded-sm">
-            <span className="text-xs font-mono text-[#ee5d34] uppercase block mb-1">Weekly Forecast</span>
-            <h3 className="font-serif text-xl text-[#eee5d3]">Next 7 Days: Releasing Vigilance</h3>
-            <p className="text-xs text-[#bfb7aa] mt-1">
+          <div className="p-4 border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] rounded-xl">
+            <span className="text-xs font-mono text-[#EAC157] uppercase block mb-1">Weekly Forecast</span>
+            <h3 className="font-serif text-xl text-[#FAF9F6]">Next 7 Days: Releasing Vigilance</h3>
+            <p className="text-xs text-[#c5d3df] mt-1">
               Short-term planetary movement asks you to step out of defense mode. Expect honest conversations in relationships and clearer momentum in work.
             </p>
           </div>
@@ -539,10 +539,10 @@ export function TimelinePage({ onNavigate }: Props) {
               { day: "Days 3–4", title: "Conversation Window", desc: "Mercury creates clarity. Speak what you've suppressed without guilt." },
               { day: "Days 5–7", title: "Heart Opening", desc: "The tension eases. Space opens for authentic connection and creative drive." },
             ].map((d) => (
-              <div key={d.day} className="border border-[rgba(238,93,52,0.1)] p-4 rounded-sm bg-[rgba(20,15,35,0.6)] space-y-2">
-                <span className="text-[10px] font-mono text-[#ee5d34] uppercase">{d.day}</span>
-                <h4 className="font-serif text-base text-[#eee5d3]">{d.title}</h4>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed">{d.desc}</p>
+              <div key={d.day} className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.6)] space-y-2">
+                <span className="text-[10px] font-mono text-[#EAC157] uppercase">{d.day}</span>
+                <h4 className="font-serif text-base text-[#FAF9F6]">{d.title}</h4>
+                <p className="text-xs text-[#c5d3df] leading-relaxed">{d.desc}</p>
               </div>
             ))}
           </div>
@@ -552,21 +552,21 @@ export function TimelinePage({ onNavigate }: Props) {
       {/* VIEW 3: THIS MONTH */}
       {timelineView === "month" && (
         <div className="space-y-4">
-          <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] p-6 rounded-sm space-y-3">
-            <span className="text-xs font-mono text-[#ee5d34] uppercase block">Monthly Architectural Theme</span>
-            <h3 className="font-serif text-2xl text-[#eee5d3]">The Shift from Overthinking to Agency</h3>
-            <p className="text-xs md:text-sm text-[#bfb7aa] leading-relaxed">
+          <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 rounded-xl space-y-3">
+            <span className="text-xs font-mono text-[#EAC157] uppercase block">Monthly Architectural Theme</span>
+            <h3 className="font-serif text-2xl text-[#FAF9F6]">The Shift from Overthinking to Agency</h3>
+            <p className="text-xs md:text-sm text-[#c5d3df] leading-relaxed">
               This month tests your comfort zone. A major shift in the planetary landscape demands that you stop performing invulnerability.
               Old relationship dilemmas are arriving at a definitive threshold.
             </p>
             <div className="pt-2 flex flex-wrap gap-2">
-              <span className="text-xs px-2.5 py-1 border border-[rgba(238,93,52,0.2)] rounded-sm text-[#eee5d3]">
+              <span className="text-xs px-2.5 py-1 border border-[rgba(234,193,87,0.2)] rounded-xl text-[#FAF9F6]">
                 ✦ New Moon: Clean Slate
               </span>
-              <span className="text-xs px-2.5 py-1 border border-[rgba(238,93,52,0.2)] rounded-sm text-[#eee5d3]">
+              <span className="text-xs px-2.5 py-1 border border-[rgba(234,193,87,0.2)] rounded-xl text-[#FAF9F6]">
                 ✦ Full Moon: Emotional Truth
               </span>
-              <span className="text-xs px-2.5 py-1 border border-[rgba(238,93,52,0.2)] rounded-sm text-[#eee5d3]">
+              <span className="text-xs px-2.5 py-1 border border-[rgba(234,193,87,0.2)] rounded-xl text-[#FAF9F6]">
                 ✦ Venus Ingress: Soft Corners Defined
               </span>
             </div>
@@ -577,14 +577,14 @@ export function TimelinePage({ onNavigate }: Props) {
       {/* VIEW 4: PLANETARY SHIFTS & PAST PERIODS */}
       {timelineView === "shifts" && (
         <div className="space-y-6">
-          <div className="p-4 border border-[rgba(238,93,52,0.2)] bg-[rgba(20,15,35,0.8)] rounded-sm">
-            <span className="text-xs font-mono text-[#ee5d34] uppercase block mb-1">
+          <div className="p-4 border border-[rgba(234,193,87,0.2)] bg-[rgba(6,28,48,0.8)] rounded-xl">
+            <span className="text-xs font-mono text-[#EAC157] uppercase block mb-1">
               Deep Astrological Archaeology
             </span>
-            <h3 className="font-serif text-xl text-[#eee5d3]">
+            <h3 className="font-serif text-xl text-[#FAF9F6]">
               Why Did That Past Period Hurt So Deeply?
             </h3>
-            <p className="text-xs text-[#bfb7aa] mt-1">
+            <p className="text-xs text-[#c5d3df] mt-1">
               Select a major planetary shift to understand what was happening behind the scenes, why it broke your heart or caused burnout, and how it is resolving now.
             </p>
           </div>
@@ -594,15 +594,15 @@ export function TimelinePage({ onNavigate }: Props) {
               <button
                 key={shift.id}
                 onClick={() => setSelectedShiftId(shift.id)}
-                className={`p-4 text-left border rounded-sm transition-all cursor-pointer ${
+                className={`p-4 text-left border rounded-xl transition-all cursor-pointer ${
                   selectedShiftId === shift.id
-                    ? "border-[#ee5d34] bg-[rgba(238,93,52,0.12)]"
-                    : "border-[rgba(238,93,52,0.1)] bg-[rgba(31,24,48,0.6)] hover:border-[rgba(238,93,52,0.3)]"
+                    ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
+                    : "border-[rgba(234,193,87,0.1)] bg-[rgba(8,40,66,0.6)] hover:border-[rgba(234,193,87,0.3)]"
                 }`}
               >
-                <span className="text-xl text-[#ee5d34] block mb-1">{shift.symbol}</span>
-                <h4 className="font-serif text-sm text-[#eee5d3] font-semibold">{shift.planet} Shift</h4>
-                <p className="text-[11px] text-[#bfb7aa] mt-1 line-clamp-2">{shift.headline}</p>
+                <span className="text-xl text-[#EAC157] block mb-1">{shift.symbol}</span>
+                <h4 className="font-serif text-sm text-[#FAF9F6] font-semibold">{shift.planet} Shift</h4>
+                <p className="text-[11px] text-[#c5d3df] mt-1 line-clamp-2">{shift.headline}</p>
               </button>
             ))}
           </div>
@@ -610,52 +610,52 @@ export function TimelinePage({ onNavigate }: Props) {
           {selectedShiftId && (() => {
             const shift = TRANSIT_SHIFTS_DATA.find((s) => s.id === selectedShiftId) || TRANSIT_SHIFTS_DATA[0];
             return (
-              <div className="border border-[#ee5d34] bg-[rgba(31,24,48,0.9)] p-6 rounded-sm space-y-5">
+              <div className="border border-[#EAC157] bg-[rgba(8,40,66,0.9)] p-6 rounded-xl space-y-5">
                 <div>
-                  <span className="text-xs font-mono text-[#ee5d34] uppercase">{shift.categoryBadge}</span>
-                  <h3 className="font-serif text-2xl text-[#eee5d3] mt-1">{shift.headline}</h3>
-                  <p className="text-xs text-[#bfb7aa] mt-1">{shift.timing}</p>
+                  <span className="text-xs font-mono text-[#EAC157] uppercase">{shift.categoryBadge}</span>
+                  <h3 className="font-serif text-2xl text-[#FAF9F6] mt-1">{shift.headline}</h3>
+                  <p className="text-xs text-[#c5d3df] mt-1">{shift.timing}</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="border border-[rgba(238,93,52,0.15)] p-4 rounded-sm bg-[rgba(20,15,35,0.7)] space-y-2">
-                    <span className="text-xs font-mono text-[#ee5d34] uppercase block">
+                  <div className="border border-[rgba(234,193,87,0.15)] p-4 rounded-xl bg-[rgba(6,28,48,0.7)] space-y-2">
+                    <span className="text-xs font-mono text-[#EAC157] uppercase block">
                       1. The Past Phase (Why It Hurt)
                     </span>
-                    <p className="text-xs text-[#eee5d3] font-medium">{shift.pastPhase.whatWasHappening}</p>
-                    <p className="text-xs text-[#bfb7aa] leading-relaxed">{shift.pastPhase.problemsYouFelt}</p>
-                    <p className="text-[11px] text-[#bfb7aa] italic pt-1 border-t border-[rgba(238,93,52,0.1)]">
+                    <p className="text-xs text-[#FAF9F6] font-medium">{shift.pastPhase.whatWasHappening}</p>
+                    <p className="text-xs text-[#c5d3df] leading-relaxed">{shift.pastPhase.problemsYouFelt}</p>
+                    <p className="text-[11px] text-[#c5d3df] italic pt-1 border-t border-[rgba(234,193,87,0.1)]">
                       ✦ Root Cause: {shift.pastPhase.whyItFeltHard}
                     </p>
                   </div>
 
-                  <div className="border border-[rgba(238,93,52,0.15)] p-4 rounded-sm bg-[rgba(20,15,35,0.7)] space-y-2">
-                    <span className="text-xs font-mono text-[#ee5d34] uppercase block">
+                  <div className="border border-[rgba(234,193,87,0.15)] p-4 rounded-xl bg-[rgba(6,28,48,0.7)] space-y-2">
+                    <span className="text-xs font-mono text-[#EAC157] uppercase block">
                       2. What You Can Expect Next
                     </span>
-                    <p className="text-xs text-[#eee5d3] font-medium">{shift.whatToExpectNext.whatYouWillFeel}</p>
-                    <ul className="text-xs text-[#bfb7aa] space-y-1">
+                    <p className="text-xs text-[#FAF9F6] font-medium">{shift.whatToExpectNext.whatYouWillFeel}</p>
+                    <ul className="text-xs text-[#c5d3df] space-y-1">
                       {shift.whatToExpectNext.concreteSigns.map((sign, idx) => (
                         <li key={idx}>✦ {sign}</li>
                       ))}
                     </ul>
-                    <p className="text-[11px] text-[#ee5d34] pt-1 border-t border-[rgba(238,93,52,0.1)]">
+                    <p className="text-[11px] text-[#EAC157] pt-1 border-t border-[rgba(234,193,87,0.1)]">
                       Advice: {shift.whatToExpectNext.adviceForYou}
                     </p>
                   </div>
                 </div>
 
                 {/* Deep Emotional & Psychological Inquiries */}
-                <div className="p-4 border border-[rgba(238,93,52,0.2)] bg-[rgba(20,15,35,0.85)] rounded-sm space-y-3">
+                <div className="p-4 border border-[rgba(234,193,87,0.2)] bg-[rgba(6,28,48,0.85)] rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono text-[#ee5d34] uppercase font-semibold">
+                    <span className="text-[11px] font-mono text-[#EAC157] uppercase font-semibold">
                       ✦ Unspoken Emotional Inquiries ({shift.planet})
                     </span>
-                    <span className="text-[10px] font-mono text-[#bfb7aa]">
+                    <span className="text-[10px] font-mono text-[#c5d3df]">
                       Free Discovery · Paid Deep Resolution
                     </span>
                   </div>
-                  <p className="text-xs text-[#bfb7aa]">
+                  <p className="text-xs text-[#c5d3df]">
                     Select a core psychological inquiry to understand why this planetary shift triggered your detachment, feelings of loneliness, or recurring overthinking:
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -671,7 +671,7 @@ export function TimelinePage({ onNavigate }: Props) {
                           localStorage.setItem("astrofindings_pending_inquiry", inquiry);
                           onNavigate("askai");
                         }}
-                        className="text-[11px] px-3 py-1.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm transition-colors text-left cursor-pointer"
+                        className="text-[11px] px-3 py-1.5 border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] text-[#FAF9F6] hover:border-[#EAC157] rounded-xl transition-colors text-left cursor-pointer"
                       >
                         ✦ {inquiry}
                       </button>
@@ -688,7 +688,7 @@ export function TimelinePage({ onNavigate }: Props) {
                   </button>
                   <button
                     onClick={() => navigateWithHighlight("chart", shift.planet)}
-                    className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                    className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
                   >
                     Locate {shift.planet} in my birth sky →
                   </button>
@@ -702,110 +702,110 @@ export function TimelinePage({ onNavigate }: Props) {
       {/* VIEW 5: HOPE & BREAKTHROUGH TIMING */}
       {timelineView === "hope" && (
         <div className="space-y-6">
-          <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.85)] p-6 rounded-sm space-y-4">
-            <span className="text-xs font-mono text-[#ee5d34] uppercase block">
+          <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.85)] p-6 rounded-xl space-y-4">
+            <span className="text-xs font-mono text-[#EAC157] uppercase block">
               ✦ Hope, Healing & The Clearing of the Fog
             </span>
-            <h3 className="font-serif text-2xl text-[#eee5d3]">
+            <h3 className="font-serif text-2xl text-[#FAF9F6]">
               When Will the Emotional Heaviness Lift?
             </h3>
-            <p className="text-xs md:text-sm text-[#bfb7aa] leading-relaxed">
+            <p className="text-xs md:text-sm text-[#c5d3df] leading-relaxed">
               Astrology is not endless endurance. Every harsh transit has an exact expiration date.
               The coming planetary windows indicate a decisive release of the emotional baggage, lonely sleepless nights, and suppressed grief you have been carrying:
             </p>
 
             {/* Free Discovery Windows */}
             <div className="space-y-3 pt-2">
-              <div className="p-4 border border-[rgba(100,180,100,0.25)] bg-[rgba(20,40,25,0.4)] rounded-sm space-y-1">
+              <div className="p-4 border border-[rgba(100,180,100,0.25)] bg-[rgba(20,40,25,0.4)] rounded-xl space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-[rgba(140,210,140,1)] uppercase">
                     Window 1: The Relief of Silence
                   </span>
-                  <span className="text-[9px] font-mono text-[rgba(140,210,140,0.8)] border border-[rgba(140,210,140,0.3)] px-1.5 py-0.2 rounded-sm">
+                  <span className="text-[9px] font-mono text-[rgba(140,210,140,0.8)] border border-[rgba(140,210,140,0.3)] px-1.5 py-0.2 rounded-xl">
                     FREE DISCOVERY
                   </span>
                 </div>
-                <h4 className="font-serif text-base text-[#eee5d3]">Letting Go of Unspoken Guilt & Anxiety</h4>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                <h4 className="font-serif text-base text-[#FAF9F6]">Letting Go of Unspoken Guilt & Anxiety</h4>
+                <p className="text-xs text-[#c5d3df] leading-relaxed">
                   As the Moon shifts into a harmonious trine with your natal placements, the urge to constantly overthink and explain yourself subsides. You will realize that you do not need their validation to heal, and stepping back into your own space is not abandonment—it is survival.
                 </p>
               </div>
 
-              <div className="p-4 border border-[rgba(238,93,52,0.25)] bg-[rgba(50,25,35,0.4)] rounded-sm space-y-1">
+              <div className="p-4 border border-[rgba(234,193,87,0.25)] bg-[rgba(50,25,35,0.4)] rounded-xl space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-[#ee5d34] uppercase">
+                  <span className="text-[10px] font-mono text-[#EAC157] uppercase">
                     Window 2: Relational Truth & Soft Corners
                   </span>
-                  <span className="text-[9px] font-mono text-[#ee5d34] border border-[rgba(238,93,52,0.3)] px-1.5 py-0.2 rounded-sm">
+                  <span className="text-[9px] font-mono text-[#EAC157] border border-[rgba(234,193,87,0.3)] px-1.5 py-0.2 rounded-xl">
                     FREE DISCOVERY
                   </span>
                 </div>
-                <h4 className="font-serif text-base text-[#eee5d3]">Clarity in Love, Cheating Doubts & Heartbreak</h4>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                <h4 className="font-serif text-base text-[#FAF9F6]">Clarity in Love, Cheating Doubts & Heartbreak</h4>
+                <p className="text-xs text-[#c5d3df] leading-relaxed">
                   The planetary cycle that caused confusion in your 7th House completes. You will finally understand why you maintained a soft corner even after betrayal, what it taught you about your own vulnerability, and how to open your heart again without terror.
                 </p>
               </div>
 
-              <div className="p-4 border border-[rgba(200,160,80,0.25)] bg-[rgba(45,35,20,0.4)] rounded-sm space-y-1">
+              <div className="p-4 border border-[rgba(200,160,80,0.25)] bg-[rgba(45,35,20,0.4)] rounded-xl space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-[#f0c870] uppercase">
                     Window 3: Stepping Into What Makes You Shine
                   </span>
-                  <span className="text-[9px] font-mono text-[#f0c870] border border-[rgba(200,160,80,0.3)] px-1.5 py-0.2 rounded-sm">
+                  <span className="text-[9px] font-mono text-[#f0c870] border border-[rgba(200,160,80,0.3)] px-1.5 py-0.2 rounded-xl">
                     FREE DISCOVERY
                   </span>
                 </div>
-                <h4 className="font-serif text-base text-[#eee5d3]">Emerging From Your Comfort Zone Trap</h4>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed">
+                <h4 className="font-serif text-base text-[#FAF9F6]">Emerging From Your Comfort Zone Trap</h4>
+                <p className="text-xs text-[#c5d3df] leading-relaxed">
                   Mars and Sun synchronize with your Midheaven. Your real voice breaks through the old container. You stop suppressing yourself to keep others comfortable, and energy returns to your career and ambition.
                 </p>
               </div>
             </div>
 
             {/* COMPETITOR-STYLE PAID PAYWALL HOOK (The Pattern / Nebula / Co-Star style curiosity & suspense) */}
-            <div className="mt-6 border-2 border-dashed border-[rgba(238,93,52,0.4)] bg-[linear-gradient(135deg,rgba(31,24,48,0.95),rgba(20,15,35,0.98))] p-6 rounded-sm space-y-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 w-32 h-32 bg-[radial-gradient(circle,rgba(238,93,52,0.15),transparent_70%)] pointer-events-none" />
+            <div className="mt-6 border-2 border-dashed border-[rgba(234,193,87,0.4)] bg-[linear-gradient(135deg,rgba(8,40,66,0.95),rgba(6,28,48,0.98))] p-6 rounded-xl space-y-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 w-32 h-32 bg-[radial-gradient(circle,rgba(234,193,87,0.15),transparent_70%)] pointer-events-none" />
               
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-[#ee5d34]">🔒</span>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#ee5d34] font-semibold">
+                  <span className="text-sm text-[#EAC157]">🔒</span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#EAC157] font-semibold">
                     PREMIUM BREAKTHROUGH DOSSIER · EXACT RESOLUTION TIMING
                   </span>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-[#ee5d34] text-[#0e0a17] font-semibold rounded-sm">
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-[#EAC157] text-[#052036] font-semibold rounded-xl">
                   PAID ACCESS ONLY
                 </span>
               </div>
 
               <div>
-                <h4 className="font-serif text-xl md:text-2xl text-[#eee5d3]">
+                <h4 className="font-serif text-xl md:text-2xl text-[#FAF9F6]">
                   Unlock the Exact Day the Fog Lifts & The Conversation Script
                 </h4>
-                <p className="text-xs text-[#bfb7aa] mt-1.5 leading-relaxed">
+                <p className="text-xs text-[#c5d3df] mt-1.5 leading-relaxed">
                   Free reveals the diagnostic sky weather. Premium reveals the <strong>exact dates, the psychological levers, and what they secretly feel</strong> according to synastric transits so you never walk in the dark again:
                 </p>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-3 pt-1">
-                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
-                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 01 / Exact Peak Dates</span>
-                  <p className="text-xs text-[#eee5d3] font-medium">Exact Calendar Day & Degree</p>
-                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(5,32,54,0.7)] p-3 rounded-xl space-y-1">
+                  <span className="text-[10px] font-mono text-[#EAC157]">✦ 01 / Exact Peak Dates</span>
+                  <p className="text-xs text-[#FAF9F6] font-medium">Exact Calendar Day & Degree</p>
+                  <p className="text-[11px] text-[#c5d3df] blur-[3px] select-none">
                     Transit peaks on October 14th at 18° Aries, ending your 14-month cycle of silence.
                   </p>
                 </div>
-                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
-                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 02 / The Hard Script</span>
-                  <p className="text-xs text-[#eee5d3] font-medium">What to Say Without Guilt</p>
-                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(5,32,54,0.7)] p-3 rounded-xl space-y-1">
+                  <span className="text-[10px] font-mono text-[#EAC157]">✦ 02 / The Hard Script</span>
+                  <p className="text-xs text-[#FAF9F6] font-medium">What to Say Without Guilt</p>
+                  <p className="text-[11px] text-[#c5d3df] blur-[3px] select-none">
                     "I can hold a soft corner for who you were while refusing to allow who you are now to hurt me."
                   </p>
                 </div>
-                <div className="border border-[rgba(238,93,52,0.15)] bg-[rgba(14,10,23,0.7)] p-3 rounded-sm space-y-1">
-                  <span className="text-[10px] font-mono text-[#ee5d34]">✦ 03 / Their Hidden Reaction</span>
-                  <p className="text-xs text-[#eee5d3] font-medium">Placements & Planetary Intent</p>
-                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none">
+                <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(5,32,54,0.7)] p-3 rounded-xl space-y-1">
+                  <span className="text-[10px] font-mono text-[#EAC157]">✦ 03 / Their Hidden Reaction</span>
+                  <p className="text-xs text-[#FAF9F6] font-medium">Placements & Planetary Intent</p>
+                  <p className="text-[11px] text-[#c5d3df] blur-[3px] select-none">
                     Their Saturn return triggers remorse when you stop initiating, forcing genuine accountability.
                   </p>
                 </div>
@@ -814,7 +814,7 @@ export function TimelinePage({ onNavigate }: Props) {
               <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                 <button
                   onClick={() => onNavigate("reading")}
-                  className="w-full sm:w-auto py-3 px-6 bg-[#ee5d34] text-[#0e0a17] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#f58a6b] transition-all rounded-sm cursor-pointer shadow-lg"
+                  className="w-full sm:w-auto py-3 px-6 bg-[#EAC157] text-[#052036] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#d9b048] transition-all rounded-xl cursor-pointer shadow-lg"
                 >
                   Unlock Complete Breakthrough Dossier →
                 </button>
@@ -823,7 +823,7 @@ export function TimelinePage({ onNavigate }: Props) {
                     localStorage.setItem("astrofindings_pending_inquiry", "When will the emotional fog lift in my life, why do I still have a soft corner for them, and what is the exact breakthrough window coming for my birth chart?");
                     onNavigate("askai");
                   }}
-                  className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] font-mono cursor-pointer"
+                  className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] font-mono cursor-pointer"
                 >
                   Ask AstroFindings AI About This Window →
                 </button>
@@ -842,25 +842,25 @@ export function TimelinePage({ onNavigate }: Props) {
 
       {/* AI Consultation Feedback Box */}
       {isConsultingAI && (
-        <div className="p-4 border border-[#ee5d34] bg-[rgba(31,24,48,0.95)] rounded-sm text-xs text-[#ee5d34] font-mono animate-pulse mt-6">
+        <div className="p-4 border border-[#EAC157] bg-[rgba(8,40,66,0.95)] rounded-xl text-xs text-[#EAC157] font-mono animate-pulse mt-6">
           ✦ Consulting your whole-sign chart against live transits...
         </div>
       )}
 
       {aiInquiryResponse && (
-        <div className="border border-[#ee5d34] bg-[rgba(20,15,35,0.95)] p-6 rounded-sm space-y-3 mt-6">
-          <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.15)] pb-2">
-            <span className="text-xs font-mono uppercase text-[#ee5d34] font-semibold">
+        <div className="border border-[#EAC157] bg-[rgba(6,28,48,0.95)] p-6 rounded-xl space-y-3 mt-6">
+          <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.15)] pb-2">
+            <span className="text-xs font-mono uppercase text-[#EAC157] font-semibold">
               ✦ Personal Timing Synthesis
             </span>
             <button
               onClick={() => setAiInquiryResponse(null)}
-              className="text-xs text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+              className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
             >
               ✕ Close
             </button>
           </div>
-          <p className="text-xs text-[#eee5d3] leading-relaxed whitespace-pre-line">
+          <p className="text-xs text-[#FAF9F6] leading-relaxed whitespace-pre-line">
             {aiInquiryResponse}
           </p>
         </div>
@@ -936,22 +936,22 @@ export function RelationshipsPage({ onNavigate }: Props) {
     >
       <div className="grid md:grid-cols-2 gap-6">
         {/* Add Person Card */}
-        <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] p-6 rounded-sm space-y-4">
-          <span className="text-xs font-mono uppercase text-[#ee5d34]">Create Bond Dossier</span>
-          <h2 className="font-serif text-2xl text-[#eee5d3]">Add a Person</h2>
+        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 rounded-xl space-y-4">
+          <span className="text-xs font-mono uppercase text-[#EAC157]">Create Bond Dossier</span>
+          <h2 className="font-serif text-2xl text-[#FAF9F6]">Add a Person</h2>
           <form onSubmit={handleCreate} className="space-y-3">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Their name"
               required
-              className="w-full bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-3 py-2 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+              className="w-full bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
             />
             <div className="grid grid-cols-2 gap-2">
               <select
                 value={relationType}
                 onChange={(e) => setRelationType(e.target.value as any)}
-                className="bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-2 py-2 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                className="bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-2 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
               >
                 <option value="Partner">Partner</option>
                 <option value="Friend">Friend</option>
@@ -962,7 +962,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="bg-[rgba(14,10,23,0.8)] border border-[rgba(238,93,52,0.3)] rounded-sm px-2 py-2 text-xs text-[#eee5d3] focus:outline-none focus:border-[#ee5d34] [color-scheme:dark]"
+                className="bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-2 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] [color-scheme:dark]"
               />
             </div>
             <button className="button-primary cursor-pointer w-full py-2.5 text-xs font-medium" type="submit">
@@ -972,9 +972,9 @@ export function RelationshipsPage({ onNavigate }: Props) {
         </div>
 
         {/* Psychological Synastry Principles */}
-        <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] p-6 rounded-sm space-y-3">
-          <span className="text-xs font-mono uppercase text-[#ee5d34]">What We Interrogate</span>
-          <ul className="text-xs text-[#bfb7aa] space-y-2">
+        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 rounded-xl space-y-3">
+          <span className="text-xs font-mono uppercase text-[#EAC157]">What We Interrogate</span>
+          <ul className="text-xs text-[#c5d3df] space-y-2">
             <li>✦ <strong>The Ice Wall vs Anxiety:</strong> How your emotional withdrawal triggers their fear, and vice versa.</li>
             <li>✦ <strong>Soft Corners:</strong> Why you still have feelings despite boundary breaches or heartbreak.</li>
             <li>✦ <strong>Attraction & Dialogue:</strong> Venus & Mars chemistry versus Mercury communication blocks.</li>
@@ -985,7 +985,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
 
       {/* Saved Bonds List */}
       <div className="mt-8 mb-6">
-        <span className="text-xs font-mono uppercase text-[#ee5d34] tracking-wider block mb-3">
+        <span className="text-xs font-mono uppercase text-[#EAC157] tracking-wider block mb-3">
           Saved Bonds ({people.length})
         </span>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -995,30 +995,30 @@ export function RelationshipsPage({ onNavigate }: Props) {
               <div
                 key={p.id}
                 onClick={() => setSelectedPersonId(p.id)}
-                className={`border p-4 rounded-sm transition-all cursor-pointer flex flex-col justify-between ${
+                className={`border p-4 rounded-xl transition-all cursor-pointer flex flex-col justify-between ${
                   isSelected
-                    ? "border-[#ee5d34] bg-[rgba(238,93,52,0.12)]"
-                    : "border-[rgba(238,93,52,0.1)] bg-[rgba(31,24,48,0.6)] hover:border-[rgba(238,93,52,0.3)]"
+                    ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
+                    : "border-[rgba(234,193,87,0.1)] bg-[rgba(8,40,66,0.6)] hover:border-[rgba(234,193,87,0.3)]"
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-serif text-base text-[#eee5d3]">{p.name}</h3>
-                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 bg-[rgba(238,93,52,0.15)] text-[#ee5d34] rounded-sm">
+                    <h3 className="font-serif text-base text-[#FAF9F6]">{p.name}</h3>
+                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 bg-[rgba(234,193,87,0.15)] text-[#EAC157] rounded-xl">
                       {p.relationship}
                     </span>
                   </div>
-                  <p className="text-xs text-[#bfb7aa]">☉ {p.sunSign} · ☽ {p.moonSign}</p>
+                  <p className="text-xs text-[#c5d3df]">☉ {p.sunSign} · ☽ {p.moonSign}</p>
                 </div>
-                <div className="flex items-center justify-between mt-4 pt-2 border-t border-[rgba(238,93,52,0.08)]">
-                  <span className="text-xs text-[#ee5d34]">View synastry →</span>
+                <div className="flex items-center justify-between mt-4 pt-2 border-t border-[rgba(234,193,87,0.08)]">
+                  <span className="text-xs text-[#EAC157]">View synastry →</span>
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       deletePerson(p.id);
                     }}
-                    className="text-xs text-[#bfb7aa] hover:text-[rgba(220,100,80,1)]"
+                    className="text-xs text-[#c5d3df] hover:text-[rgba(220,100,80,1)]"
                   >
                     Remove
                   </button>
@@ -1031,48 +1031,48 @@ export function RelationshipsPage({ onNavigate }: Props) {
 
       {/* Synastry Analysis Detail Card */}
       {selectedPerson && compatibility && (
-        <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.85)] p-6 rounded-sm mb-6 space-y-5">
-          <div className="flex items-baseline justify-between border-b border-[rgba(238,93,52,0.1)] pb-3">
+        <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.85)] p-6 rounded-xl mb-6 space-y-5">
+          <div className="flex items-baseline justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
             <div>
-              <h3 className="font-serif text-2xl text-[#eee5d3]">
+              <h3 className="font-serif text-2xl text-[#FAF9F6]">
                 {user.name} & {selectedPerson.name}
               </h3>
-              <p className="text-xs text-[#bfb7aa]">
+              <p className="text-xs text-[#c5d3df]">
                 {user.sunSign} Sun / {user.moonSign} Moon × {selectedPerson.sunSign} Sun / {selectedPerson.moonSign} Moon
               </p>
             </div>
             <div className="text-right">
-              <span className="text-3xl font-serif text-[#ee5d34]">{compatibility.overallScore}%</span>
-              <span className="block text-[10px] font-mono text-[#bfb7aa] uppercase">Harmony index</span>
+              <span className="text-3xl font-serif text-[#EAC157]">{compatibility.overallScore}%</span>
+              <span className="block text-[10px] font-mono text-[#c5d3df] uppercase">Harmony index</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center py-2">
-            <div className="border border-[rgba(238,93,52,0.1)] p-2.5 rounded-sm bg-[rgba(20,15,35,0.6)]">
-              <span className="text-xs text-[#bfb7aa] block">Emotional</span>
-              <strong className="text-base text-[#eee5d3]">{compatibility.emotionalScore}%</strong>
+            <div className="border border-[rgba(234,193,87,0.1)] p-2.5 rounded-xl bg-[rgba(6,28,48,0.6)]">
+              <span className="text-xs text-[#c5d3df] block">Emotional</span>
+              <strong className="text-base text-[#FAF9F6]">{compatibility.emotionalScore}%</strong>
             </div>
-            <div className="border border-[rgba(238,93,52,0.1)] p-2.5 rounded-sm bg-[rgba(20,15,35,0.6)]">
-              <span className="text-xs text-[#bfb7aa] block">Dialogue</span>
-              <strong className="text-base text-[#eee5d3]">{compatibility.communicationScore}%</strong>
+            <div className="border border-[rgba(234,193,87,0.1)] p-2.5 rounded-xl bg-[rgba(6,28,48,0.6)]">
+              <span className="text-xs text-[#c5d3df] block">Dialogue</span>
+              <strong className="text-base text-[#FAF9F6]">{compatibility.communicationScore}%</strong>
             </div>
-            <div className="border border-[rgba(238,93,52,0.1)] p-2.5 rounded-sm bg-[rgba(20,15,35,0.6)]">
-              <span className="text-xs text-[#bfb7aa] block">Passion</span>
-              <strong className="text-base text-[#eee5d3]">{compatibility.passionScore}%</strong>
+            <div className="border border-[rgba(234,193,87,0.1)] p-2.5 rounded-xl bg-[rgba(6,28,48,0.6)]">
+              <span className="text-xs text-[#c5d3df] block">Passion</span>
+              <strong className="text-base text-[#FAF9F6]">{compatibility.passionScore}%</strong>
             </div>
-            <div className="border border-[rgba(238,93,52,0.1)] p-2.5 rounded-sm bg-[rgba(20,15,35,0.6)]">
-              <span className="text-xs text-[#bfb7aa] block">Long-Term</span>
-              <strong className="text-base text-[#eee5d3]">{compatibility.longTermScore}%</strong>
+            <div className="border border-[rgba(234,193,87,0.1)] p-2.5 rounded-xl bg-[rgba(6,28,48,0.6)]">
+              <span className="text-xs text-[#c5d3df] block">Long-Term</span>
+              <strong className="text-base text-[#FAF9F6]">{compatibility.longTermScore}%</strong>
             </div>
           </div>
 
           {/* Deep Psychological Prompts */}
-          <div className="p-4 border border-[rgba(238,93,52,0.15)] bg-[rgba(20,15,35,0.7)] rounded-sm space-y-3">
+          <div className="p-4 border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.7)] rounded-xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase text-[#ee5d34] block">
+              <span className="text-xs font-mono uppercase text-[#EAC157] block">
                 ✦ Unspoken Synastry Inquiries (Click to Consult AI)
               </span>
-              <span className="text-[10px] font-mono text-[#bfb7aa]">
+              <span className="text-[10px] font-mono text-[#c5d3df]">
                 Grounded in Both Natal Wheels
               </span>
             </div>
@@ -1090,7 +1090,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
                     setSynastryAIQuery(q);
                     handleConsultBondAI(q);
                   }}
-                  className="text-xs px-2.5 py-1.5 border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.7)] text-[#eee5d3] hover:border-[#ee5d34] rounded-sm cursor-pointer text-left"
+                  className="text-xs px-2.5 py-1.5 border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] text-[#FAF9F6] hover:border-[#EAC157] rounded-xl cursor-pointer text-left"
                 >
                   ✦ {q}
                 </button>
@@ -1098,28 +1098,28 @@ export function RelationshipsPage({ onNavigate }: Props) {
             </div>
 
             {/* Competitor Synastric Paywall Teaser */}
-            <div className="mt-4 p-4 border border-dashed border-[rgba(238,93,52,0.35)] bg-[rgba(14,10,23,0.85)] rounded-sm space-y-3">
+            <div className="mt-4 p-4 border border-dashed border-[rgba(234,193,87,0.35)] bg-[rgba(5,32,54,0.85)] rounded-xl space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34] font-semibold">
+                <span className="text-[10px] font-mono uppercase text-[#EAC157] font-semibold">
                   🔒 Premium Synastry Dossier · What They Secretly Feel
                 </span>
-                <span className="text-[9px] font-mono px-1.5 py-0.5 bg-[#ee5d34] text-[#0e0a17] font-semibold rounded-sm">
+                <span className="text-[9px] font-mono px-1.5 py-0.5 bg-[#EAC157] text-[#052036] font-semibold rounded-xl">
                   PAID ACCESS
                 </span>
               </div>
-              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+              <p className="text-xs text-[#c5d3df] leading-relaxed">
                 Free reveals basic harmony scores. Premium reveals <strong>what {selectedPerson.name} actually feels about you according to their planetary placements, why they act distant, and the script for honest conversation:</strong>
               </p>
               <div className="grid sm:grid-cols-2 gap-2 text-left pt-1">
-                <div className="p-2 border border-[rgba(238,93,52,0.12)] rounded-sm bg-[rgba(31,24,48,0.6)]">
-                  <span className="text-[10px] font-mono text-[#ee5d34] block">✦ What They Secretly Feel</span>
-                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none mt-0.5">
+                <div className="p-2 border border-[rgba(234,193,87,0.12)] rounded-xl bg-[rgba(8,40,66,0.6)]">
+                  <span className="text-[10px] font-mono text-[#EAC157] block">✦ What They Secretly Feel</span>
+                  <p className="text-[11px] text-[#c5d3df] blur-[3px] select-none mt-0.5">
                     Their Venus in Leo craves your admiration, but their Saturn square causes cold emotional withdrawal.
                   </p>
                 </div>
-                <div className="p-2 border border-[rgba(238,93,52,0.12)] rounded-sm bg-[rgba(31,24,48,0.6)]">
-                  <span className="text-[10px] font-mono text-[#ee5d34] block">✦ The Healing Script</span>
-                  <p className="text-[11px] text-[#bfb7aa] blur-[3px] select-none mt-0.5">
+                <div className="p-2 border border-[rgba(234,193,87,0.12)] rounded-xl bg-[rgba(8,40,66,0.6)]">
+                  <span className="text-[10px] font-mono text-[#EAC157] block">✦ The Healing Script</span>
+                  <p className="text-[11px] text-[#c5d3df] blur-[3px] select-none mt-0.5">
                     "I am stepping back not out of anger, but because I deserve the same emotional safety I offer you."
                   </p>
                 </div>
@@ -1139,7 +1139,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
                     );
                     onNavigate("askai");
                   }}
-                  className="text-xs text-[#ee5d34] hover:underline font-mono cursor-pointer"
+                  className="text-xs text-[#EAC157] hover:underline font-mono cursor-pointer"
                 >
                   Consult AI on This Bond →
                 </button>
@@ -1147,20 +1147,20 @@ export function RelationshipsPage({ onNavigate }: Props) {
             </div>
 
             {isConsultingSynastry && (
-              <div className="text-xs font-mono text-[#ee5d34] animate-pulse pt-2">
+              <div className="text-xs font-mono text-[#EAC157] animate-pulse pt-2">
                 Consulting synastry ephemeris between your two charts...
               </div>
             )}
 
             {synastryAIResponse && (
-              <div className="p-4 border border-[#ee5d34] bg-[rgba(14,10,23,0.9)] rounded-sm text-xs text-[#eee5d3] leading-relaxed whitespace-pre-line mt-3">
-                <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.15)] pb-1 mb-2">
-                  <span className="font-mono text-[#ee5d34] uppercase text-[10px]">
+              <div className="p-4 border border-[#EAC157] bg-[rgba(5,32,54,0.9)] rounded-xl text-xs text-[#FAF9F6] leading-relaxed whitespace-pre-line mt-3">
+                <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.15)] pb-1 mb-2">
+                  <span className="font-mono text-[#EAC157] uppercase text-[10px]">
                     ✦ Synastry AI Consultation
                   </span>
                   <button
                     onClick={() => setSynastryAIResponse(null)}
-                    className="text-[10px] text-[#bfb7aa] hover:text-[#eee5d3]"
+                    className="text-[10px] text-[#c5d3df] hover:text-[#FAF9F6]"
                   >
                     ✕ Close
                   </button>
@@ -1198,7 +1198,7 @@ export function WellnessPage({ onNavigate }: Props) {
       intro="What can you do with these feelings? Daily affirmations, somatic meditations, and rituals to ease anxiety, heal heartbreak, and step out of your comfort zone."
     >
       {/* Sub Tabs */}
-      <div className="flex gap-2 mb-8 border-b border-[rgba(238,93,52,0.12)] pb-3">
+      <div className="flex gap-2 mb-8 border-b border-[rgba(234,193,87,0.12)] pb-3">
         {[
           { id: "affirmations", label: "Affirmations (No Guilt)" },
           { id: "meditations", label: "Grounding Soundscapes" },
@@ -1207,10 +1207,10 @@ export function WellnessPage({ onNavigate }: Props) {
           <button
             key={t.id}
             onClick={() => setWellnessTab(t.id as any)}
-            className={`px-3 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
               wellnessTab === t.id
-                ? "bg-[#ee5d34] text-[#0e0a17] font-semibold"
-                : "border border-[rgba(238,93,52,0.12)] text-[#bfb7aa] hover:border-[#ee5d34] hover:text-[#eee5d3]"
+                ? "bg-[#EAC157] text-[#052036] font-semibold"
+                : "border border-[rgba(234,193,87,0.12)] text-[#c5d3df] hover:border-[#EAC157] hover:text-[#FAF9F6]"
             }`}
           >
             {t.label}
@@ -1226,10 +1226,10 @@ export function WellnessPage({ onNavigate }: Props) {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`text-xs px-2.5 py-1 rounded-sm uppercase font-mono transition-colors cursor-pointer ${
+                className={`text-xs px-2.5 py-1 rounded-xl uppercase font-mono transition-colors cursor-pointer ${
                   selectedCategory === cat
-                    ? "bg-[#ee5d34] text-[#0e0a17] font-medium"
-                    : "border border-[rgba(238,93,52,0.15)] text-[#bfb7aa] hover:text-[#eee5d3]"
+                    ? "bg-[#EAC157] text-[#052036] font-medium"
+                    : "border border-[rgba(234,193,87,0.15)] text-[#c5d3df] hover:text-[#FAF9F6]"
                 }`}
               >
                 {cat}
@@ -1241,13 +1241,13 @@ export function WellnessPage({ onNavigate }: Props) {
             {affirmations.map((a) => (
               <div
                 key={a.id}
-                className="border border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.7)] p-5 rounded-sm space-y-3"
+                className="border border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.7)] p-5 rounded-xl space-y-3"
               >
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34] block">
+                <span className="text-[10px] font-mono uppercase text-[#EAC157] block">
                   ✦ {a.category} · Focus: {a.focusPlanet}
                 </span>
-                <p className="font-serif text-base text-[#eee5d3] leading-snug">“{a.text}”</p>
-                <p className="text-xs text-[#bfb7aa] leading-relaxed pt-2 border-t border-[rgba(238,93,52,0.08)]">
+                <p className="font-serif text-base text-[#FAF9F6] leading-snug">“{a.text}”</p>
+                <p className="text-xs text-[#c5d3df] leading-relaxed pt-2 border-t border-[rgba(234,193,87,0.08)]">
                   {a.insightContext}
                 </p>
               </div>
@@ -1268,13 +1268,13 @@ export function WellnessPage({ onNavigate }: Props) {
             ].map((track) => {
               const playing = isPlayingAudio === track.id;
               return (
-                <div key={track.id} className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.8)] p-5 rounded-sm space-y-3">
+                <div key={track.id} className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.8)] p-5 rounded-xl space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-[#ee5d34]">{track.freq}</span>
-                    <span className="text-xs font-mono text-[#bfb7aa]">{track.duration}</span>
+                    <span className="text-xs font-mono text-[#EAC157]">{track.freq}</span>
+                    <span className="text-xs font-mono text-[#c5d3df]">{track.duration}</span>
                   </div>
-                  <h4 className="font-serif text-lg text-[#eee5d3]">{track.title}</h4>
-                  <p className="text-xs text-[#bfb7aa] leading-relaxed">{track.desc}</p>
+                  <h4 className="font-serif text-lg text-[#FAF9F6]">{track.title}</h4>
+                  <p className="text-xs text-[#c5d3df] leading-relaxed">{track.desc}</p>
                   <button
                     onClick={() => setIsPlayingAudio(playing ? null : track.id)}
                     className="button-primary cursor-pointer text-xs py-1.5 px-3 w-full"
@@ -1291,10 +1291,10 @@ export function WellnessPage({ onNavigate }: Props) {
       {/* 3. RITUALS */}
       {wellnessTab === "rituals" && (
         <div className="space-y-4">
-          <div className="border border-[rgba(238,93,52,0.2)] bg-[rgba(31,24,48,0.8)] p-6 rounded-sm space-y-4">
-            <span className="text-xs font-mono uppercase text-[#ee5d34] block">Current Celestial Practice</span>
-            <h3 className="font-serif text-xl text-[#eee5d3]">The Unspoken Cord Cut</h3>
-            <p className="text-xs text-[#bfb7aa] leading-relaxed">
+          <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.8)] p-6 rounded-xl space-y-4">
+            <span className="text-xs font-mono uppercase text-[#EAC157] block">Current Celestial Practice</span>
+            <h3 className="font-serif text-xl text-[#FAF9F6]">The Unspoken Cord Cut</h3>
+            <p className="text-xs text-[#c5d3df] leading-relaxed">
               When someone lingers in your mental space long after the relationship ended, your energy remains depleted.
               Tonight, take five minutes in total darkness: write down what they did that made you cry, acknowledge that holding a soft corner does not require you to contact them, and destroy the paper without guilt.
             </p>
@@ -1324,12 +1324,12 @@ export function PalmReadingPage({ onNavigate }: Props) {
     >
       <div className="grid md:grid-cols-2 gap-8 items-start">
         {/* Palm Visualizer Card */}
-        <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(20,15,35,0.8)] p-6 rounded-sm text-center space-y-4">
-          <span className="text-xs font-mono uppercase text-[#ee5d34]">Somatic Mirror</span>
-          <div className="w-56 h-64 mx-auto border-2 border-dashed border-[rgba(238,93,52,0.3)] rounded-sm flex flex-col items-center justify-center p-4 relative">
-            <span className="text-6xl text-[#ee5d34] opacity-80 mb-2">✋</span>
-            <span className="text-[11px] font-mono text-[#bfb7aa]">Active Line: {analyzedLine.toUpperCase()} LINE</span>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0e0a17] via-transparent to-transparent pointer-events-none" />
+        <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(6,28,48,0.8)] p-6 rounded-xl text-center space-y-4">
+          <span className="text-xs font-mono uppercase text-[#EAC157]">Somatic Mirror</span>
+          <div className="w-56 h-64 mx-auto border-2 border-dashed border-[rgba(234,193,87,0.3)] rounded-xl flex flex-col items-center justify-center p-4 relative">
+            <span className="text-6xl text-[#EAC157] opacity-80 mb-2">✋</span>
+            <span className="text-[11px] font-mono text-[#c5d3df]">Active Line: {analyzedLine.toUpperCase()} LINE</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#052036] via-transparent to-transparent pointer-events-none" />
           </div>
 
           <div className="flex justify-center gap-2">
@@ -1341,10 +1341,10 @@ export function PalmReadingPage({ onNavigate }: Props) {
               <button
                 key={l.id}
                 onClick={() => setAnalyzedLine(l.id as any)}
-                className={`px-3 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
                   analyzedLine === l.id
-                    ? "bg-[#ee5d34] text-[#0e0a17] font-semibold"
-                    : "border border-[rgba(238,93,52,0.15)] text-[#bfb7aa] hover:border-[#ee5d34]"
+                    ? "bg-[#EAC157] text-[#052036] font-semibold"
+                    : "border border-[rgba(234,193,87,0.15)] text-[#c5d3df] hover:border-[#EAC157]"
                 }`}
               >
                 {l.label}
@@ -1354,12 +1354,12 @@ export function PalmReadingPage({ onNavigate }: Props) {
         </div>
 
         {/* Line Psychological Interpretation */}
-        <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.85)] p-6 rounded-sm space-y-4">
+        <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.85)] p-6 rounded-xl space-y-4">
           {analyzedLine === "heart" && (
             <div className="space-y-3">
-              <span className="text-xs font-mono text-[#ee5d34] uppercase">Heart Line: The Relational Valve</span>
-              <h3 className="font-serif text-2xl text-[#eee5d3]">Heartbreak, Detachment & Soft Corners</h3>
-              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+              <span className="text-xs font-mono text-[#EAC157] uppercase">Heart Line: The Relational Valve</span>
+              <h3 className="font-serif text-2xl text-[#FAF9F6]">Heartbreak, Detachment & Soft Corners</h3>
+              <p className="text-xs text-[#c5d3df] leading-relaxed">
                 Your heart line indicates how your nervous system responds to emotional injury.
                 A deep curve shows a person who loves with intense loyalty, frequently keeping an unspoken soft corner for those who betrayed them.
                 When overwhelmed, your defense mechanism is to step back into complete silence.
@@ -1369,9 +1369,9 @@ export function PalmReadingPage({ onNavigate }: Props) {
 
           {analyzedLine === "head" && (
             <div className="space-y-3">
-              <span className="text-xs font-mono text-[#ee5d34] uppercase">Head Line: The Thought Machine</span>
-              <h3 className="font-serif text-2xl text-[#eee5d3]">Overthinking & Cognitive Vigilance</h3>
-              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+              <span className="text-xs font-mono text-[#EAC157] uppercase">Head Line: The Thought Machine</span>
+              <h3 className="font-serif text-2xl text-[#FAF9F6]">Overthinking & Cognitive Vigilance</h3>
+              <p className="text-xs text-[#c5d3df] leading-relaxed">
                 Your head line reflects mental bandwidth. Sloping gently downward, it signals high emotional intuition coupled with an exhaustion-inducing tendency to over-analyze every micro-reaction from other people.
               </p>
             </div>
@@ -1379,9 +1379,9 @@ export function PalmReadingPage({ onNavigate }: Props) {
 
           {analyzedLine === "life" && (
             <div className="space-y-3">
-              <span className="text-xs font-mono text-[#ee5d34] uppercase">Life Line: Grounding & Vitality</span>
-              <h3 className="font-serif text-2xl text-[#eee5d3]">Comfort Zone & Sovereign Power</h3>
-              <p className="text-xs text-[#bfb7aa] leading-relaxed">
+              <span className="text-xs font-mono text-[#EAC157] uppercase">Life Line: Grounding & Vitality</span>
+              <h3 className="font-serif text-2xl text-[#FAF9F6]">Comfort Zone & Sovereign Power</h3>
+              <p className="text-xs text-[#c5d3df] leading-relaxed">
                 This line doesn't measure lifespan — it measures your grounded presence. It reveals when you are hiding inside your safe comfort zone versus when you have the vitality to step out and truly shine.
               </p>
             </div>
@@ -1497,13 +1497,13 @@ export function AskAIPage({ onNavigate }: Props) {
       intro="A chart-grounded astrological salon. Not an automated chatbot, but an epistolary dossier synthesized by cross-examining your exact natal coordinates against current planetary transits."
     >
       {/* 1. STUDIED NATAL COORDINATES BANNER */}
-      <div className="border border-[rgba(238,93,52,0.22)] bg-[radial-gradient(ellipse_at_top,rgba(31,24,48,0.95),rgba(14,10,23,0.98))] p-5 rounded-sm mb-8 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(238,93,52,0.12)] pb-4 mb-4">
+      <div className="border border-[rgba(234,193,87,0.22)] bg-[radial-gradient(ellipse_at_top,rgba(8,40,66,0.95),rgba(5,32,54,0.98))] p-5 rounded-xl mb-8 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(234,193,87,0.12)] pb-4 mb-4">
           <div>
-            <span className="text-[10px] font-mono tracking-widest uppercase text-[#ee5d34] block">
+            <span className="text-[10px] font-mono tracking-widest uppercase text-[#EAC157] block">
               ✦ Studied Natal Coordinates Anchored to Your Inquiry
             </span>
-            <h3 className="font-serif text-lg text-[#eee5d3]">
+            <h3 className="font-serif text-lg text-[#FAF9F6]">
               {user.name || "Natal Blueprint"} · Born {user.birthDate || "Configured in Profile"}
             </h3>
           </div>
@@ -1511,7 +1511,7 @@ export function AskAIPage({ onNavigate }: Props) {
           {/* Active Engine Badge & Switcher */}
           <div className="flex items-center gap-2">
             <div className="text-right hidden sm:block">
-              <span className="text-[9px] font-mono text-[#bfb7aa] uppercase block">Active Synthesis Engine</span>
+              <span className="text-[9px] font-mono text-[#c5d3df] uppercase block">Active Synthesis Engine</span>
               <span className="text-xs font-mono text-[#d4af37]">
                 {settings.provider === "builtin" && "Free Built-in Ephemeris"}
                 {settings.provider === "groq" && "Groq Cloud (Free Llama 3.3)"}
@@ -1522,7 +1522,7 @@ export function AskAIPage({ onNavigate }: Props) {
             </div>
             <button
               onClick={() => setShowEngineModal(true)}
-              className="px-3 py-1.5 border border-[rgba(238,93,52,0.3)] bg-[rgba(238,93,52,0.08)] hover:bg-[rgba(238,93,52,0.18)] text-[#eee5d3] text-xs font-mono rounded-sm transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-[rgba(234,193,87,0.3)] bg-[rgba(234,193,87,0.08)] hover:bg-[rgba(234,193,87,0.18)] text-[#FAF9F6] text-xs font-mono rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
             >
               <span>⚙</span>
               <span>Configure Engine & API</span>
@@ -1540,34 +1540,34 @@ export function AskAIPage({ onNavigate }: Props) {
 
           return (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☉ Sun Luminary</span>
-                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.sunSign}</div>
-                <span className="text-[10px] text-[#bfb7aa] block">
+              <div className="p-3 border border-[rgba(234,193,87,0.1)] bg-[rgba(6,28,48,0.6)] rounded-xl">
+                <span className="text-[10px] font-mono text-[#EAC157] block uppercase">☉ Sun Luminary</span>
+                <div className="font-serif text-sm text-[#FAF9F6] font-medium">{user.sunSign}</div>
+                <span className="text-[10px] text-[#c5d3df] block">
                   {sunHouse ? `House ${sunHouse} · Conscious Will` : "Vital Purpose"}
                 </span>
               </div>
 
-              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">☽ Moon Core</span>
-                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.moonSign}</div>
-                <span className="text-[10px] text-[#bfb7aa] block">
+              <div className="p-3 border border-[rgba(234,193,87,0.1)] bg-[rgba(6,28,48,0.6)] rounded-xl">
+                <span className="text-[10px] font-mono text-[#EAC157] block uppercase">☽ Moon Core</span>
+                <div className="font-serif text-sm text-[#FAF9F6] font-medium">{user.moonSign}</div>
+                <span className="text-[10px] text-[#c5d3df] block">
                   {moonHouse ? `House ${moonHouse} · Instinct & Care` : "Subconscious Depths"}
                 </span>
               </div>
 
-              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
-                <span className="text-[10px] font-mono text-[#ee5d34] block uppercase">↑ Ascendant</span>
-                <div className="font-serif text-sm text-[#eee5d3] font-medium">{user.risingSign}</div>
-                <span className="text-[10px] text-[#bfb7aa] block">Sovereign Facade & Mask</span>
+              <div className="p-3 border border-[rgba(234,193,87,0.1)] bg-[rgba(6,28,48,0.6)] rounded-xl">
+                <span className="text-[10px] font-mono text-[#EAC157] block uppercase">↑ Ascendant</span>
+                <div className="font-serif text-sm text-[#FAF9F6] font-medium">{user.risingSign}</div>
+                <span className="text-[10px] text-[#c5d3df] block">Sovereign Facade & Mask</span>
               </div>
 
-              <div className="p-3 border border-[rgba(238,93,52,0.1)] bg-[rgba(20,15,35,0.6)] rounded-sm">
+              <div className="p-3 border border-[rgba(234,193,87,0.1)] bg-[rgba(6,28,48,0.6)] rounded-xl">
                 <span className="text-[10px] font-mono text-[#d4af37] block uppercase">☿ Active Transits</span>
-                <div className="font-serif text-sm text-[#eee5d3] font-medium truncate">
+                <div className="font-serif text-sm text-[#FAF9F6] font-medium truncate">
                   {transSunSign} Sun · {transMoonSign} Moon
                 </div>
-                <span className="text-[10px] text-[#bfb7aa] block truncate">
+                <span className="text-[10px] text-[#c5d3df] block truncate">
                   {retroCount} Retrograde(s)
                 </span>
               </div>
@@ -1579,29 +1579,29 @@ export function AskAIPage({ onNavigate }: Props) {
       {/* 2. ENGINE & API CONFIGURATION MODAL / DRAWER */}
       {showEngineModal && (
         <div className="fixed inset-0 z-50 bg-[rgba(10,8,16,0.85)] backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#140f23] border border-[#ee5d34] rounded-sm max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-[rgba(238,93,52,0.2)] pb-3">
+          <div className="bg-[#140f23] border border-[#EAC157] rounded-xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
+            <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.2)] pb-3">
               <div>
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34] tracking-wider block">
+                <span className="text-[10px] font-mono uppercase text-[#EAC157] tracking-wider block">
                   AstroFindings Intelligence System
                 </span>
-                <h3 className="font-serif text-xl text-[#eee5d3]">Astrological Engine & API Provider</h3>
+                <h3 className="font-serif text-xl text-[#FAF9F6]">Astrological Engine & API Provider</h3>
               </div>
               <button
                 onClick={() => setShowEngineModal(false)}
-                className="text-[#bfb7aa] hover:text-[#eee5d3] text-lg font-mono cursor-pointer"
+                className="text-[#c5d3df] hover:text-[#FAF9F6] text-lg font-mono cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="text-xs text-[#bfb7aa] leading-relaxed">
+            <div className="text-xs text-[#c5d3df] leading-relaxed">
               Choose between the free offline Ephemeris engine or plug in your personal API key (Groq, Gemini, OpenAI, OpenRouter) to unlock limitless deep psychological synthesis.
             </div>
 
             {/* Provider Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-mono text-[#eee5d3] block uppercase">Select Calculation Engine</label>
+              <label className="text-xs font-mono text-[#FAF9F6] block uppercase">Select Calculation Engine</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { id: "builtin", name: "Free Built-in Engine", desc: "100% Free · No API key needed" },
@@ -1626,14 +1626,14 @@ export function AskAIPage({ onNavigate }: Props) {
                             : prev.model,
                       }))
                     }
-                    className={`p-2.5 text-left rounded-sm border transition-all cursor-pointer ${
+                    className={`p-2.5 text-left rounded-xl border transition-all cursor-pointer ${
                       settings.provider === p.id
-                        ? "border-[#ee5d34] bg-[rgba(238,93,52,0.15)] text-[#eee5d3]"
-                        : "border-[rgba(238,93,52,0.15)] bg-[rgba(31,24,48,0.5)] text-[#bfb7aa] hover:border-[#ee5d34]"
+                        ? "border-[#EAC157] bg-[rgba(234,193,87,0.15)] text-[#FAF9F6]"
+                        : "border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.5)] text-[#c5d3df] hover:border-[#EAC157]"
                     }`}
                   >
-                    <div className="text-xs font-serif font-medium text-[#eee5d3]">{p.name}</div>
-                    <div className="text-[10px] text-[#bfb7aa] mt-0.5">{p.desc}</div>
+                    <div className="text-xs font-serif font-medium text-[#FAF9F6]">{p.name}</div>
+                    <div className="text-[10px] text-[#c5d3df] mt-0.5">{p.desc}</div>
                   </button>
                 ))}
               </div>
@@ -1641,15 +1641,15 @@ export function AskAIPage({ onNavigate }: Props) {
 
             {/* API Key Input (if not builtin) */}
             {settings.provider !== "builtin" && (
-              <div className="space-y-2 pt-2 border-t border-[rgba(238,93,52,0.1)]">
+              <div className="space-y-2 pt-2 border-t border-[rgba(234,193,87,0.1)]">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-mono text-[#eee5d3] uppercase">
+                  <label className="text-xs font-mono text-[#FAF9F6] uppercase">
                     {settings.provider.toUpperCase()} API Key
                   </label>
                   <button
                     type="button"
                     onClick={() => setShowKeyInput(!showKeyInput)}
-                    className="text-[10px] font-mono text-[#ee5d34] hover:underline"
+                    className="text-[10px] font-mono text-[#EAC157] hover:underline"
                   >
                     {showKeyInput ? "Hide Key" : "Show Key"}
                   </button>
@@ -1665,9 +1665,9 @@ export function AskAIPage({ onNavigate }: Props) {
                       ? "AIzaSy..."
                       : "sk-..."
                   }
-                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(238,93,52,0.3)] rounded-sm p-2.5 text-xs font-mono text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(234,193,87,0.3)] rounded-xl p-2.5 text-xs font-mono text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
                 />
-                <div className="text-[11px] text-[#bfb7aa]">
+                <div className="text-[11px] text-[#c5d3df]">
                   {settings.provider === "groq" && (
                     <span>
                       Get a free Groq key with thousands of fast requests daily at{" "}
@@ -1675,7 +1675,7 @@ export function AskAIPage({ onNavigate }: Props) {
                         href="https://console.groq.com/keys"
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#ee5d34] underline"
+                        className="text-[#EAC157] underline"
                       >
                         console.groq.com
                       </a>
@@ -1688,7 +1688,7 @@ export function AskAIPage({ onNavigate }: Props) {
                         href="https://aistudio.google.com/app/apikey"
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#ee5d34] underline"
+                        className="text-[#EAC157] underline"
                       >
                         aistudio.google.com
                       </a>
@@ -1704,18 +1704,18 @@ export function AskAIPage({ onNavigate }: Props) {
             {/* Model Field */}
             {settings.provider !== "builtin" && (
               <div className="space-y-1">
-                <label className="text-xs font-mono text-[#eee5d3] uppercase">Model Identifier</label>
+                <label className="text-xs font-mono text-[#FAF9F6] uppercase">Model Identifier</label>
                 <input
                   type="text"
                   value={settings.model}
                   onChange={(e) => setSettings((prev) => ({ ...prev, model: e.target.value }))}
-                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(238,93,52,0.2)] rounded-sm p-2 text-xs font-mono text-[#eee5d3] focus:outline-none focus:border-[#ee5d34]"
+                  className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(234,193,87,0.2)] rounded-xl p-2 text-xs font-mono text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
                 />
               </div>
             )}
 
             {engineSavedNotice && (
-              <div className="text-xs font-mono text-[#ee5d34] bg-[rgba(238,93,52,0.1)] p-2 rounded-sm text-center">
+              <div className="text-xs font-mono text-[#EAC157] bg-[rgba(234,193,87,0.1)] p-2 rounded-xl text-center">
                 ✓ Engine configuration saved successfully!
               </div>
             )}
@@ -1724,7 +1724,7 @@ export function AskAIPage({ onNavigate }: Props) {
               <button
                 type="button"
                 onClick={() => setShowEngineModal(false)}
-                className="px-4 py-2 text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                className="px-4 py-2 text-xs font-mono text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
               >
                 Cancel
               </button>
@@ -1743,7 +1743,7 @@ export function AskAIPage({ onNavigate }: Props) {
       {/* 3. DIAGNOSTIC INQUIRIES & INSCRIPTION DESK */}
       <div className="space-y-6">
         <div>
-          <span className="text-[11px] font-mono uppercase tracking-widest text-[#ee5d34] block mb-2">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-[#EAC157] block mb-2">
             ✦ Diagnostic Natal Inquiries (Select to Inscribe)
           </span>
           <div className="grid md:grid-cols-3 gap-2.5">
@@ -1754,13 +1754,13 @@ export function AskAIPage({ onNavigate }: Props) {
                   setQuestion(item.prompt);
                   handleConsult(item.prompt);
                 }}
-                className="border border-[rgba(238,93,52,0.18)] bg-[rgba(31,24,48,0.7)] hover:border-[#ee5d34] hover:bg-[rgba(31,24,48,0.95)] p-3.5 rounded-sm transition-all text-left cursor-pointer group"
+                className="border border-[rgba(234,193,87,0.18)] bg-[rgba(8,40,66,0.7)] hover:border-[#EAC157] hover:bg-[rgba(8,40,66,0.95)] p-3.5 rounded-xl transition-all text-left cursor-pointer group"
               >
-                <div className="flex items-center justify-between text-xs text-[#ee5d34] font-mono mb-1">
+                <div className="flex items-center justify-between text-xs text-[#EAC157] font-mono mb-1">
                   <span>{item.title}</span>
                   <span className="opacity-60 group-hover:opacity-100">{item.glyph}</span>
                 </div>
-                <p className="text-xs text-[#bfb7aa] group-hover:text-[#eee5d3] line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[#c5d3df] group-hover:text-[#FAF9F6] line-clamp-2 leading-relaxed">
                   “{item.prompt}”
                 </p>
               </button>
@@ -1769,12 +1769,12 @@ export function AskAIPage({ onNavigate }: Props) {
         </div>
 
         {/* Manuscript Input Field */}
-        <div className="border border-[rgba(238,93,52,0.25)] bg-[rgba(20,15,35,0.75)] p-5 rounded-sm space-y-4">
+        <div className="border border-[rgba(234,193,87,0.25)] bg-[rgba(6,28,48,0.75)] p-5 rounded-xl space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-mono text-[#eee5d3] uppercase tracking-wider">
+            <label className="text-xs font-mono text-[#FAF9F6] uppercase tracking-wider">
               Formulate Inscription for AstroFindings
             </label>
-            <span className="text-[10px] font-mono text-[#bfb7aa]">
+            <span className="text-[10px] font-mono text-[#c5d3df]">
               Cross-referenced with {user.sunSign} Sun · {user.moonSign} Moon · {user.risingSign} Rising
             </span>
           </div>
@@ -1783,11 +1783,11 @@ export function AskAIPage({ onNavigate }: Props) {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Inscribe the truth you keep guarded: Why do I shut down during intimacy? Why am I terrified of being alone yet keep pushing people away? Why does this specific heartbreak feel physical?..."
-            className="w-full h-32 bg-[rgba(10,8,16,0.85)] border border-[rgba(238,93,52,0.25)] rounded-sm p-4 text-xs sm:text-sm text-[#eee5d3] placeholder:text-[#6e677c] focus:outline-none focus:border-[#ee5d34] leading-relaxed resize-y"
+            className="w-full h-32 bg-[rgba(10,8,16,0.85)] border border-[rgba(234,193,87,0.25)] rounded-xl p-4 text-xs sm:text-sm text-[#FAF9F6] placeholder:text-[#6e677c] focus:outline-none focus:border-[#EAC157] leading-relaxed resize-y"
           />
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-            <div className="text-[11px] font-mono text-[#bfb7aa]">
+            <div className="text-[11px] font-mono text-[#c5d3df]">
               {settings.provider === "builtin" ? (
                 <span>⚡ Using Free Ephemeris Engine (Instant Offline Calculation)</span>
               ) : (
@@ -1809,24 +1809,24 @@ export function AskAIPage({ onNavigate }: Props) {
 
         {/* 4. THE CONSULTATION DOSSIER (NON-CHATBOT PARCHMENT LEDGER) */}
         {isLoading && (
-          <div className="border border-[rgba(238,93,52,0.3)] bg-[rgba(20,15,35,0.9)] p-8 rounded-sm text-center space-y-4 animate-pulse">
-            <span className="text-2xl text-[#ee5d34] block animate-spin inline-block">✦</span>
-            <div className="font-serif text-lg text-[#eee5d3]">Studying Natal Coordinates & Whole-Sign Rulers</div>
-            <p className="text-xs font-mono text-[#bfb7aa] max-w-md mx-auto">
+          <div className="border border-[rgba(234,193,87,0.3)] bg-[rgba(6,28,48,0.9)] p-8 rounded-xl text-center space-y-4 animate-pulse">
+            <span className="text-2xl text-[#EAC157] block animate-spin inline-block">✦</span>
+            <div className="font-serif text-lg text-[#FAF9F6]">Studying Natal Coordinates & Whole-Sign Rulers</div>
+            <p className="text-xs font-mono text-[#c5d3df] max-w-md mx-auto">
               Calculating aspects between {user.sunSign} Sun, {user.moonSign} Moon, house rulers, and current sky retrogrades...
             </p>
           </div>
         )}
 
         {response && !isLoading && (
-          <div className="border border-[#ee5d34] bg-[radial-gradient(ellipse_at_top,rgba(31,24,48,0.95),rgba(14,10,23,0.98))] rounded-sm shadow-2xl p-6 sm:p-8 space-y-6">
+          <div className="border border-[#EAC157] bg-[radial-gradient(ellipse_at_top,rgba(8,40,66,0.95),rgba(5,32,54,0.98))] rounded-xl shadow-2xl p-6 sm:p-8 space-y-6">
             {/* Dossier Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(238,93,52,0.2)] pb-4 gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(234,193,87,0.2)] pb-4 gap-2">
               <div>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-[#ee5d34] block">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-[#EAC157] block">
                   ✦ ASTROFINDINGS CONSULTATION DOSSIER · EPHEMERIS VERIFIED
                 </span>
-                <h2 className="font-serif text-2xl text-[#eee5d3] mt-0.5">
+                <h2 className="font-serif text-2xl text-[#FAF9F6] mt-0.5">
                   Astrological Reading on “{question.slice(0, 50)}
                   {question.length > 50 ? "..." : ""}”
                 </h2>
@@ -1834,7 +1834,7 @@ export function AskAIPage({ onNavigate }: Props) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCopyDossier}
-                  className="text-xs font-mono px-3 py-1.5 border border-[rgba(238,93,52,0.2)] hover:border-[#ee5d34] text-[#eee5d3] rounded-sm transition-colors cursor-pointer"
+                  className="text-xs font-mono px-3 py-1.5 border border-[rgba(234,193,87,0.2)] hover:border-[#EAC157] text-[#FAF9F6] rounded-xl transition-colors cursor-pointer"
                 >
                   {copied ? "✓ Inscription Copied" : "Copy Dossier"}
                 </button>
@@ -1842,28 +1842,28 @@ export function AskAIPage({ onNavigate }: Props) {
             </div>
 
             {/* Inscription Metadata strip */}
-            <div className="flex flex-wrap gap-2 text-[11px] font-mono text-[#bfb7aa] border-b border-[rgba(238,93,52,0.1)] pb-3">
-              <span className="px-2 py-0.5 bg-[rgba(238,93,52,0.1)] text-[#ee5d34] rounded-sm">
+            <div className="flex flex-wrap gap-2 text-[11px] font-mono text-[#c5d3df] border-b border-[rgba(234,193,87,0.1)] pb-3">
+              <span className="px-2 py-0.5 bg-[rgba(234,193,87,0.1)] text-[#EAC157] rounded-xl">
                 Subject: {user.name || "Sovereign Inquirer"}
               </span>
-              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm">
+              <span className="px-2 py-0.5 bg-[rgba(6,28,48,0.8)] border border-[rgba(234,193,87,0.15)] rounded-xl">
                 Coordinates: {user.sunSign} Sun · {user.moonSign} Moon · {user.risingSign} Rising
               </span>
-              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm">
+              <span className="px-2 py-0.5 bg-[rgba(6,28,48,0.8)] border border-[rgba(234,193,87,0.15)] rounded-xl">
                 Engine: {response.engineUsed}
               </span>
-              <span className="px-2 py-0.5 bg-[rgba(20,15,35,0.8)] border border-[rgba(238,93,52,0.15)] rounded-sm text-[#d4af37]">
+              <span className="px-2 py-0.5 bg-[rgba(6,28,48,0.8)] border border-[rgba(234,193,87,0.15)] rounded-xl text-[#d4af37]">
                 Archetype: {response.category}
               </span>
             </div>
 
             {/* Mind Reading Disclaimer if third party inquiry */}
             {response.structuredReading?.mindReadingDisclaimer && (
-              <div className="p-3.5 border border-[#ee5d34]/40 bg-[rgba(238,93,52,0.08)] rounded-sm text-xs text-[#eee5d3] flex items-start gap-2.5">
-                <span className="text-[#ee5d34] text-base leading-none mt-0.5">✦</span>
+              <div className="p-3.5 border border-[#EAC157]/40 bg-[rgba(234,193,87,0.08)] rounded-xl text-xs text-[#FAF9F6] flex items-start gap-2.5">
+                <span className="text-[#EAC157] text-base leading-none mt-0.5">✦</span>
                 <div className="space-y-0.5">
-                  <span className="font-mono text-[10px] text-[#ee5d34] uppercase tracking-wider block font-bold">Chart Boundary Notice</span>
-                  <p className="text-xs text-[#bfb7aa] leading-relaxed">{response.structuredReading.mindReadingDisclaimer}</p>
+                  <span className="font-mono text-[10px] text-[#EAC157] uppercase tracking-wider block font-bold">Chart Boundary Notice</span>
+                  <p className="text-xs text-[#c5d3df] leading-relaxed">{response.structuredReading.mindReadingDisclaimer}</p>
                 </div>
               </div>
             )}
@@ -1872,25 +1872,25 @@ export function AskAIPage({ onNavigate }: Props) {
             {response.structuredReading && response.structuredReading.sections.length > 0 ? (
               <div className="space-y-6">
                 {response.structuredReading.summary && (
-                  <div className="p-4 rounded-sm bg-[rgba(238,93,52,0.06)] border-l-2 border-[#ee5d34] font-serif text-sm md:text-base text-[#eee5d3] italic leading-relaxed">
+                  <div className="p-4 rounded-xl bg-[rgba(234,193,87,0.06)] border-l-2 border-[#EAC157] font-serif text-sm md:text-base text-[#FAF9F6] italic leading-relaxed">
                     "{response.structuredReading.summary}"
                   </div>
                 )}
 
                 <div className="space-y-6 pt-2">
                   {response.structuredReading.sections.map((sec, sIdx) => (
-                    <div key={sIdx} className="space-y-2 border-b border-[rgba(238,93,52,0.1)] pb-5 last:border-b-0">
+                    <div key={sIdx} className="space-y-2 border-b border-[rgba(234,193,87,0.1)] pb-5 last:border-b-0">
                       <div className="flex flex-wrap items-center gap-2">
                         {sec.dimensionTag && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(238,93,52,0.15)] text-[#ee5d34] rounded-sm font-semibold uppercase">
+                          <span className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(234,193,87,0.15)] text-[#EAC157] rounded-xl font-semibold uppercase">
                             {sec.dimensionTag}
                           </span>
                         )}
-                        <h3 className="font-serif text-base md:text-lg text-[#eee5d3] font-medium">
+                        <h3 className="font-serif text-base md:text-lg text-[#FAF9F6] font-medium">
                           {sec.title}
                         </h3>
                       </div>
-                      <p className="text-xs sm:text-sm text-[#eee5d3]/90 leading-relaxed whitespace-pre-line font-serif">
+                      <p className="text-xs sm:text-sm text-[#FAF9F6]/90 leading-relaxed whitespace-pre-line font-serif">
                         {sec.text}
                       </p>
                     </div>
@@ -1898,14 +1898,14 @@ export function AskAIPage({ onNavigate }: Props) {
                 </div>
               </div>
             ) : (
-              <div className="prose prose-invert max-w-none text-xs sm:text-sm text-[#eee5d3] leading-relaxed space-y-4 whitespace-pre-line font-serif font-normal">
+              <div className="prose prose-invert max-w-none text-xs sm:text-sm text-[#FAF9F6] leading-relaxed space-y-4 whitespace-pre-line font-serif font-normal">
                 {response.text}
               </div>
             )}
 
             {/* Active Sky Transits Tag Cloud */}
             {response.structuredReading?.relevantTransits && response.structuredReading.relevantTransits.length > 0 && (
-              <div className="pt-2 border-t border-[rgba(238,93,52,0.15)] space-y-1.5">
+              <div className="pt-2 border-t border-[rgba(234,193,87,0.15)] space-y-1.5">
                 <span className="text-[10px] font-mono uppercase text-[#d4af37] block font-bold">
                   Active Sky Transits Impacting This Inquiry:
                 </span>
@@ -1913,7 +1913,7 @@ export function AskAIPage({ onNavigate }: Props) {
                   {response.structuredReading.relevantTransits.map((t, tIdx) => (
                     <span
                       key={tIdx}
-                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(212,175,55,0.12)] border border-[rgba(212,175,55,0.25)] text-[#eee5d3] rounded-sm"
+                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(212,175,55,0.12)] border border-[rgba(212,175,55,0.25)] text-[#FAF9F6] rounded-xl"
                     >
                       ⚡ {t.transit}
                     </span>
@@ -1924,15 +1924,15 @@ export function AskAIPage({ onNavigate }: Props) {
 
             {/* Consulted Planets Tag Cloud */}
             {response.consultedPlanets && response.consultedPlanets.length > 0 && (
-              <div className="pt-2 border-t border-[rgba(238,93,52,0.15)] space-y-1.5">
-                <span className="text-[10px] font-mono uppercase text-[#ee5d34] block">
+              <div className="pt-2 border-t border-[rgba(234,193,87,0.15)] space-y-1.5">
+                <span className="text-[10px] font-mono uppercase text-[#EAC157] block">
                   Cross-Examined Ephemeris Bodies:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {response.consultedPlanets.map((p, idx) => (
                     <span
                       key={idx}
-                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(238,93,52,0.12)] border border-[rgba(238,93,52,0.2)] text-[#eee5d3] rounded-sm"
+                      className="text-[10px] font-mono px-2.5 py-1 bg-[rgba(234,193,87,0.12)] border border-[rgba(234,193,87,0.2)] text-[#FAF9F6] rounded-xl"
                     >
                       ✦ {p}
                     </span>
@@ -1942,20 +1942,20 @@ export function AskAIPage({ onNavigate }: Props) {
             )}
 
             {/* Dossier Footer Actions */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[rgba(238,93,52,0.15)]">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[rgba(234,193,87,0.15)]">
               <button
                 onClick={() => {
                   setResponse(null);
                   setQuestion("");
                 }}
-                className="text-xs font-mono text-[#bfb7aa] hover:text-[#eee5d3] cursor-pointer"
+                className="text-xs font-mono text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
               >
                 ← Inscribe Another Inquiry
               </button>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => onNavigate("chart")}
-                  className="text-xs font-mono text-[#ee5d34] hover:underline cursor-pointer"
+                  className="text-xs font-mono text-[#EAC157] hover:underline cursor-pointer"
                 >
                   Examine Natal Planetary Chart Wheel →
                 </button>
@@ -1966,15 +1966,15 @@ export function AskAIPage({ onNavigate }: Props) {
       </div>
 
       {/* Navigation Footer */}
-      <div className="pt-10 flex items-center justify-between border-t border-[rgba(238,93,52,0.12)] mt-12">
+      <div className="pt-10 flex items-center justify-between border-t border-[rgba(234,193,87,0.12)] mt-12">
         <button
-          className="button-quiet cursor-pointer text-xs text-[#bfb7aa] hover:text-[#eee5d3]"
+          className="button-quiet cursor-pointer text-xs text-[#c5d3df] hover:text-[#FAF9F6]"
           onClick={() => onNavigate("chart")}
         >
           ← Read Birth Chart Wheel
         </button>
         <button
-          className="button-quiet cursor-pointer text-xs text-[#bfb7aa] hover:text-[#eee5d3]"
+          className="button-quiet cursor-pointer text-xs text-[#c5d3df] hover:text-[#FAF9F6]"
           onClick={() => onNavigate("timeline")}
         >
           Inspect Planetary Transits Timeline →

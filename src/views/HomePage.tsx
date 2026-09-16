@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AstroFindingsLogo from "../components/AstroFindingsLogo";
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -168,15 +169,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   ];
 
   return (
-    <div className="home-root selection:bg-[#ee5d34] selection:text-[#0e0a17]">
+    <div className="home-root selection:bg-[#EAC157] selection:text-[#052036]">
       {/* ------------------------------------------------------------------ */}
-      {/* HEADER & NAVIGATION                                                */}
+      {/* HEADER & NAVIGATION (Brand Logo + Pill CTA)                        */}
       {/* ------------------------------------------------------------------ */}
       <header className="site-header">
-        <button className="brand cursor-pointer" onClick={() => go("home")}>
-          <span className="brand-mark">AF</span>
-          <span className="brand-name">AstroFindings</span>
-        </button>
+        <div className="cursor-pointer" onClick={() => go("home")}>
+          <AstroFindingsLogo size="sm" variant="dark" />
+        </div>
 
         <nav className="site-nav" aria-label="Primary navigation">
           <a href="#why">Against the Script</a>
@@ -208,7 +208,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* HERO SECTION: ORIGINAL LAYOUT & SVG ART (NO EXTERNAL PICTURES)      */}
+      {/* HERO SECTION: BRAND GUIDE DARK THEME                                */}
+      {/* "Same Stars. A Brighter You."                                      */}
       {/* ------------------------------------------------------------------ */}
       <main>
               <section className="hero" id="top">
@@ -241,7 +242,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 01 / AGAINST THE SCRIPT                                            */}
+        {/* 01 / AGAINST THE SCRIPT (Light Theme Showcase)                    */}
+        {/* "Discover Clarity in Every Chapter"                               */}
         {/* ------------------------------------------------------------------ */}
         <section className="manifesto" id="why">
           <div className="section-shell manifesto-grid">
@@ -260,7 +262,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         {/* ------------------------------------------------------------------ */}
         {/* 02 / THE 6 MOVEMENTS: RENDERED IN THE METHOD ROW UI                */}
         {/* ------------------------------------------------------------------ */}
-        <section className="method border-t border-[rgba(238,93,52,0.15)]" id="story">
+        <section className="method border-t border-[rgba(234,193,87,0.2)]" id="story">
           <div className="section-shell">
             <div className="method-intro">
               <div>
@@ -280,11 +282,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <span className="method-number">{chapter.numeral}</span>
                   <div>
                     <h3>{chapter.title}</h3>
-                    <span className="text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider block mt-1">
+                    <span className="text-[11px] font-sans text-[#EAC157] font-semibold uppercase tracking-wider block mt-1">
                       {chapter.theme}
                     </span>
                   </div>
-                  <p className="font-serif italic text-[#eee5d3]">
+                  <p className="font-serif italic text-[#FAF9F6]">
                     "{chapter.quote}"
                   </p>
                   <Arrow />
@@ -300,11 +302,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <section className="threshold" id="dilemmas">
           <div className="section-shell">
             <div className="max-w-2xl mb-10 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#0e0a17]/30 bg-[#eee5d3]/60 text-[10px] font-mono uppercase tracking-widest text-[#0e0a17] mb-3">
-                <span>03 / REAL CROSSROADS</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#052036]/30 bg-[#FAF9F6] text-[10px] font-sans uppercase tracking-widest text-[#052036] font-bold mb-3">
+                <span> 03 / REAL CROSSROADS</span>
               </div>
-              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads. </h2>
-              <p className="threshold-lede text-base font-medium text-[#0e0a17]/90" style={{ marginTop: "10px" }}>
+              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads.</h2>
+              <p className="threshold-lede text-base font-medium text-[#052036]/90" style={{ marginTop: "10px" }}>
                 When staying destroys you and leaving costs everything. Select the standoff keeping you awake tonight:
               </p>
             </div>
@@ -315,10 +317,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <button
                   key={d.id}
                   onClick={() => setSelectedDilemma(d.id)}
-                  className={`px-4 py-2.5 rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                     selectedDilemma === d.id
-                      ? "bg-[#0e0a17] text-[#eee5d3] shadow-md border-2 border-[#ee5d34] font-bold"
-                      : "bg-[#0e0a17]/10 hover:bg-[#0e0a17]/20 text-[#0e0a17] border border-[#0e0a17]/20 font-semibold"
+                      ? "bg-[#052036] text-[#FAF9F6] shadow-md border-2 border-[#EAC157] font-bold"
+                      : "bg-[#052036]/10 hover:bg-[#052036]/20 text-[#052036] border border-[#052036]/20 font-semibold"
                   }`}>
                   {d.tag}
                 </button>
@@ -326,47 +328,47 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
 
             {/* Dilemma Mirror Box */}
-            <div className="editorial-card border-2 border-[rgba(238,93,52,0.35)] bg-[#0e0a17] text-[#eee5d3] p-6 md:p-8 rounded-sm space-y-6 shadow-2xl relative">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(238,93,52,0.2)] pb-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider font-bold">
+            <div className="editorial-card border-2 border-[rgba(234,193,87,0.45)] bg-[#052036] text-[#FAF9F6] p-6 md:p-8 rounded-xl space-y-6 shadow-2xl relative">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(234,193,87,0.25)] pb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#EAC157] bg-[#082842] text-[10px] font-sans text-[#EAC157] uppercase tracking-wider font-bold">
                   <span>{activeDilemma.stampNote}</span>
                 </div>
-                <span className="text-[10px] font-mono text-[#bfb7aa] tracking-widest uppercase font-bold">
+                <span className="text-[10px] font-sans text-[#c5d3df] tracking-widest uppercase font-bold">
                   {activeDilemma.anchor}
                 </span>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
+                  <span className="text-[10px] font-sans uppercase tracking-widest text-[#c5d3df] block font-bold mb-1">
                     The Real-World Dilemma
                   </span>
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#eee5d3] leading-snug font-bold italic">
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#FAF9F6] leading-snug font-bold italic">
                     {activeDilemma.trigger}
                   </h3>
                 </div>
 
                 <div className="pt-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
+                  <span className="text-[10px] font-sans uppercase tracking-widest text-[#c5d3df] block font-bold mb-1">
                     The Psychological Truth:
                   </span>
-                  <p className="text-sm md:text-base text-[#eee5d3]/90 leading-relaxed font-normal">
+                  <p className="text-sm md:text-base text-[#FAF9F6]/90 leading-relaxed font-normal">
                     {activeDilemma.glimpseOfTruth}
                   </p>
                 </div>
               </div>
 
-              <div className="p-5 rounded-sm border-l-4 border-[#ee5d34] bg-[rgba(238,93,52,0.14)] space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-[#ee5d34] block font-bold">
+              <div className="p-5 rounded-lg border-l-4 border-[#EAC157] bg-[rgba(234,193,87,0.12)] space-y-2">
+                <span className="text-[11px] font-sans uppercase tracking-widest text-[#EAC157] block font-bold">
                   The Hard Question You Keep Avoiding
                 </span>
-                <p className="font-serif text-xl md:text-2xl text-[#eee5d3] font-bold italic leading-snug">
+                <p className="font-serif text-xl md:text-2xl text-[#FAF9F6] font-bold italic leading-snug">
                   "{activeDilemma.lingeringQuestion}"
                 </p>
               </div>
 
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-4">
-                <p className="text-xs text-[#bfb7aa] font-mono">
+                <p className="text-xs text-[#c5d3df] font-sans">
                   Your birth chart holds the exact planetary degrees driving this dynamic.
                 </p>
                 <button
@@ -384,7 +386,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         {/* ------------------------------------------------------------------ */}
         <section className="threshold" id="threshold">
           <div className="section-shell">
-            <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>
+            <span className="eyebrow" style={{ color: "#052036", opacity: 0.8 }}>
               04 / Before you cross the threshold
             </span>
             <h2 className="display">Bring the question you keep making smaller.</h2>
@@ -395,7 +397,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <div className="threshold-list">
                 {["Curiosity over certainty.", "Agency over inevitability.", "Specific questions over cosmic fog."].map((x) => (
                   <div className="threshold-item" key={x}>
-                    <span>✦</span>
+                    <span className="text-[#EAC157] font-bold">✦</span>
                     <p>{x}</p>
                   </div>
                 ))}
@@ -412,7 +414,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div className="faq-intro">
               <span className="eyebrow">05 / Questions at the threshold</span>
               <h2 className="display">Still skeptical?<br />Good.</h2>
-              <p className="text-xs text-[#bfb7aa] mt-2 leading-relaxed">
+              <p className="text-xs text-[#c5d3df] mt-2 leading-relaxed">
                 AstroFindings (astrofindings.com) is dedicated to clean, honest self-inquiry without cosmic pretension.
               </p>
             </div>
@@ -424,7 +426,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                     onClick={() => setOpenQuestion(openQuestion === i ? null : i)}
                     aria-expanded={openQuestion === i}>
                     <span>{x[0]}</span>
-                    <span>{openQuestion === i ? "−" : "+"}</span>
+                    <span className="text-[#EAC157] text-xl">{openQuestion === i ? "−" : "+"}</span>
                   </button>
                   <div className={`faq-answer ${openQuestion === i ? "is-open" : ""}`}>
                     <p>{x[1]}</p>
@@ -437,11 +439,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </main>
 
       {/* ------------------------------------------------------------------ */}
-      {/* FOOTER                                                             */}
+      {/* FOOTER (Cosmic Gold Background with Deep Space Text & Pill Button)  */}
       {/* ------------------------------------------------------------------ */}
       <footer className="closing">
         <div className="section-shell closing-inner">
-          <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>The door is open</span>
+          <span className="eyebrow block mb-6 text-xs font-sans font-semibold tracking-[0.22em] uppercase text-[#052036]/80">
+            The door is open
+          </span>
           <h2 className="display">Come with a question.<br /><em>Leave with a choice.</em></h2>
           <div className="closing-actions">
             <button className="button-dark cursor-pointer" onClick={() => go("onboarding")}>

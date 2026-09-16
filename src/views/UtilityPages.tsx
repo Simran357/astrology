@@ -13,6 +13,7 @@ import {
 } from "../services/aiAstrologyService";
 import { TRANSIT_SHIFTS_DATA } from "../data/transitShiftsData";
 import { AFFIRMATIONS_DATA } from "../data/wellnessData";
+import AstroFindingsLogo from "../components/AstroFindingsLogo";
 
 interface Props {
   onNavigate: (page: string) => void;
@@ -125,20 +126,17 @@ export function LoginPage({ onNavigate }: Props) {
   };
 
   return (
-    <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#0e0a17]">
-      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.92)] p-8 rounded-sm space-y-6 shadow-2xl backdrop-blur-md">
-        <button
-          className="brand auth-brand flex items-center gap-2 cursor-pointer"
+    <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#052036]">
+      <div className="auth-card max-w-md w-full border border-[rgba(234,193,87,0.3)] bg-[#082842]/95 p-8 rounded-xl space-y-6 shadow-2xl backdrop-blur-md">
+        <div
+          className="flex justify-center mb-6 cursor-pointer"
           onClick={() => onNavigate("home")}
         >
-          <span className="brand-mark text-xs font-mono px-1.5 py-0.5 border border-[#ee5d34] text-[#ee5d34]">
-            AF
-          </span>
-          <span className="brand-name font-serif text-lg text-[#eee5d3]">AstroFindings</span>
-        </button>
+          <AstroFindingsLogo size="md" variant="dark" />
+        </div>
 
         <div className="flex items-center justify-between">
-          <span className="eyebrow text-xs font-mono text-[#ee5d34] uppercase tracking-wider">
+          <span className="eyebrow text-xs font-sans text-[#EAC157] font-semibold uppercase tracking-wider">
             Private access
           </span>
           <span className="text-[10px] font-mono text-[#bfb7aa]">
@@ -283,20 +281,17 @@ export function SignupPage({ onNavigate }: Props) {
   };
 
   return (
-    <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#0e0a17]">
-      <div className="auth-card max-w-md w-full border border-[rgba(238,93,52,0.25)] bg-[rgba(31,24,48,0.92)] p-8 rounded-sm space-y-6 shadow-2xl backdrop-blur-md">
-        <button
-          className="brand auth-brand flex items-center gap-2 cursor-pointer"
+    <div className="auth-page astral-app-surface min-h-screen flex items-center justify-center p-6 bg-[#052036]">
+      <div className="auth-card max-w-md w-full border border-[rgba(234,193,87,0.3)] bg-[#082842]/95 p-8 rounded-xl space-y-6 shadow-2xl backdrop-blur-md">
+        <div
+          className="flex justify-center mb-6 cursor-pointer"
           onClick={() => onNavigate("home")}
         >
-          <span className="brand-mark text-xs font-mono px-1.5 py-0.5 border border-[#ee5d34] text-[#ee5d34]">
-            AF
-          </span>
-          <span className="brand-name font-serif text-lg text-[#eee5d3]">AstroFindings</span>
-        </button>
+          <AstroFindingsLogo size="md" variant="dark" />
+        </div>
 
         <div className="flex items-center justify-between">
-          <span className="eyebrow text-xs font-mono text-[#ee5d34] uppercase tracking-wider">
+          <span className="eyebrow text-xs font-sans text-[#EAC157] font-semibold uppercase tracking-wider">
             Begin a private practice
           </span>
           <span className="text-[10px] font-mono text-[#bfb7aa]">

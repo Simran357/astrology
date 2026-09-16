@@ -1,6 +1,7 @@
 "use client";
 
 import { useApp } from "../context/AppContext";
+import AstroFindingsLogo from "./AstroFindingsLogo";
 
 type Page = "home" | "dashboard" | "chart" | "reading" | "learn" | "profile" | "onboarding" | "login" | "signup" | "timeline" | "relationships" | "askai" | "wellness" | "palm";
 interface NavigationProps { currentPage: Page; onNavigate: (page: Page) => void; }
@@ -22,8 +23,10 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
  };
 
  return <header className="site-header app-header">
-   <button className="brand" onClick={()=>onNavigate("home")} aria-label="AstroFindings home"><span className="brand-mark">AF</span><span className="brand-name">AstroFindings</span></button>
-   <nav className="site-nav">{items.filter(x=>x.id!=="home").map(x=><button key={x.id} className="button-quiet cursor-pointer" onClick={()=>handleNavClick(x.id)} style={{color:currentPage===x.id?"var(--rust)":"var(--paper-dim)"}}>{x.label}</button>)}</nav>
+   <div className="cursor-pointer" onClick={()=>onNavigate("home")} aria-label="AstroFindings home">
+     <AstroFindingsLogo size="sm" variant="dark" showTagline={false} />
+   </div>
+   <nav className="site-nav">{items.filter(x=>x.id!=="home").map(x=><button key={x.id} className="button-quiet cursor-pointer" onClick={()=>handleNavClick(x.id)} style={{color:currentPage===x.id?"var(--gold)":"var(--paper-dim)", fontWeight: currentPage===x.id?600:500}}>{x.label}</button>)}</nav>
    <div className="app-status"><span>●</span> Moon phase / live sky</div>
  </header>;
 }

@@ -1,462 +1,311 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
+import { useApp } from "../context/AppContext";
+import HeroArt from "../components/home/HeroArt";
 
-interface HomePageProps {
-  onNavigate: (page: string) => void;
-}
+const reveal = {
+  hidden: { opacity: 0, y: 40 },
+  show: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] as const },
+  }),
+};
 
-const Arrow = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="inline-block shrink-0 ml-1">
-    <path d="M2.5 7h9M7.5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+const NAV = [
+  ["Rituals", "#rituals"],
+  ["The Sky", "#movements"],
+  ["Philosophy", "#philosophy"],
+  ["Questions", "#questions"],
+];
 
-const Down = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="inline-block shrink-0 ml-1">
-    <path d="M2 4.5l4 4 4-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-interface DilemmaMirror {
-  id: string;
-  tag: string;
-  trigger: string;
-  glimpseOfTruth: string;
-  lingeringQuestion: string;
-  anchor: string;
-  stampNote: string;
-}
-
-const DILEMMA_MIRRORS: DilemmaMirror[] = [
+const FEATURES: { icon: string; title: string; body: string }[] = [
   {
-    id: "golden_handcuffs",
-    tag: "The Golden Handcuffs",
-    trigger: "\"I earn great money, but every Sunday night feels like walking toward a prison sentence.\"",
-    glimpseOfTruth:
-      "You didn't choose security—you bought comfortable numbness. Every year you trade for a company bonus is a year your true talent quietly decays.",
-    lingeringQuestion:
-      "Are you staying for financial prudence—or because you're terrified you have nothing else to offer the world?",
-    anchor: "2nd House Security vs. 10th House Purpose",
-    stampNote: "CAREER // THE GOLDEN CAGE",
+    icon: "/stickers/sun.png",
+    title: "Your daily sky",
+    body: "Wake up to a warm, plain-language reading of the transits touching your chart — no jargon, just what actually matters today.",
   },
   {
-    id: "sunk_cost_love",
-    tag: "The 5-Year Relationship",
-    trigger: "\"We've been together 5 years. We don't fight, but there is zero physical or emotional spark left.\"",
-    glimpseOfTruth:
-      "Neither of you is evil, but you are slowly burning each other's finite youth out of habit, shared furniture, and fear of starting over.",
-    lingeringQuestion:
-      "How many more years will you waste holding their hand just to avoid the five-week guilt of breaking up?",
-    anchor: "7th House Contracts vs. 8th House Severance",
-    stampNote: "LOVE // SUNK COST",
+    icon: "/stickers/moon.png",
+    title: "Moon-led rituals",
+    body: "Gentle practices tuned to each lunar phase. Journal prompts, affirmations, and small rituals to move with the moon, not against it.",
   },
   {
-    id: "family_debt",
-    tag: "Parental Guilt & Control",
-    trigger: "\"My parents expect me to obey their career and marriage demands because they paid for my upbringing.\"",
-    glimpseOfTruth:
-      "Their sacrifices were their responsibility as parents—not a permanent mortgage on your adulthood. They will happily ruin your peace to protect their reputation.",
-    lingeringQuestion:
-      "Can you accept being the 'ungrateful villain' in your family's story in order to live your own life?",
-    anchor: "4th House Lineage vs. 1st House Sovereignty",
-    stampNote: "FAMILY // EMOTIONAL BLACKMAIL",
-  },
-  {
-    id: "partner_betrayal",
-    tag: "Stolen Equity & Credit",
-    trigger: "\"I did the heavy building behind the scenes, but my co-founder took the investor spotlight and reduced my shares.\"",
-    glimpseOfTruth:
-      "You built the engine; they played the politics. Swallowing the disrespect under the guise of 'keeping the peace' isn't wisdom—it is surrender.",
-    lingeringQuestion:
-      "Is your silence really 'strategic maturity'—or are you simply terrified of standing up and fighting for what you built?",
-    anchor: "8th House Assets & Mars 10th House",
-    stampNote: "BUSINESS // STOLEN CREDIT",
-  },
-  {
-    id: "emotional_affair",
-    tag: "The Secret Emotional Affair",
-    trigger: "\"We haven't slept together, but this co-worker is the first person I text and the only one who understands me.\"",
-    glimpseOfTruth:
-      "Deleting your chat history and tilting your phone screen proves you know the truth. Starving your spouse to feed a workplace fantasy is already betrayal.",
-    lingeringQuestion:
-      "If your partner saw all your private chats with this person right now, could you look them in the eye without lying?",
-    anchor: "Venus-Neptune Axis & 5th House Secrets",
-    stampNote: "INFIDELITY // DOUBLE LIFE",
-  },
-  {
-    id: "geographic_reset",
-    tag: "Outgrown Childhood Friends",
-    trigger: "\"Every time I hit a new milestone, my childhood circle mocks my ambition and tries to drag me back down.\"",
-    glimpseOfTruth:
-      "They don't miss the old times. They miss the broken, smaller version of you that made them feel safe about their own stagnation.",
-    lingeringQuestion:
-      "Will you stay small to protect their fragile egos, or walk away and face the loneliness of new territory?",
-    anchor: "11th House Alliances vs. 9th House Exile",
-    stampNote: "FRIENDSHIP // TOXIC NOSTALGIA",
+    icon: "/stickers/hand.png",
+    title: "Ask the stars",
+    body: "Bring a real question. Get a grounded, specific reflection rooted in your birth chart — curiosity over cosmic fog.",
   },
 ];
 
-const STORY_CHAPTERS = [
-  {
-    numeral: "01",
-    theme: "The Deep Ocean",
-    title: "Why You Feel What You Feel",
-    quote: "Your sensitivity is not a design flaw. It is an antenna registering frequencies others are too numb to detect.",
-  },
-  {
-    numeral: "02",
-    theme: "The Flight Response",
-    title: "Why You Stay Away When Things Get Tough",
-    quote: "You don't scream during conflict. You vanish.",
-  },
-  {
-    numeral: "03",
-    theme: "The Freeze",
-    title: "Why You Shut Down",
-    quote: "Silence was the only fortress that never gave them ammunition.",
-  },
-  {
-    numeral: "04",
-    theme: "The Sacred Core",
-    title: "Why You Fiercely Preserve What You Value",
-    quote: "You guard your tenderness with the vigilance of a curator protecting an ancient scroll.",
-  },
-  {
-    numeral: "05",
-    theme: "The Mirror of Love",
-    title: "How Relationships Treat You",
-    quote: "You fall in love with potential because it gives you an audition to win.",
-  },
-  {
-    numeral: "06",
-    theme: "The Ice Wall",
-    title: "What Detachment Feels Like to You",
-    quote: "You don't break dishes. You simply lean back and unclip your heart.",
-  },
+const MOVEMENTS: { n: string; title: string; body: string }[] = [
+  { n: "i.", title: "Enter your birth", body: "Date, time, and place. We cast your natal chart with astronomical precision in seconds." },
+  { n: "ii.", title: "Meet your sky", body: "See your sun, moon, and rising — and what the current planets are stirring in you now." },
+  { n: "iii.", title: "Move with it", body: "Daily guidance and rituals translate the sky into small, doable, human choices." },
+  { n: "iv.", title: "Return often", body: "Track shifts over time. Notice patterns. Come back with new questions as you grow." },
 ];
 
-export default function HomePage({ onNavigate }: HomePageProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedDilemma, setSelectedDilemma] = useState<string>("golden_handcuffs");
-  const [openQuestion, setOpenQuestion] = useState<number | null>(null);
+const FAQ: [string, string][] = [
+  ["Is this fortune telling?", "No. We treat astrology as a language for self-reflection — a mirror, not a map of fate. You always keep your agency."],
+  ["Do I need my exact birth time?", "It helps a lot — your rising sign and house placements depend on it. If you don't know it, you'll still get a rich sun-and-moon reading."],
+  ["Is it based on real astronomy?", "Yes. Chart positions are calculated from real ephemeris data. The interpretation is poetic; the planets are precise."],
+  ["What makes this different?", "Warmth without the woo. Specific questions over vague horoscopes. Curiosity over certainty, agency over inevitability."],
+];
 
-  const activeDilemma = DILEMMA_MIRRORS.find((d) => d.id === selectedDilemma) || DILEMMA_MIRRORS[0];
-
-  const go = (page: string) => {
-    setMobileOpen(false);
-    onNavigate(page);
-  };
-
-  const faq = [
-    [
-      "Is there a real human astrologer on this site?",
-      "No. AstroFindings is a 100% self-guided, digital astrological cartography archive. We do not sell expensive 1-on-1 phone or video calls with human astrologers. Instead, you receive immediate, deeply personal psychological interpretations calculated directly from your exact astronomical birth coordinates.",
-    ],
-    [
-      "What kind of astrology is this?",
-      "Hellenistic and psychological western astrology using whole-sign houses and astronomical ephemeris algorithms. Less daily horoscope prophecy, more structural diagnostic of your recurring emotional tensions.",
-    ],
-    [
-      "What if I don’t know my exact birth time?",
-      "You can still generate your chart and explore your Sun, Moon, and planetary aspects. We calculate using solar noon and clearly mark house boundaries as provisional.",
-    ],
-    [
-      "Will this tell me what to do with my life?",
-      "No. The chart offers a precise vocabulary, not a command. It shows the recurring bargain you make with uncertainty, explains why you shut down or detach, and hands the sovereign decision back to you.",
-    ],
-  ];
+export default function HomePage() {
+  const { navigate } = useApp();
+  const [open, setOpen] = useState<number | null>(0);
+  const go = (page: string) => navigate(page);
 
   return (
-    <div className="home-root selection:bg-[#ee5d34] selection:text-[#0e0a17]">
-      {/* ------------------------------------------------------------------ */}
-      {/* HEADER & NAVIGATION                                                */}
-      {/* ------------------------------------------------------------------ */}
-      <header className="site-header">
-        <button className="brand cursor-pointer" onClick={() => go("home")}>
-          <span className="brand-mark">AF</span>
-          <span className="brand-name">AstroFindings</span>
-        </button>
-
-        <nav className="site-nav" aria-label="Primary navigation">
-          <a href="#why">Against the Script</a>
-          <a href="#story">The 6 Movements</a>
-          <a href="#dilemmas">The Dilemmas</a>
-          <a href="#about">The Philosophy</a>
-          <a href="#questions">FAQ</a>
-        </nav>
-
-        <button className="header-cta cursor-pointer" onClick={() => go("onboarding")}>
-          Begin Discovery →
-        </button>
-        <button className="menu-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
-          {mobileOpen ? "×" : "☰"}
-        </button>
+    <div className="chani-root">
+      {/* header */}
+      <header className="chani-header">
+        <div className="chani-wrap chani-header-in">
+          <button className="chani-brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            <span className="chani-brand-mark">A</span>
+            <span className="chani-brand-name">Astra</span>
+          </button>
+          <nav className="chani-nav">
+            {NAV.map(([label, href]) => (
+              <a key={href} onClick={() => document.querySelector(href)?.scrollIntoView({ behavior: "smooth" })}>
+                {label}
+              </a>
+            ))}
+          </nav>
+          <button className="chani-cta" onClick={() => go("onboarding")}>
+            Begin free <Arrow />
+          </button>
+        </div>
       </header>
 
-      {mobileOpen && (
-        <nav className="mobile-nav is-open">
-          <a href="#why" onClick={() => setMobileOpen(false)}>Against the Script</a>
-          <a href="#story" onClick={() => setMobileOpen(false)}>The 6 Movements</a>
-          <a href="#dilemmas" onClick={() => setMobileOpen(false)}>The Dilemmas</a>
-          <a href="#about" onClick={() => setMobileOpen(false)}>The Philosophy</a>
-          <a href="#questions" onClick={() => setMobileOpen(false)}>FAQ</a>
-          <button className="button-primary w-full cursor-pointer" onClick={() => go("onboarding")}>
-            Begin Discovery →
-          </button>
-        </nav>
-      )}
+      {/* hero */}
+      <section className="chani-hero">
+        <div className="chani-wrap chani-hero-grid">
+          <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.12 } } }}>
+            <motion.span className="chani-eyebrow" variants={reveal}>
+              ✦ Astrology for the tender & curious
+            </motion.span>
+            <motion.h1 className="chani-title" variants={reveal}>
+              Read the sky<br />
+              like a <em>love letter</em>
+            </motion.h1>
+            <motion.p className="chani-lead" variants={reveal}>
+              Astra turns the movements of the planets into warm, practical guidance — so you can meet each day with a little more grace and a lot more you.
+            </motion.p>
+            <motion.div className="chani-hero-actions" variants={reveal}>
+              <button className="chani-cta" onClick={() => go("onboarding")}>
+                Cast my chart <Arrow />
+              </button>
+              <button className="chani-cta ghost" onClick={() => go("login")}>
+                I have an account
+              </button>
+            </motion.div>
+          </motion.div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* HERO SECTION: ORIGINAL LAYOUT & SVG ART (NO EXTERNAL PICTURES)      */}
-      {/* ------------------------------------------------------------------ */}
-      <main>
-              <section className="hero" id="top">
-        <div className="section-shell hero-grid">
-          <div className="hero-copy">
-            <div className="hero-kicker">00 / A private practice in public</div>
-            <h1 className="display">Your chart<br/>is not your <em>fate.</em></h1>
-            <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
-            <div className="hero-actions">
-              <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow/></button>
-              <a className="button-quiet" href="#story">How I read <Down/></a>
-            </div>
-            <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
-          </div>
-          <div className="hero-art">
-            <div className="orbit"><span className="orbit-line"/><span className="orbit-dot"/><span className="orbit-dot sage"/></div>
-            <span className="hero-side-label">A study in contradiction</span>
-            <div className="chart-card">
-              <div className="chart-top"><span>Case 0047</span><span>Mutable / fixed</span></div>
-              <svg className="chart-glyph" viewBox="0 0 190 146" fill="none">
-                <circle cx="95" cy="73" r="55" stroke="hsl(42 33% 89%/.6)"/><circle cx="95" cy="73" r="35" stroke="hsl(163 31% 58%/.8)"/>
-                <path d="M40 73h110M95 18v110M56 34l78 78M134 34 56 112" stroke="hsl(42 72% 69%/.55)"/>
-                <path d="M95 18 134 34 150 73 126 116 71 122 40 73 56 34z" stroke="hsl(16 79% 61%/.95)" strokeWidth="1.5"/>
-                <circle cx="95" cy="18" r="4" fill="hsl(16 79% 61%)"/><circle cx="150" cy="73" r="4" fill="hsl(163 31% 58%)"/><circle cx="71" cy="122" r="4" fill="hsl(42 72% 69%)"/>
-              </svg>
-              <h2 className="serif">The useful<br/>discomfort.</h2><p>A reading is not a verdict. It is a room with better lighting.</p>
-            </div>
+          <HeroArt />
+        </div>
+
+        {/* marquee */}
+        <div className="chani-marquee" aria-hidden="true">
+          <div className="chani-marquee-track">
+            {[0, 1].map((k) => (
+              <span key={k}>
+                Moon phases Birth charts Daily transits Lunar rituals Self-reflection Real astronomy Tender guidance
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
-        {/* ------------------------------------------------------------------ */}
-        {/* 01 / AGAINST THE SCRIPT                                            */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="manifesto" id="why">
-          <div className="section-shell manifesto-grid">
-            <div><span className="eyebrow">01 / Against the script</span></div>
-            <div>
-              <h2 className="display">Astrology is a mirror, not a muzzle.</h2>
-              <div className="manifesto-copy">
-                <p><strong>Most readings hand you a personality sticker.</strong> You are told you are intense, nurturing, analytical — then sent back into the same old room.</p>
-                <p>I am more interested in what the chart makes difficult to ignore: the desire beneath the performance, the power you keep lending away, the contradiction that might become a choice.</p>
-                <div className="manifesto-aside">Not prediction. Not diagnosis. A practice of noticing.</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 02 / THE 6 MOVEMENTS: RENDERED IN THE METHOD ROW UI                */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="method border-t border-[rgba(238,93,52,0.15)]" id="story">
-          <div className="section-shell">
-            <div className="method-intro">
-              <div>
-                <span className="eyebrow">02 / The Illustrated Memoir</span>
-                <h2 className="display">Knowing what was<br />previously unknown.</h2>
-              </div>
-              <p>Six movements through your interior architecture — from the emotions you swallow in silence to the cold peace of walking away.</p>
-            </div>
-
-            <div className="method-list">
-              {STORY_CHAPTERS.map((chapter) => (
-                <div
-                  className="method-row cursor-pointer group"
-                  key={chapter.numeral}
-                  onClick={() => go("onboarding")}
-                >
-                  <span className="method-number">{chapter.numeral}</span>
-                  <div>
-                    <h3>{chapter.title}</h3>
-                    <span className="text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider block mt-1">
-                      {chapter.theme}
-                    </span>
-                  </div>
-                  <p className="font-serif italic text-[#eee5d3]">
-                    "{chapter.quote}"
-                  </p>
-                  <Arrow />
+      {/* features */}
+      <section className="chani-section" id="rituals">
+        <div className="chani-wrap">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={reveal}>
+            <span className="chani-kicker">01 / What you get</span>
+            <h2 className="chani-h2">
+              A softer way to<br /><em>meet yourself</em>
+            </h2>
+          </motion.div>
+          <div className="chani-features">
+            {FEATURES.map((f, i) => (
+              <motion.article
+                className="chani-card"
+                key={f.title}
+                custom={i}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={reveal}>
+                <div className="chani-card-ico">
+                  <img src={f.icon || "/placeholder.svg"} alt="" />
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 03 / INTERACTIVE MIRROR: WHAT KEEPS YOU UP TONIGHT?                */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="threshold" id="dilemmas">
-          <div className="section-shell">
-            <div className="max-w-2xl mb-10 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#0e0a17]/30 bg-[#eee5d3]/60 text-[10px] font-mono uppercase tracking-widest text-[#0e0a17] mb-3">
-                <span>03 / REAL CROSSROADS</span>
-              </div>
-              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads. </h2>
-              <p className="threshold-lede text-base font-medium text-[#0e0a17]/90" style={{ marginTop: "10px" }}>
-                When staying destroys you and leaving costs everything. Select the standoff keeping you awake tonight:
-              </p>
-            </div>
-
-            {/* Selector Buttons */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {DILEMMA_MIRRORS.map((d) => (
-                <button
-                  key={d.id}
-                  onClick={() => setSelectedDilemma(d.id)}
-                  className={`px-4 py-2.5 rounded-sm text-xs font-mono uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                    selectedDilemma === d.id
-                      ? "bg-[#0e0a17] text-[#eee5d3] shadow-md border-2 border-[#ee5d34] font-bold"
-                      : "bg-[#0e0a17]/10 hover:bg-[#0e0a17]/20 text-[#0e0a17] border border-[#0e0a17]/20 font-semibold"
-                  }`}>
-                  {d.tag}
-                </button>
-              ))}
-            </div>
-
-            {/* Dilemma Mirror Box */}
-            <div className="editorial-card border-2 border-[rgba(238,93,52,0.35)] bg-[#0e0a17] text-[#eee5d3] p-6 md:p-8 rounded-sm space-y-6 shadow-2xl relative">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(238,93,52,0.2)] pb-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-dashed border-[#ee5d34] bg-[#171126] text-[10px] font-mono text-[#ee5d34] uppercase tracking-wider font-bold">
-                  <span>{activeDilemma.stampNote}</span>
-                </div>
-                <span className="text-[10px] font-mono text-[#bfb7aa] tracking-widest uppercase font-bold">
-                  {activeDilemma.anchor}
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
-                    The Real-World Dilemma
-                  </span>
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#eee5d3] leading-snug font-bold italic">
-                    {activeDilemma.trigger}
-                  </h3>
-                </div>
-
-                <div className="pt-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#bfb7aa] block font-bold mb-1">
-                    The Psychological Truth:
-                  </span>
-                  <p className="text-sm md:text-base text-[#eee5d3]/90 leading-relaxed font-normal">
-                    {activeDilemma.glimpseOfTruth}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-5 rounded-sm border-l-4 border-[#ee5d34] bg-[rgba(238,93,52,0.14)] space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-[#ee5d34] block font-bold">
-                  The Hard Question You Keep Avoiding
-                </span>
-                <p className="font-serif text-xl md:text-2xl text-[#eee5d3] font-bold italic leading-snug">
-                  "{activeDilemma.lingeringQuestion}"
-                </p>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-4">
-                <p className="text-xs text-[#bfb7aa] font-mono">
-                  Your birth chart holds the exact planetary degrees driving this dynamic.
-                </p>
-                <button
-                  onClick={() => go("onboarding")}
-                  className="button-primary cursor-pointer text-xs font-bold whitespace-nowrap">
-                  Decode in Your Birth Sky →
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 04 / BEFORE YOU CROSS THE THRESHOLD                                */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="threshold" id="threshold">
-          <div className="section-shell">
-            <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>
-              04 / Before you cross the threshold
-            </span>
-            <h2 className="display">Bring the question you keep making smaller.</h2>
-            <div className="threshold-grid">
-              <p className="threshold-lede">
-                You do not need to believe in astrology. You need only be willing to look at your patterns without turning them into a prison.
-              </p>
-              <div className="threshold-list">
-                {["Curiosity over certainty.", "Agency over inevitability.", "Specific questions over cosmic fog."].map((x) => (
-                  <div className="threshold-item" key={x}>
-                    <span>✦</span>
-                    <p>{x}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 05 / FAQ                                                           */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="faq" id="questions">
-          <div className="section-shell faq-grid">
-            <div className="faq-intro">
-              <span className="eyebrow">05 / Questions at the threshold</span>
-              <h2 className="display">Still skeptical?<br />Good.</h2>
-              <p className="text-xs text-[#bfb7aa] mt-2 leading-relaxed">
-                AstroFindings (astrofindings.com) is dedicated to clean, honest self-inquiry without cosmic pretension.
-              </p>
-            </div>
-            <div className="faq-list">
-              {faq.map((x, i) => (
-                <div className="faq-item" key={x[0]}>
-                  <button
-                    className="faq-trigger cursor-pointer"
-                    onClick={() => setOpenQuestion(openQuestion === i ? null : i)}
-                    aria-expanded={openQuestion === i}>
-                    <span>{x[0]}</span>
-                    <span>{openQuestion === i ? "−" : "+"}</span>
-                  </button>
-                  <div className={`faq-answer ${openQuestion === i ? "is-open" : ""}`}>
-                    <p>{x[1]}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* FOOTER                                                             */}
-      {/* ------------------------------------------------------------------ */}
-      <footer className="closing">
-        <div className="section-shell closing-inner">
-          <span className="eyebrow" style={{ color: "hsl(259 30% 8%/.65)" }}>The door is open</span>
-          <h2 className="display">Come with a question.<br /><em>Leave with a choice.</em></h2>
-          <div className="closing-actions">
-            <button className="button-dark cursor-pointer" onClick={() => go("onboarding")}>
-              Begin Your Journey of Discovery <Arrow />
-            </button>
-            <button className="button-quiet cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-              Back to the beginning ↑
-            </button>
-          </div>
-          <div className="footer-line">
-            <span>AstroFindings © 2026</span>
-            <span>astrofindings.com / Self-guided astrological cartography</span>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </motion.article>
+            ))}
           </div>
         </div>
+      </section>
+
+      {/* movements / steps */}
+      <section className="chani-section" id="movements" style={{ paddingTop: 0 }}>
+        <div className="chani-wrap">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={reveal}>
+            <span className="chani-kicker">02 / How it moves</span>
+            <h2 className="chani-h2">
+              Four small steps into<br /><em>your own orbit</em>
+            </h2>
+          </motion.div>
+          <div className="chani-steps">
+            {MOVEMENTS.map((m, i) => (
+              <motion.div
+                className="chani-step"
+                key={m.n}
+                custom={i}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={reveal}>
+                <span className="chani-step-n">{m.n}</span>
+                <div>
+                  <h4>{m.title}</h4>
+                  <p>{m.body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* philosophy quote */}
+      <section className="chani-quote" id="philosophy">
+        <QuoteStickers />
+        <motion.div
+          className="chani-wrap chani-quote-inner"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={reveal}>
+          <blockquote>
+            The stars <em>incline</em>,<br />they do not compel.
+          </blockquote>
+          <cite>— The Astra philosophy</cite>
+        </motion.div>
+      </section>
+
+      {/* faq */}
+      <section className="chani-section" id="questions">
+        <div className="chani-wrap chani-faq-grid">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={reveal}>
+            <span className="chani-kicker">03 / At the threshold</span>
+            <h2 className="chani-h2">
+              Still<br /><em>skeptical?</em>
+            </h2>
+            <p className="chani-sub">Good. Astra is built for honest self-inquiry — bring your doubt with you.</p>
+          </motion.div>
+          <div>
+            {FAQ.map(([q, a], i) => (
+              <motion.div
+                className="chani-faq-item"
+                key={q}
+                custom={i}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                variants={reveal}>
+                <button className="chani-faq-q" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
+                  <span>{q}</span>
+                  <span>{open === i ? "−" : "+"}</span>
+                </button>
+                <div className={`chani-faq-a ${open === i ? "open" : ""}`}>
+                  <p>{a}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* footer CTA */}
+      <footer className="chani-footer">
+        <FooterStickers />
+        <motion.div
+          className="chani-wrap chani-quote-inner"
+          style={{ textAlign: "center" }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={reveal}>
+          <span className="chani-kicker" style={{ color: "var(--gold)" }}>The door is open</span>
+          <h2 className="chani-h2">
+            Come with a question.<br /><em>Leave with a choice.</em>
+          </h2>
+          <div className="chani-footer-actions" style={{ justifyContent: "center" }}>
+            <button className="chani-cta" onClick={() => go("onboarding")}>
+              Begin your journey <Arrow />
+            </button>
+            <button className="chani-cta ghost" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              Back to the top ↑
+            </button>
+          </div>
+          <div className="chani-footer-line">
+            <span>Astra © 2026</span>
+            <span>Warm astrological cartography for the curious</span>
+          </div>
+        </motion.div>
       </footer>
     </div>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function QuoteStickers() {
+  return (
+    <>
+      <motion.div
+        className="chani-sticker"
+        style={{ width: 120, top: "12%", left: "8%" }}
+        animate={{ y: [0, -18, 0], rotate: [0, 8, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>
+        <img src="/stickers/eye.png" alt="" />
+      </motion.div>
+      <motion.div
+        className="chani-sticker"
+        style={{ width: 96, bottom: "14%", right: "10%" }}
+        animate={{ y: [0, 16, 0], rotate: [0, -10, 0] }}
+        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}>
+        <img src="/stickers/star.png" alt="" />
+      </motion.div>
+    </>
+  );
+}
+
+function FooterStickers() {
+  return (
+    <>
+      <motion.div
+        className="chani-sticker"
+        style={{ width: 130, top: "10%", right: "6%", opacity: 0.9 }}
+        animate={{ y: [0, -16, 0], rotate: [0, -8, 0] }}
+        transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}>
+        <img src="/stickers/moon.png" alt="" />
+      </motion.div>
+      <motion.div
+        className="chani-sticker"
+        style={{ width: 110, bottom: "12%", left: "5%", opacity: 0.85 }}
+        animate={{ y: [0, 14, 0], rotate: [0, 12, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+        <img src="/stickers/comet.png" alt="" />
+      </motion.div>
+    </>
   );
 }

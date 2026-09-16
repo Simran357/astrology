@@ -428,7 +428,7 @@
 }
 /* Shared app shell */
 .app-page { min-height:100vh; background:var(--ink); color:var(--paper); }
-.app-page .text-[#05060f], .app-page .text-\[\#05060f\] { color:var(--ink) !important; }
+.app-page .text-\[\#05060f\] { color:var(--ink) !important; }
 .app-page button { cursor:pointer; }
 .app-page a { transition: color .2s ease, border-color .2s ease, background .2s ease; }
 @media (max-width: 768px) {
@@ -507,3 +507,182 @@
  .auth-card { padding:28px 22px; }
  .brand-name { font-size:.62rem; }
 }
+
+/* ==================================================================== */
+/* CHANI-style landing — warm, dreamy, celestial sticker aesthetic      */
+/* ==================================================================== */
+.chani-root {
+  --cream: #f2e7d6;
+  --cream-2: #eaddc7;
+  --cream-3: #f7efe2;
+  --ink: #2c1b2e;
+  --ink-2: #4a3648;
+  --coral: #dc6b4f;
+  --coral-deep: #c1543a;
+  --gold: #e5a63c;
+  --lav: #b79fd0;
+  --sage: #9db98f;
+  --line: rgba(44, 27, 46, 0.14);
+  --app-font: "DM Sans", system-ui, sans-serif;
+  --app-font-serif: "Fraunces", Georgia, serif;
+  min-height: 100%;
+  background:
+    radial-gradient(120% 90% at 80% -10%, #f7d9b0 0%, rgba(247, 217, 176, 0) 45%),
+    radial-gradient(120% 90% at 0% 10%, #ecd0d8 0%, rgba(236, 208, 216, 0) 40%),
+    var(--cream);
+  color: var(--ink);
+  font-family: var(--app-font);
+  overflow-x: clip;
+}
+.chani-root ::selection { background: var(--coral); color: var(--cream-3); }
+.chani-wrap { width: min(1200px, 92vw); margin: 0 auto; }
+
+/* header */
+.chani-header {
+  position: sticky; top: 0; z-index: 60;
+  backdrop-filter: blur(12px);
+  background: rgba(242, 231, 214, 0.72);
+  border-bottom: 1px solid var(--line);
+}
+.chani-header-in { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.chani-brand { display: flex; align-items: center; gap: 10px; background: none; border: 0; cursor: pointer; color: var(--ink); }
+.chani-brand-mark {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold), var(--coral));
+  display: grid; place-items: center; color: var(--cream-3);
+  font: 700 0.9rem/1 var(--app-font-serif);
+  box-shadow: 0 4px 14px rgba(220, 107, 79, 0.4);
+}
+.chani-brand-name { font: 600 1.05rem/1 var(--app-font-serif); letter-spacing: 0.14em; text-transform: uppercase; }
+.chani-nav { display: flex; align-items: center; gap: 30px; }
+.chani-nav a { color: var(--ink-2); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.02em; cursor: pointer; transition: color 0.2s; }
+.chani-nav a:hover { color: var(--coral); }
+.chani-cta {
+  border: 0; cursor: pointer; border-radius: 999px;
+  background: var(--ink); color: var(--cream-3);
+  font: 600 0.82rem/1 var(--app-font); letter-spacing: 0.02em;
+  padding: 12px 22px; transition: transform 0.2s, background 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.chani-cta:hover { background: var(--coral); transform: translateY(-2px); }
+.chani-cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.chani-cta.ghost:hover { background: var(--ink); color: var(--cream-3); }
+@media (max-width: 860px) { .chani-nav { display: none; } }
+
+/* hero */
+.chani-hero { position: relative; padding: 70px 0 40px; }
+.chani-hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 30px; align-items: center; }
+@media (max-width: 960px) { .chani-hero-grid { grid-template-columns: 1fr; text-align: center; } }
+.chani-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 0.72rem/1 var(--app-font-mono, monospace); letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--coral-deep); background: rgba(220, 107, 79, 0.12);
+  padding: 8px 14px; border-radius: 999px; margin-bottom: 22px;
+}
+.chani-title { font: 500 clamp(3rem, 8vw, 6.6rem)/0.94 var(--app-font-serif); letter-spacing: -0.02em; margin: 0 0 24px; }
+.chani-title em { font-style: italic; color: var(--coral); }
+.chani-lead { font-size: clamp(1rem, 1.6vw, 1.22rem); line-height: 1.6; color: var(--ink-2); max-width: 30ch; margin: 0 0 34px; }
+@media (max-width: 960px) { .chani-lead { margin-inline: auto; } }
+.chani-hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+@media (max-width: 960px) { .chani-hero-actions { justify-content: center; } }
+
+/* hero art stage */
+.chani-stage { position: relative; aspect-ratio: 1 / 1; }
+.chani-stage-figure {
+  position: absolute; inset: 8% 10%; z-index: 2;
+  filter: drop-shadow(0 24px 44px rgba(44, 27, 46, 0.28));
+  will-change: transform;
+}
+.chani-stage-figure img { width: 100%; height: 100%; object-fit: contain; }
+.chani-orb {
+  position: absolute; z-index: 1; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(229, 166, 60, 0.5), rgba(220, 107, 79, 0));
+  filter: blur(6px);
+}
+.chani-sticker { position: absolute; will-change: transform; z-index: 3; aspect-ratio: 1 / 1; }
+.chani-sticker img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid var(--cream-3);
+  box-shadow: 0 14px 28px rgba(44, 27, 46, 0.26);
+}
+
+/* marquee */
+.chani-marquee {
+  border-block: 1px solid var(--line); background: var(--ink); color: var(--cream-3);
+  overflow: hidden; padding: 16px 0; margin-top: 30px;
+}
+.chani-marquee-track { display: flex; gap: 40px; width: max-content; animation: chani-scroll 26s linear infinite; }
+.chani-marquee span { font: 500 1.15rem/1 var(--app-font-serif); font-style: italic; display: inline-flex; align-items: center; gap: 40px; white-space: nowrap; }
+.chani-marquee span::after { content: "✦"; color: var(--gold); font-style: normal; }
+@keyframes chani-scroll { to { transform: translateX(-50%); } }
+
+/* generic section */
+.chani-section { padding: 96px 0; }
+.chani-kicker { font: 600 0.72rem/1 var(--app-font-mono, monospace); letter-spacing: 0.22em; text-transform: uppercase; color: var(--coral-deep); }
+.chani-h2 { font: 500 clamp(2.2rem, 5vw, 4rem)/1 var(--app-font-serif); letter-spacing: -0.02em; margin: 14px 0 0; }
+.chani-h2 em { font-style: italic; color: var(--coral); }
+.chani-sub { color: var(--ink-2); font-size: 1.02rem; line-height: 1.6; max-width: 52ch; margin-top: 18px; }
+
+/* feature cards */
+.chani-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 54px; }
+@media (max-width: 900px) { .chani-features { grid-template-columns: 1fr; } }
+.chani-card {
+  position: relative; background: var(--cream-3); border: 1px solid var(--line);
+  border-radius: 26px; padding: 36px 30px; overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
+}
+.chani-card:hover { transform: translateY(-8px); box-shadow: 0 26px 50px rgba(44, 27, 46, 0.14); }
+ .chani-card-ico { width: 84px; height: 84px; margin-bottom: 22px; }
+ .chani-card-ico img {
+   width: 100%; height: 100%; object-fit: cover;
+   border-radius: 50%;
+   border: 4px solid var(--cream-3);
+   box-shadow: 0 10px 20px rgba(44, 27, 46, 0.2);
+ }
+.chani-card h3 { font: 500 1.5rem/1.1 var(--app-font-serif); margin: 0 0 10px; }
+.chani-card p { color: var(--ink-2); line-height: 1.6; font-size: 0.96rem; }
+
+/* movements / steps */
+.chani-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 50px; }
+@media (max-width: 760px) { .chani-steps { grid-template-columns: 1fr; } }
+.chani-step {
+  display: flex; gap: 20px; align-items: flex-start;
+  background: rgba(255, 255, 255, 0.45); border: 1px solid var(--line);
+  border-radius: 22px; padding: 26px 28px;
+}
+.chani-step-n { font: 500 2.2rem/1 var(--app-font-serif); font-style: italic; color: var(--coral); min-width: 54px; }
+.chani-step h4 { font: 600 1.12rem/1.2 var(--app-font); margin: 4px 0 8px; }
+.chani-step p { color: var(--ink-2); line-height: 1.55; font-size: 0.92rem; }
+
+/* quote band */
+.chani-quote { position: relative; text-align: center; padding: 120px 0; overflow: hidden; }
+.chani-quote-inner { position: relative; z-index: 2; }
+.chani-quote blockquote { font: 500 clamp(1.8rem, 4.4vw, 3.4rem)/1.18 var(--app-font-serif); letter-spacing: -0.01em; margin: 0 auto; max-width: 20ch; }
+.chani-quote blockquote em { font-style: italic; color: var(--coral); }
+.chani-quote cite { display: block; margin-top: 28px; font-style: normal; font: 600 0.78rem/1 var(--app-font-mono, monospace); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-2); }
+.chani-quote .chani-sticker { opacity: 0.9; }
+
+/* faq */
+.chani-faq-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 48px; }
+@media (max-width: 860px) { .chani-faq-grid { grid-template-columns: 1fr; gap: 24px; } }
+.chani-faq-item { border-bottom: 1px solid var(--line); }
+.chani-faq-q {
+  width: 100%; text-align: left; background: none; border: 0; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 18px;
+  padding: 24px 0; color: var(--ink); font: 500 1.15rem/1.3 var(--app-font-serif);
+}
+.chani-faq-q span:last-child { color: var(--coral); font-size: 1.5rem; line-height: 1; }
+.chani-faq-a { overflow: hidden; height: 0; }
+.chani-faq-a.open { height: auto; padding-bottom: 24px; }
+.chani-faq-a p { color: var(--ink-2); line-height: 1.6; }
+
+/* footer */
+.chani-footer { background: var(--ink); color: var(--cream-2); padding: 90px 0 40px; position: relative; overflow: hidden; }
+.chani-footer .chani-h2 { color: var(--cream-3); }
+.chani-footer-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+.chani-footer .chani-cta { background: var(--coral); }
+.chani-footer .chani-cta:hover { background: var(--gold); color: var(--ink); }
+.chani-footer .chani-cta.ghost { background: transparent; color: var(--cream-2); border-color: rgba(242, 231, 214, 0.4); }
+.chani-footer .chani-cta.ghost:hover { background: var(--cream-3); color: var(--ink); }
+.chani-footer-line { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 64px; padding-top: 24px; border-top: 1px solid rgba(242, 231, 214, 0.18); font-size: 0.78rem; color: rgba(242, 231, 214, 0.6); }

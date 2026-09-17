@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import AstroFindingsLogo, { AstroFindingsDarkLogo, AstroFindingsLightLogo } from "../components/AstroFindingsLogo";
+const darkLogo = "/image/AstroFindingsDarkLogo.svg";
+const lightLogo = "/image/AstroFindingslightLogo.svg";
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -9,13 +10,13 @@ interface HomePageProps {
 
 const Arrow = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="inline-block shrink-0 ml-1">
-    <path d="M2.5 7h9M7.5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2.5 7h9M7.5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const Down = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="inline-block shrink-0 ml-1">
-    <path d="M2 4.5l4 4 4-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 4.5l4 4 4-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -175,7 +176,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* ------------------------------------------------------------------ */}
       <header className="site-header">
         <div className="cursor-pointer" onClick={() => go("home")} aria-label="AstroFindings Home">
-          <AstroFindingsDarkLogo size="sm" />
+          <img src={darkLogo} alt="AstroFindings" className="h-7 w-auto select-none inline-block align-middle" />
         </div>
 
         <nav className="site-nav" aria-label="Primary navigation">
@@ -197,7 +198,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {mobileOpen && (
         <nav className="mobile-nav is-open">
           <div className="pb-3 mb-2 border-b border-[rgba(234,193,87,0.15)] flex justify-between items-center">
-            <AstroFindingsDarkLogo size="sm" onClick={() => go("home")} />
+            <img src={darkLogo} alt="AstroFindings" className="h-7 w-auto select-none inline-block align-middle cursor-pointer" onClick={() => go("home")} />
           </div>
           <a href="#why" onClick={() => setMobileOpen(false)}>Against the Script</a>
           <a href="#story" onClick={() => setMobileOpen(false)}>The 6 Movements</a>
@@ -215,34 +216,34 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* "Same Stars. A Brighter You."                                      */}
       {/* ------------------------------------------------------------------ */}
       <main>
-              <section className="hero" id="top">
-        <div className="section-shell hero-grid">
-          <div className="hero-copy">
-            <div className="hero-kicker">00 / A private practice in public</div>
-            <h1 className="display">Your chart<br/>is not your <em>fate.</em></h1>
-            <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
-            <div className="hero-actions">
-              <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow/></button>
-              <a className="button-quiet" href="#story">How I read <Down/></a>
+        <section className="hero" id="top">
+          <div className="section-shell hero-grid">
+            <div className="hero-copy">
+              <div className="hero-kicker">00 / A private practice in public</div>
+              <h1 className="display">Your chart<br />is not your <em>fate.</em></h1>
+              <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
+              <div className="hero-actions">
+                <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow /></button>
+                <a className="button-quiet" href="#story">How I read <Down /></a>
+              </div>
+              <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
             </div>
-            <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
-          </div>
-          <div className="hero-art">
-            <div className="orbit"><span className="orbit-line"/><span className="orbit-dot"/><span className="orbit-dot sage"/></div>
-            <span className="hero-side-label">A study in contradiction</span>
-            <div className="chart-card">
-              <div className="chart-top"><span>Case 0047</span><span>Mutable / fixed</span></div>
-              <svg className="chart-glyph" viewBox="0 0 190 146" fill="none">
-                <circle cx="95" cy="73" r="55" stroke="hsl(42 33% 89%/.6)"/><circle cx="95" cy="73" r="35" stroke="hsl(163 31% 58%/.8)"/>
-                <path d="M40 73h110M95 18v110M56 34l78 78M134 34 56 112" stroke="hsl(42 72% 69%/.55)"/>
-                <path d="M95 18 134 34 150 73 126 116 71 122 40 73 56 34z" stroke="hsl(16 79% 61%/.95)" strokeWidth="1.5"/>
-                <circle cx="95" cy="18" r="4" fill="hsl(16 79% 61%)"/><circle cx="150" cy="73" r="4" fill="hsl(163 31% 58%)"/><circle cx="71" cy="122" r="4" fill="hsl(42 72% 69%)"/>
-              </svg>
-              <h2 className="serif">The useful<br/>discomfort.</h2><p>A reading is not a verdict. It is a room with better lighting.</p>
+            <div className="hero-art">
+              <div className="orbit"><span className="orbit-line" /><span className="orbit-dot" /><span className="orbit-dot sage" /></div>
+              <span className="hero-side-label">A study in contradiction</span>
+              <div className="chart-card">
+                <div className="chart-top"><span>Case 0047</span><span>Mutable / fixed</span></div>
+                <svg className="chart-glyph" viewBox="0 0 190 146" fill="none">
+                  <circle cx="95" cy="73" r="55" stroke="hsl(42 33% 89%/.6)" /><circle cx="95" cy="73" r="35" stroke="hsl(163 31% 58%/.8)" />
+                  <path d="M40 73h110M95 18v110M56 34l78 78M134 34 56 112" stroke="hsl(42 72% 69%/.55)" />
+                  <path d="M95 18 134 34 150 73 126 116 71 122 40 73 56 34z" stroke="hsl(16 79% 61%/.95)" strokeWidth="1.5" />
+                  <circle cx="95" cy="18" r="4" fill="hsl(16 79% 61%)" /><circle cx="150" cy="73" r="4" fill="hsl(163 31% 58%)" /><circle cx="71" cy="122" r="4" fill="hsl(42 72% 69%)" />
+                </svg>
+                <h2 className="serif">The useful<br />discomfort.</h2><p>A reading is not a verdict. It is a room with better lighting.</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
         {/* ------------------------------------------------------------------ */}
         {/* 01 / AGAINST THE SCRIPT (Light Theme Showcase)                    */}
@@ -320,11 +321,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <button
                   key={d.id}
                   onClick={() => setSelectedDilemma(d.id)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                    selectedDilemma === d.id
+                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer ${selectedDilemma === d.id
                       ? "bg-[#052036] text-[#FAF9F6] shadow-md border-2 border-[#EAC157] font-bold"
                       : "bg-[#052036]/10 hover:bg-[#052036]/20 text-[#052036] border border-[#052036]/20 font-semibold"
-                  }`}>
+                    }`}>
                   {d.tag}
                 </button>
               ))}
@@ -447,7 +447,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <footer className="closing">
         <div className="section-shell closing-inner">
           <div className="mb-6 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="AstroFindings Home">
-            <AstroFindingsLightLogo size="md" />
+            <img src={lightLogo} alt="AstroFindings" className="h-9.5 w-auto select-none inline-block align-middle" />
           </div>
           <span className="eyebrow block mb-6 text-xs font-sans font-semibold tracking-[0.22em] uppercase text-[#052036]/80">
             The door is open

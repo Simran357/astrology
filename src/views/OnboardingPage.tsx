@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useApp } from "../context/AppContext";
 import { searchLocations, GeocodedLocation } from "../services/geocodingService";
-import { AstroFindingsDarkLogo } from "../components/AstroFindingsLogo";
+const darkLogo = "/image/AstroFindingsDarkLogo.svg";
 
 interface OnboardingPageProps {
   onNavigate: (page: string) => void;
@@ -227,7 +227,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-[rgba(234,193,87,0.1)]">
         <div onClick={() => onNavigate("home")} className="cursor-pointer" aria-label="AstroFindings Home">
-          <AstroFindingsDarkLogo size="sm" />
+          <img src={darkLogo} alt="AstroFindings" className="h-7 w-auto select-none inline-block align-middle" />
         </div>
 
         {step < 7 && (
@@ -481,8 +481,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                     step === 4
                       ? data.q1Answer === opt.id
                       : step === 5
-                      ? data.q2Answer === opt.id
-                      : data.q3Answer === opt.id;
+                        ? data.q2Answer === opt.id
+                        : data.q3Answer === opt.id;
 
                   return (
                     <div
@@ -492,16 +492,14 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                         if (step === 5) setData((d) => ({ ...d, q2Answer: opt.id }));
                         if (step === 6) setData((d) => ({ ...d, q3Answer: opt.id }));
                       }}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
-                        isSelected
+                      className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${isSelected
                           ? "border-[#EAC157] bg-[rgba(234,193,87,0.08)] shadow-md"
                           : "border-[rgba(234,193,87,0.18)] bg-[rgba(8,40,66,0.5)] hover:border-[rgba(234,193,87,0.4)]"
-                      }`}>
+                        }`}>
                       <div className="flex items-start gap-3">
                         <div
-                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${
-                            isSelected ? "border-[#EAC157] bg-[#EAC157]" : "border-[#c5d3df]"
-                          }`}>
+                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${isSelected ? "border-[#EAC157] bg-[#EAC157]" : "border-[#c5d3df]"
+                            }`}>
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#052036]" />}
                         </div>
                         <div className="space-y-1">
@@ -685,9 +683,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           <div className="flex items-center justify-between pt-8 border-t border-[rgba(234,193,87,0.1)] mt-8">
             <button
               onClick={() => step > 0 && setStep((s) => s - 1)}
-              className={`text-xs font-mono uppercase tracking-wider text-[#c5d3df] hover:text-[#FAF9F6] transition-colors cursor-pointer ${
-                step === 0 || step === 7 ? "invisible" : ""
-              }`}>
+              className={`text-xs font-mono uppercase tracking-wider text-[#c5d3df] hover:text-[#FAF9F6] transition-colors cursor-pointer ${step === 0 || step === 7 ? "invisible" : ""
+                }`}>
               ← Back
             </button>
 
@@ -705,10 +702,10 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               {isCalculating
                 ? "Calculating Ephemeris..."
                 : step === 6
-                ? "Reveal My Inner Architecture →"
-                : step === 7
-                ? "Enter Your Sanctuary & Chart →"
-                : "Continue →"}
+                  ? "Reveal My Inner Architecture →"
+                  : step === 7
+                    ? "Enter Your Sanctuary & Chart →"
+                    : "Continue →"}
             </button>
           </div>
         </div>

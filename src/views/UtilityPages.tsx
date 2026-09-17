@@ -13,7 +13,7 @@ import {
 } from "../services/aiAstrologyService";
 import { TRANSIT_SHIFTS_DATA } from "../data/transitShiftsData";
 import { AFFIRMATIONS_DATA } from "../data/wellnessData";
-import AstroFindingsLogo, { AstroFindingsDarkLogo, AstroFindingsLightLogo } from "../components/AstroFindingsLogo";
+const darkLogo = "/image/AstroFindingsDarkLogo.svg";
 
 interface Props {
   onNavigate: (page: string) => void;
@@ -133,7 +133,7 @@ export function LoginPage({ onNavigate }: Props) {
           onClick={() => onNavigate("home")}
           aria-label="AstroFindings Home"
         >
-          <AstroFindingsDarkLogo size="md" />
+          <img src={darkLogo} alt="AstroFindings" className="h-9.5 w-auto select-none inline-block align-middle" />
         </div>
 
         <div className="flex items-center justify-between">
@@ -289,7 +289,7 @@ export function SignupPage({ onNavigate }: Props) {
           onClick={() => onNavigate("home")}
           aria-label="AstroFindings Home"
         >
-          <AstroFindingsDarkLogo size="md" />
+          <img src={darkLogo} alt="AstroFindings" className="h-9.5 w-auto select-none inline-block align-middle" />
         </div>
 
         <div className="flex items-center justify-between">
@@ -451,11 +451,10 @@ export function TimelinePage({ onNavigate }: Props) {
             <button
               key={tab.id}
               onClick={() => setTimelineView(tab.id as any)}
-              className={`px-3 py-1.5 text-xs font-mono rounded-xl transition-all cursor-pointer ${
-                active
+              className={`px-3 py-1.5 text-xs font-mono rounded-xl transition-all cursor-pointer ${active
                   ? "bg-[#EAC157] text-[#052036] font-semibold"
                   : "border border-[rgba(234,193,87,0.12)] text-[#c5d3df] hover:border-[#EAC157] hover:text-[#FAF9F6]"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -596,11 +595,10 @@ export function TimelinePage({ onNavigate }: Props) {
               <button
                 key={shift.id}
                 onClick={() => setSelectedShiftId(shift.id)}
-                className={`p-4 text-left border rounded-xl transition-all cursor-pointer ${
-                  selectedShiftId === shift.id
+                className={`p-4 text-left border rounded-xl transition-all cursor-pointer ${selectedShiftId === shift.id
                     ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
                     : "border-[rgba(234,193,87,0.1)] bg-[rgba(8,40,66,0.6)] hover:border-[rgba(234,193,87,0.3)]"
-                }`}
+                  }`}
               >
                 <span className="text-xl text-[#EAC157] block mb-1">{shift.symbol}</span>
                 <h4 className="font-serif text-sm text-[#FAF9F6] font-semibold">{shift.planet} Shift</h4>
@@ -767,7 +765,7 @@ export function TimelinePage({ onNavigate }: Props) {
             {/* COMPETITOR-STYLE PAID PAYWALL HOOK (The Pattern / Nebula / Co-Star style curiosity & suspense) */}
             <div className="mt-6 border-2 border-dashed border-[rgba(234,193,87,0.4)] bg-[linear-gradient(135deg,rgba(8,40,66,0.95),rgba(6,28,48,0.98))] p-6 rounded-xl space-y-4 relative overflow-hidden">
               <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 w-32 h-32 bg-[radial-gradient(circle,rgba(234,193,87,0.15),transparent_70%)] pointer-events-none" />
-              
+
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-[#EAC157]">🔒</span>
@@ -997,11 +995,10 @@ export function RelationshipsPage({ onNavigate }: Props) {
               <div
                 key={p.id}
                 onClick={() => setSelectedPersonId(p.id)}
-                className={`border p-4 rounded-xl transition-all cursor-pointer flex flex-col justify-between ${
-                  isSelected
+                className={`border p-4 rounded-xl transition-all cursor-pointer flex flex-col justify-between ${isSelected
                     ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
                     : "border-[rgba(234,193,87,0.1)] bg-[rgba(8,40,66,0.6)] hover:border-[rgba(234,193,87,0.3)]"
-                }`}
+                  }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-1">
@@ -1209,11 +1206,10 @@ export function WellnessPage({ onNavigate }: Props) {
           <button
             key={t.id}
             onClick={() => setWellnessTab(t.id as any)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
-              wellnessTab === t.id
+            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${wellnessTab === t.id
                 ? "bg-[#EAC157] text-[#052036] font-semibold"
                 : "border border-[rgba(234,193,87,0.12)] text-[#c5d3df] hover:border-[#EAC157] hover:text-[#FAF9F6]"
-            }`}
+              }`}
           >
             {t.label}
           </button>
@@ -1228,11 +1224,10 @@ export function WellnessPage({ onNavigate }: Props) {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`text-xs px-2.5 py-1 rounded-xl uppercase font-mono transition-colors cursor-pointer ${
-                  selectedCategory === cat
+                className={`text-xs px-2.5 py-1 rounded-xl uppercase font-mono transition-colors cursor-pointer ${selectedCategory === cat
                     ? "bg-[#EAC157] text-[#052036] font-medium"
                     : "border border-[rgba(234,193,87,0.15)] text-[#c5d3df] hover:text-[#FAF9F6]"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -1343,11 +1338,10 @@ export function PalmReadingPage({ onNavigate }: Props) {
               <button
                 key={l.id}
                 onClick={() => setAnalyzedLine(l.id as any)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
-                  analyzedLine === l.id
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${analyzedLine === l.id
                     ? "bg-[#EAC157] text-[#052036] font-semibold"
                     : "border border-[rgba(234,193,87,0.15)] text-[#c5d3df] hover:border-[#EAC157]"
-                }`}
+                  }`}
               >
                 {l.label}
               </button>
@@ -1622,17 +1616,16 @@ export function AskAIPage({ onNavigate }: Props) {
                           p.id === "groq"
                             ? "llama-3.3-70b-versatile"
                             : p.id === "gemini"
-                            ? "gemini-1.5-flash"
-                            : p.id === "openai"
-                            ? "gpt-4o-mini"
-                            : prev.model,
+                              ? "gemini-1.5-flash"
+                              : p.id === "openai"
+                                ? "gpt-4o-mini"
+                                : prev.model,
                       }))
                     }
-                    className={`p-2.5 text-left rounded-xl border transition-all cursor-pointer ${
-                      settings.provider === p.id
+                    className={`p-2.5 text-left rounded-xl border transition-all cursor-pointer ${settings.provider === p.id
                         ? "border-[#EAC157] bg-[rgba(234,193,87,0.15)] text-[#FAF9F6]"
                         : "border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.5)] text-[#c5d3df] hover:border-[#EAC157]"
-                    }`}
+                      }`}
                   >
                     <div className="text-xs font-serif font-medium text-[#FAF9F6]">{p.name}</div>
                     <div className="text-[10px] text-[#c5d3df] mt-0.5">{p.desc}</div>
@@ -1664,8 +1657,8 @@ export function AskAIPage({ onNavigate }: Props) {
                     settings.provider === "groq"
                       ? "gsk_..."
                       : settings.provider === "gemini"
-                      ? "AIzaSy..."
-                      : "sk-..."
+                        ? "AIzaSy..."
+                        : "sk-..."
                   }
                   className="w-full bg-[rgba(10,8,16,0.9)] border border-[rgba(234,193,87,0.3)] rounded-xl p-2.5 text-xs font-mono text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
                 />

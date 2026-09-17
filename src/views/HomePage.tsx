@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "motion/react";
 
 gsap.registerPlugin(ScrollTrigger);
 import GalaxyCanvas from "../components/GalaxyCanvas";
@@ -51,10 +50,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div className="new-actions"><button className="new-primary" onClick={() => onNavigate("onboarding")}>Meet your birth chart <Arrow /></button><a href="#method">See how it works ↓</a></div>
           </div>
           <div className="hero-collage" aria-label="Illustration of a star map, moon, and crystal">
-            <motion.div className="sticker sticker-yellow" whileHover={{ scale: 1.08, rotate: -4 }} transition={{ type: "spring", stiffness: 280, damping: 14 }}>YOUR<br />PATTERNS<br />ARE<br />CLUES</motion.div>
-            <motion.div className="sticker sticker-pink" whileHover={{ scale: 1.08, rotate: 5 }} transition={{ type: "spring", stiffness: 280, damping: 14 }}>NOT<br />YOUR<br /><i>FATE</i></motion.div>
-            <motion.div className="mini-sticker sticker-blue" initial={{ opacity: 0, y: 14, rotate: 8 }} animate={{ opacity: 1, y: 0, rotate: 8 }} transition={{ delay: .7, duration: .6 }}>ASK<br />BETTER<br />QUESTIONS</motion.div>
-            <motion.div className="star-badge" whileHover={{ rotate: 180, scale: 1.1 }} transition={{ duration: .5 }}>✦</motion.div>
+            <div className="sticker sticker-yellow">YOUR<br />PATTERNS<br />ARE<br />CLUES</div>
+            <div className="sticker sticker-pink">NOT<br />YOUR<br /><i>FATE</i></div>
             <GalaxyCanvas className="new-galaxy" opacity={1} />
             <div className="moon-shape" aria-hidden="true" />
             <div className="crystal-shape" aria-hidden="true"><span /><b /><i /></div>
@@ -73,14 +70,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <section id="chart" className="chart-story story-reveal">
           <div className="chart-stamp" aria-hidden="true"><span>YOUR<br />SKY<br />HAS<br />RECEIPTS</span><b>✦</b></div>
           <div className="chart-copy"><p className="new-label">FIELD NOTES / 002</p><h2>A diagram<br />with a pulse.</h2><p>Not a personality quiz. Not a cosmic mood board. A precise map of tension, talent, longing, and timing — made personal to you.</p><button className="new-outline" onClick={() => onNavigate("onboarding")}>Make my map <Arrow /></button></div>
-          <div className="chart-art"><motion.div className="chart-label-sticker" whileHover={{ y: -6, rotate: -5 }} transition={{ type: "spring", stiffness: 220 }}>MAP<br />THE<br />MYSTERY</motion.div><div className="chart-orbit orbit-a" /><div className="chart-orbit orbit-b" /><div className="chart-orbit orbit-c" /><div className="chart-sun">☼</div><span className="chart-note note-a">the part<br />that wants more</span><span className="chart-note note-b">the part<br />that protects</span></div>
+          <div className="chart-art"><div className="chart-orbit orbit-a" /><div className="chart-orbit orbit-b" /><div className="chart-orbit orbit-c" /><div className="chart-sun">☼</div><span className="chart-note note-a">the part<br />that wants more</span><span className="chart-note note-b">the part<br />that protects</span></div>
         </section>
 
         <section className="quote-break story-reveal"><div className="quote-sun" aria-hidden="true">☼</div><span className="quote-sticker">LOOK<br />UP,<br />THEN<br /><i>IN.</i></span><blockquote>“The point is not to become someone else. It is to notice the exact moment you start abandoning yourself.”</blockquote><cite>— AstroFindings field guide</cite></section>
 
         <section id="questions" className="questions-new story-reveal"><div className="question-moon" aria-hidden="true" /><div><p className="new-label">FIELD NOTES / 003</p><h2>Keep your<br /><i>questions.</i></h2></div><div className="faq-new">{faqs.map(([question, answer], index) => <div key={question} className="faq-new-item"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{question}</span><b>{openFaq === index ? "−" : "+"}</b></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
 
-        <section className="final-card story-reveal"><motion.div className="final-scribble" animate={{ rotate: [0, 12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>✳</motion.div><div className="final-tape" aria-hidden="true">KEEP<br />LOOKING</div><p className="new-label">THE DOOR IS OPEN</p><h2>Bring the question<br /><i>you keep making smaller.</i></h2><button className="new-primary" onClick={() => onNavigate("onboarding")}>Begin your reading <Arrow /></button></section>
+        <section className="final-card story-reveal"><div className="final-scribble">✳</div><p className="new-label">THE DOOR IS OPEN</p><h2>Bring the question<br /><i>you keep making smaller.</i></h2><button className="new-primary" onClick={() => onNavigate("onboarding")}>Begin your reading <Arrow /></button></section>
       </main>
       <footer className="new-footer"><span>AstroFindings © 2026</span><span>Astrology for the suspiciously self-aware.</span></footer>
     </div>

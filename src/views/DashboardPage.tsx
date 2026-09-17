@@ -1,5 +1,7 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 import { useApp } from "../context/AppContext";
 import {
   MoonSymbol,
@@ -17,6 +19,18 @@ interface DashboardPageProps {
 
 export default function DashboardPage({ onNavigate }: DashboardPageProps) {
   const { user, liveTransits, navigateWithHighlight } = useApp();
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const root = dashboardRef.current;
+    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = gsap.context(() => {
+      gsap.from(".dashboard-kicker, .dashboard-title, .dashboard-subtitle", { opacity: 0, y: 18, duration: 0.7, stagger: 0.08, ease: "power2.out" });
+      gsap.from(".dashboard-card", { opacity: 0, y: 24, duration: 0.7, stagger: 0.08, delay: 0.2, ease: "power2.out" });
+      gsap.from(".dashboard-sticker", { opacity: 0, scale: 0.8, rotation: -8, duration: 0.8, delay: 0.35, ease: "back.out(1.7)" });
+    }, root);
+    return () => ctx.revert();
+  }, []);
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   const firstName = user.name ? user.name.split(" ")[0] : "Seeker";
@@ -62,7 +76,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
       ];
 
   return (
-    <div className="min-h-screen bg-[#0e0a17] text-[#eee5d3]">
+    <div ref={dashboardRef} className="astral-dashboard min-h-screen bg-[#0e0a17] text-[#eee5d3]">
       {/* Ambient */}
       <div className="fixed inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 50% 40% at 70% 20%, rgba(60,30,130,0.07) 0%, transparent 70%)" }}/>
@@ -70,14 +84,15 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
       <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-8">
 
         {/* Greeting */}
-        <div className="mb-12">
-          <p className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase mb-2">
+        <div className="dashboard-header mb-12">
+          <div className="dashboard-sticker" aria-hidden="true"><span>YOUR<br />SKY<br />NOT<br />YOUR<br />FATE</span><i>✦</i></div>
+          <p className="dashboard-kicker text-xs font-mono text-[#f0c870] tracking-widest uppercase mb-2">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
           </p>
-          <h1 className="font-serif text-3xl md:text-4xl font-light text-[#eee5d3]">
+          <h1 className="dashboard-title font-serif text-3xl md:text-4xl font-light text-[#eee5d3]">
             {greeting}, {firstName}
           </h1>
-          <p className="text-[#bfb7aa] mt-2 text-sm">Sun in {user.sunSign} · Moon in {user.moonSign} · {user.risingSign} rising</p>
+          <p className="dashboard-subtitle text-[#bfb7aa] mt-2 text-sm">Sun in {user.sunSign} · Moon in {user.moonSign} · {user.risingSign} rising</p>
         </div>
 
         {/* Main grid */}
@@ -87,7 +102,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           <div className="lg:col-span-3 space-y-8">
 
             {/* Today's Psychological Horoscope & Trigger Diagnosis */}
-            <div className="border border-[rgba(238,93,52,0.22)] bg-[rgba(31,24,48,0.85)] rounded-sm p-6 sm:p-7 space-y-4 shadow-xl">
+            <div className="dashboard-card border border-[rgba(238,93,52,0.22)] bg-[rgba(31,24,48,0.85)] rounded-sm p-6 sm:p-7 space-y-4 shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <SunSymbol size={16} className="text-[#f0c870]" />
@@ -152,7 +167,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
             </div>
 
             {/* Birth chart preview */}
-            <div className="border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
+            <div className="dashboard-card border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase mb-1">Your natal chart</p>
@@ -173,7 +188,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           <div className="lg:col-span-2 space-y-8">
 
             {/* Moon phase */}
-            <div className="border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
+            <div className="dashboard-card border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
               <div className="flex items-center gap-2 mb-4">
                 <MoonSymbol size={14} className="text-[#bfb7aa]"/>
                 <span className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase">Moon</span>
@@ -196,7 +211,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
             </div>
 
             {/* Cosmic events */}
-            <div className="border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
+            <div className="dashboard-card border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
               <p className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase mb-4">Upcoming</p>
               <div className="space-y-4">
                 {cosmicEvents.map((event, i) => (
@@ -217,7 +232,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
             </div>
 
             {/* Recent readings */}
-            <div className="border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
+            <div className="dashboard-card border border-[rgba(238,93,52,0.12)] bg-[rgba(31,24,48,0.8)] rounded-sm p-6">
               <p className="text-xs font-mono text-[#bfb7aa] tracking-widest uppercase mb-4">Recent readings</p>
               <div className="space-y-4">
                 {recentReadings.map((r, i) => (

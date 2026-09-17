@@ -1,0 +1,12 @@
+/* Astral Heretic dashboard artifacts: small, tactile, and cheap to render. */
+.astral-dashboard { position: relative; overflow: hidden; }
+.astral-dashboard::after { content: ""; position: absolute; width: 34rem; height: 34rem; right: -16rem; top: 5rem; border: 1px solid rgba(115,191,162,.16); border-radius: 50%; transform: rotate(-22deg); pointer-events: none; }
+.dashboard-header { position: relative; }
+.dashboard-sticker { position: absolute; right: 1.5rem; top: -1.5rem; width: 82px; height: 82px; display: grid; place-items: center; background: #f0c870; color: #0e0a17; clip-path: polygon(8% 12%, 88% 4%, 96% 84%, 14% 96%); transform: rotate(7deg); box-shadow: 8px 10px 0 rgba(238,93,52,.18); }
+.dashboard-sticker span { font: 500 8px/1.05 "DM Mono", monospace; letter-spacing: .06em; text-align: center; }
+.dashboard-sticker i { position: absolute; right: 9px; bottom: 7px; font-style: normal; font-size: 12px; color: #ee5d34; }
+.dashboard-card { position: relative; overflow: hidden; transition: border-color .25s ease, transform .25s ease, background .25s ease; }
+.dashboard-card::before { content: "✦"; position: absolute; right: 18px; top: 12px; color: rgba(240,200,112,.5); font-size: 13px; pointer-events: none; }
+.dashboard-card:hover { border-color: rgba(240,200,112,.48); transform: translateY(-2px); }
+@media (max-width: 640px) { .dashboard-sticker { right: 0; top: -2.5rem; transform: scale(.78) rotate(7deg); } .astral-dashboard::after { width: 22rem; height: 22rem; right: -13rem; } .astral-dashboard .grid > *, .astral-dashboard .dashboard-card { min-width: 0; } .astral-dashboard .dashboard-card { overflow-wrap: anywhere; } .astral-dashboard button { max-width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .dashboard-card { transition: none; } }

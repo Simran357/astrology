@@ -216,6 +216,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className="section-shell hero-grid">
           <div className="hero-copy">
             <div className="hero-kicker">00 / A private practice in public</div>
+            <div className="home-artifact" aria-hidden="true"><span>ASTRO<br />FOR THE<br />CURIOUS</span><b>✦</b></div>
             <h1 className="display">Your chart<br/>is not your <em>fate.</em></h1>
             <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
             <div className="hero-actions">

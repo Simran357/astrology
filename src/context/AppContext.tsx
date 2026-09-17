@@ -55,6 +55,7 @@ interface AppContextType {
   isMembershipActive: boolean;
   toggleMembership: () => void;
   startCheckout: (planId?: string) => Promise<void>;
+  restorePurchases: () => Promise<{ success: boolean; message: string; restored?: boolean }>;
   subscriptionStatus: string;
   isLoggedIn: boolean;
   login: (email?: string, password?: string) => Promise<{ success: boolean; error?: string }>;
@@ -186,6 +187,72 @@ export const AppProvider: React.FC<{
     }
   };
 
+  const loadUserNatalData = useCallback(async (accessToken?: string) => {
+    try {
+      const headers: Record<string, string> = {};
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+      const res = await fetch("/api/natal/chart", { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.chart) {
+          const chart = data.chart;
+          const planets = chart.planets || chart.placements || [];
+          const sun = planets.find((p: any) => p.planet === "Sun");
+          const moon = planets.find((p: any) => p.planet === "Moon");
+          const asc = chart.ascendant;
+
+          setUser((prev) => {
+            const updated: UserProfileData = {
+              ...prev,
+              isTimeApproximate: data.isApproximate ?? prev.isTimeApproximate,
+              chartJson: chart,
+              placements: planets.length > 0 ? planets : prev.placements,
+              houses: chart.houses || prev.houses,
+              aspects: chart.aspects || prev.aspects,
+              sunSign: sun?.sign || prev.sunSign,
+              moonSign: moon?.sign || prev.moonSign,
+              risingSign: asc?.sign || prev.risingSign,
+            };
+            try {
+              localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("Could not sync remote chart:", e);
+    }
+  }, []);
+
+  const restorePurchases = useCallback(async (): Promise<{ success: boolean; message: string; restored?: boolean }> => {
+    try {
+      const session = await getCurrentSession();
+      const headers: Record<string, string> = {};
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+      const res = await fetch("/api/subscriptions/restore", {
+        method: "POST",
+        headers,
+      });
+      const data = await res.json();
+      if (data.restored) {
+        setIsMembershipActive(true);
+        setSubscriptionStatus(data.status || "active");
+        try {
+          localStorage.setItem(MEMBERSHIP_STORAGE_KEY, "true");
+        } catch {}
+        return { success: true, message: data.message || "Subscriptions restored successfully.", restored: true };
+      }
+      return { success: true, message: data.message || "No active subscriptions found to restore.", restored: false };
+    } catch (err: any) {
+      return { success: false, message: err.message || "Failed to restore purchases." };
+    }
+  }, []);
+
   // Auth session sync
   useEffect(() => {
     const checkSession = async () => {
@@ -201,6 +268,8 @@ export const AppProvider: React.FC<{
           avatar: session.user.user_metadata?.avatar_url || prev.avatar,
           authProvider: (session.user.app_metadata?.provider as any) || "google",
         }));
+        loadUserNatalData(session.access_token);
+        checkServerEntitlements();
       }
     };
     checkSession();
@@ -217,6 +286,8 @@ export const AppProvider: React.FC<{
           avatar: session.user.user_metadata?.avatar_url || prev.avatar,
           authProvider: (session.user.app_metadata?.provider as any) || "google",
         }));
+        loadUserNatalData(session.access_token);
+        checkServerEntitlements();
       }
     });
 
@@ -318,8 +389,14 @@ export const AppProvider: React.FC<{
   const logout = useCallback(async () => {
     await supabaseSignOut();
     setIsLoggedIn(false);
+    setIsMembershipActive(false);
+    setSubscriptionStatus("free");
+    setUser(DEFAULT_USER_PROFILE);
     try {
       localStorage.removeItem(AUTH_STORAGE_KEY);
+      localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(MEMBERSHIP_STORAGE_KEY);
+      localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
     } catch {}
   }, []);
 
@@ -530,6 +607,7 @@ export const AppProvider: React.FC<{
         isMembershipActive,
         toggleMembership,
         startCheckout,
+        restorePurchases,
         subscriptionStatus,
         isLoggedIn,
         login,

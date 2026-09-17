@@ -28,16 +28,18 @@ export async function GET(req: Request) {
       if (error) {
         console.error("Supabase query error:", error);
       } else if (data) {
+        const canonicalChart = data.chart_data || data.chart_json || {
+          ascendant: { sign: data.ascendant_sign, degree: data.ascendant_degree },
+          midheaven: { sign: data.midheaven_sign, degree: data.midheaven_degree },
+          placements: data.placements,
+          houses: data.houses,
+          aspects: data.aspects,
+          houseSystem: data.house_system,
+        };
+
         return NextResponse.json({
-          chart: data.chart_json || {
-            ascendant: { sign: data.ascendant_sign, degree: data.ascendant_degree },
-            midheaven: { sign: data.midheaven_sign, degree: data.midheaven_degree },
-            placements: data.placements,
-            houses: data.houses,
-            aspects: data.aspects,
-            houseSystem: data.house_system,
-          },
-          isApproximate: data.is_approximate,
+          chart: canonicalChart,
+          isApproximate: data.is_time_approximate || data.is_approximate || false,
           createdAt: data.created_at,
           fromCache: true,
         });
@@ -65,7 +67,16 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { birthDate, birthTime, birthLocation, latitude, longitude, timezone, houseSystem = "Placidus" } = body;
+    const {
+      birthDate,
+      birthTime,
+      birthLocation,
+      latitude,
+      longitude,
+      timezone,
+      houseSystem = "Placidus",
+      isTimeApproximate,
+    } = body;
 
     // Validation
     if (!birthDate || typeof birthDate !== "string") {
@@ -79,11 +90,11 @@ export async function POST(req: Request) {
     const lat = typeof latitude === "number" ? latitude : 37.7749;
     const lng = typeof longitude === "number" ? longitude : -122.4194;
 
-    // Historical timezone & noon fallback resolution
-    const tzResolution = resolveHistoricalTimezone(lat, lng, birthDate, birthTime);
-    const resolvedTime = tzResolution.isTimeApproximate ? "12:00" : birthTime || "12:00";
+    // Historical timezone & noon fallback resolution (accounts for historical DST changes)
+    const tzResolution = resolveHistoricalTimezone(lat, lng, birthDate, birthTime, isTimeApproximate);
+    const resolvedTime = tzResolution.effectiveTime;
 
-    // Calculate real ephemeris
+    // Calculate real astronomical ephemeris (Single Source of Truth)
     const ephemeris = calculateNatalEphemeris(
       birthDate,
       resolvedTime,
@@ -108,14 +119,29 @@ export async function POST(req: Request) {
           birth_timezone: tzResolution.timezone,
           historical_utc_offset_minutes: tzResolution.historicalUtcOffsetMinutes,
           is_birth_time_approximate: tzResolution.isTimeApproximate,
+          sun_sign: ephemeris.sunSign,
+          moon_sign: ephemeris.moonSign,
+          rising_sign: ephemeris.risingSign,
           updated_at: new Date().toISOString(),
         }, { onConflict: "id" });
 
       // 2. Persist real natal chart
       await client
         .from("natal_charts")
-        .insert({
+        .upsert({
           user_id: auth.userId,
+          name: body.name || "Primary Chart",
+          birth_date: birthDate,
+          birth_time: resolvedTime,
+          is_time_approximate: tzResolution.isTimeApproximate,
+          is_approximate: tzResolution.isTimeApproximate,
+          birth_location: birthLocation || "San Francisco, CA",
+          latitude: lat,
+          longitude: lng,
+          timezone: tzResolution.timezone,
+          utc_offset_minutes: tzResolution.historicalUtcOffsetMinutes,
+          house_system: houseSystem.toLowerCase(),
+          chart_data: ephemeris.chartJson,
           chart_json: ephemeris.chartJson,
           sun_sign: ephemeris.sunSign,
           moon_sign: ephemeris.moonSign,
@@ -127,9 +153,8 @@ export async function POST(req: Request) {
           placements: ephemeris.placements,
           houses: ephemeris.houses,
           aspects: ephemeris.aspects,
-          house_system: houseSystem,
-          is_approximate: tzResolution.isTimeApproximate,
-        });
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "user_id" });
     }
 
     return NextResponse.json({

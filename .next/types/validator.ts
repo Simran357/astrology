@@ -182,6 +182,78 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/api/horoscope/today/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/horoscope/today">> = Specific
+  const handler = {} as typeof import("../../src/app/api/horoscope/today/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/natal/chart/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/natal/chart">> = Specific
+  const handler = {} as typeof import("../../src/app/api/natal/chart/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/notifications/dispatch/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/notifications/dispatch">> = Specific
+  const handler = {} as typeof import("../../src/app/api/notifications/dispatch/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/notifications/register/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/notifications/register">> = Specific
+  const handler = {} as typeof import("../../src/app/api/notifications/register/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/payments/checkout/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/payments/checkout">> = Specific
+  const handler = {} as typeof import("../../src/app/api/payments/checkout/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/subscriptions/restore/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/subscriptions/restore">> = Specific
+  const handler = {} as typeof import("../../src/app/api/subscriptions/restore/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/subscriptions/status/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/subscriptions/status">> = Specific
+  const handler = {} as typeof import("../../src/app/api/subscriptions/status/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/webhooks/dodo/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/webhooks/dodo">> = Specific
+  const handler = {} as typeof import("../../src/app/api/webhooks/dodo/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 
 
 

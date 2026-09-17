@@ -48,6 +48,54 @@
       "namedRegex": "^/api/astrology/reading(?:/)?$"
     },
     {
+      "page": "/api/horoscope/today",
+      "regex": "^/api/horoscope/today(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/horoscope/today(?:/)?$"
+    },
+    {
+      "page": "/api/natal/chart",
+      "regex": "^/api/natal/chart(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/natal/chart(?:/)?$"
+    },
+    {
+      "page": "/api/notifications/dispatch",
+      "regex": "^/api/notifications/dispatch(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/notifications/dispatch(?:/)?$"
+    },
+    {
+      "page": "/api/notifications/register",
+      "regex": "^/api/notifications/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/notifications/register(?:/)?$"
+    },
+    {
+      "page": "/api/payments/checkout",
+      "regex": "^/api/payments/checkout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/payments/checkout(?:/)?$"
+    },
+    {
+      "page": "/api/subscriptions/restore",
+      "regex": "^/api/subscriptions/restore(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/subscriptions/restore(?:/)?$"
+    },
+    {
+      "page": "/api/subscriptions/status",
+      "regex": "^/api/subscriptions/status(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/subscriptions/status(?:/)?$"
+    },
+    {
+      "page": "/api/webhooks/dodo",
+      "regex": "^/api/webhooks/dodo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/webhooks/dodo(?:/)?$"
+    },
+    {
       "page": "/askai",
       "regex": "^/askai(?:/)?$",
       "routeKeys": {},

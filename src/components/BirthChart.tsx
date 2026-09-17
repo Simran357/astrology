@@ -470,13 +470,13 @@ export default function BirthChart({
 
       {/* Selected Planet Details Inspector */}
       {selectedPlanetDetail && (
-        <div className="mt-3 w-full border border-[#EAC157]/40 bg-[#082842]/95 backdrop-blur-md rounded-xl p-4 text-xs font-sans shadow-2xl relative z-20">
+        <div className="mt-3 w-full border border-[#052036]/15 bg-white/95 backdrop-blur-md rounded-2xl p-4 text-xs font-sans shadow-xl relative z-20 text-[#052036]">
           <div className="flex items-center justify-between gap-2 border-b border-[#EAC157]/20 pb-2 mb-2">
             <div className="flex items-center gap-2">
               <span className="text-lg font-serif" style={{ color: selectedPlanetDetail.color }}>
                 {selectedPlanetDetail.glyph}
               </span>
-              <span className="font-serif text-sm font-semibold text-[#FAF9F6]">
+              <span className="font-cormorant text-base font-semibold text-[#052036]">
                 {selectedPlanetDetail.name}
               </span>
               {selectedPlanetDetail.isRetrograde && (
@@ -487,7 +487,7 @@ export default function BirthChart({
             </div>
             <button
               onClick={() => setSelectedPlanetDetail(null)}
-              className="text-[#c5d3df] hover:text-[#FAF9F6] p-1 cursor-pointer font-mono"
+              className="text-[#052036]/60 hover:text-[#052036] p-1 cursor-pointer font-mono"
               aria-label="Close inspector"
             >
               ✕
@@ -495,24 +495,24 @@ export default function BirthChart({
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[11px] mb-2 font-mono">
-            <div className="p-2 rounded bg-[#052036] border border-[#EAC157]/15">
-              <span className="text-[#c5d3df] block text-[10px] uppercase">Zodiac & Degree</span>
+            <div className="p-2 rounded bg-[#FAF7F2] border border-[#052036]/10">
+              <span className="text-[#052036]/60 block text-[10px] uppercase">Zodiac & Degree</span>
               <span className="text-[#EAC157] font-semibold">{selectedPlanetDetail.formatted}</span>
             </div>
-            <div className="p-2 rounded bg-[#052036] border border-[#EAC157]/15">
-              <span className="text-[#c5d3df] block text-[10px] uppercase">House Placement</span>
-              <span className="text-[#FAF9F6] font-semibold">House {selectedPlanetDetail.house} ({selectedPlanetDetail.element})</span>
+            <div className="p-2 rounded bg-[#FAF7F2] border border-[#052036]/10">
+              <span className="text-[#052036]/60 block text-[10px] uppercase">House Placement</span>
+              <span className="text-[#052036] font-semibold">House {selectedPlanetDetail.house} ({selectedPlanetDetail.element})</span>
             </div>
           </div>
 
-          <p className="text-[#c5d3df] leading-relaxed font-sans text-[11px]">
+          <p className="text-[#052036]/80 leading-relaxed font-sans text-[11px]">
             {selectedPlanetDetail.meaning}
           </p>
         </div>
       )}
 
       {/* Aspect Legend Bar */}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono text-[#c5d3df]/80">
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[10px] font-mono text-[#052036]/70">
         <span className="flex items-center gap-1">
           <span className="w-2.5 h-0.5 bg-[#38bdf8] inline-block rounded" /> Trine (120°)
         </span>

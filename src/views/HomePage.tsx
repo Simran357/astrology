@@ -140,6 +140,7 @@ const STORY_CHAPTERS = [
 const ZODIAC_DAILY_GUIDANCE = [
   {
     sign: "Aries",
+    sticker: "/stickers/zodiac/aries.png",
     dates: "Mar 21 – Apr 19",
     element: "Fire",
     glyph: "♈",
@@ -149,6 +150,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Taurus",
+    sticker: "/stickers/zodiac/taurus.png",
     dates: "Apr 20 – May 20",
     element: "Earth",
     glyph: "♉",
@@ -158,6 +160,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Gemini",
+    sticker: "/stickers/zodiac/gemini.png",
     dates: "May 21 – Jun 20",
     element: "Air",
     glyph: "♊",
@@ -167,6 +170,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Cancer",
+    sticker: "/stickers/zodiac/cancer.png",
     dates: "Jun 21 – Jul 22",
     element: "Water",
     glyph: "♋",
@@ -176,6 +180,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Leo",
+    sticker: "/stickers/zodiac/leo.png",
     dates: "Jul 23 – Aug 22",
     element: "Fire",
     glyph: "♌",
@@ -185,6 +190,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Virgo",
+    sticker: "/stickers/zodiac/virgo.png",
     dates: "Aug 23 – Sep 22",
     element: "Earth",
     glyph: "♍",
@@ -194,6 +200,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Libra",
+    sticker: "/stickers/zodiac/libra.png",
     dates: "Sep 23 – Oct 22",
     element: "Air",
     glyph: "♎",
@@ -203,6 +210,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Scorpio",
+    sticker: "/stickers/zodiac/scorpio.png",
     dates: "Oct 23 – Nov 21",
     element: "Water",
     glyph: "♏",
@@ -212,6 +220,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Sagittarius",
+    sticker: "/stickers/zodiac/sagittarius.png",
     dates: "Nov 22 – Dec 21",
     element: "Fire",
     glyph: "♐",
@@ -221,6 +230,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Capricorn",
+    sticker: "/stickers/zodiac/capricorn.png",
     dates: "Dec 22 – Jan 19",
     element: "Earth",
     glyph: "♑",
@@ -230,6 +240,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Aquarius",
+    sticker: "/stickers/zodiac/aquarius.png",
     dates: "Jan 20 – Feb 18",
     element: "Air",
     glyph: "♒",
@@ -239,6 +250,7 @@ const ZODIAC_DAILY_GUIDANCE = [
   },
   {
     sign: "Pisces",
+    sticker: "/stickers/zodiac/pisces.png",
     dates: "Feb 19 – Mar 20",
     element: "Water",
     glyph: "♓",
@@ -251,6 +263,7 @@ const ZODIAC_DAILY_GUIDANCE = [
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedDilemma, setSelectedDilemma] = useState<string>("golden_handcuffs");
+  const [selectedDailySign, setSelectedDailySign] = useState<string>("Sagittarius");
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
@@ -304,17 +317,18 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <img src={darkLogo} alt="AstroFindings" className="h-7 w-auto select-none inline-block align-middle" />
         </div>
 
-        <nav className="hidden xl:flex items-center gap-5 text-xs font-mono uppercase tracking-widest text-[#052036]/70">
-          <a href="#why" className="hover:text-[#052036] transition-colors">Against Script</a>
-          <a href="#ask-your-chart" className="hover:text-[#052036] transition-colors">Ask Chart</a>
-          <a href="#story" className="hover:text-[#052036] transition-colors">02 / Movements</a>
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-mono uppercase tracking-widest text-[#052036]/70">
+          <a href="#ask-your-chart" className="hover:text-[#052036] transition-colors">How It Works</a>
+          <span className="text-[#EAC157]">✦</span>
+          <a href="#story" className="hover:text-[#052036] transition-colors">Movements</a>
+          <span className="text-[#EAC157]">✦</span>
           <a href="#transits" className="hover:text-[#052036] transition-colors">Transits</a>
-          <a href="#journaling" className="hover:text-[#052036] transition-colors">Journal</a>
-          <a href="#dilemmas" className="hover:text-[#052036] transition-colors">03 / Dilemmas</a>
+          <span className="text-[#EAC157]">✦</span>
           <a href="#compatibility" className="hover:text-[#052036] transition-colors">Compatibility</a>
-          <a href="#daily-signs" className="hover:text-[#052036] transition-colors">Daily Signs</a>
+          <span className="text-[#EAC157]">✦</span>
+          <a href="#dilemmas" className="hover:text-[#052036] transition-colors">Crossroads</a>
+          <span className="text-[#EAC157]">✦</span>
           <a href="#pricing" className="hover:text-[#052036] transition-colors">Pricing</a>
-          <a href="#questions" className="hover:text-[#052036] transition-colors">05 / FAQ</a>
         </nav>
 
         <div className="flex items-center gap-4 text-xs font-mono">
@@ -331,7 +345,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             Get your chart →
           </button>
           <button
-            className="xl:hidden text-2xl px-2 text-[#052036]"
+            className="lg:hidden text-2xl px-2 text-[#052036]"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -341,17 +355,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </header>
 
       {mobileOpen && (
-        <nav className="mobile-nav is-open bg-[#FAF7F2] border-b border-[#052036]/10 p-6 space-y-3 text-xs font-mono uppercase tracking-widest xl:hidden">
-          <a href="#why" onClick={() => setMobileOpen(false)} className="block py-1">01 / Against the Script</a>
-          <a href="#ask-your-chart" onClick={() => setMobileOpen(false)} className="block py-1">✦ Ask Your Chart</a>
-          <a href="#story" onClick={() => setMobileOpen(false)} className="block py-1">02 / The 6 Movements</a>
+        <nav className="mobile-nav is-open bg-[#FAF7F2] border-b border-[#052036]/10 p-6 space-y-3 text-xs font-mono uppercase tracking-widest lg:hidden">
+          <a href="#ask-your-chart" onClick={() => setMobileOpen(false)} className="block py-1">✦ How It Works</a>
+          <a href="#story" onClick={() => setMobileOpen(false)} className="block py-1">✦ The 6 Movements</a>
           <a href="#transits" onClick={() => setMobileOpen(false)} className="block py-1">✦ Transit Calendar</a>
-          <a href="#journaling" onClick={() => setMobileOpen(false)} className="block py-1">✦ Transit Journaling</a>
-          <a href="#dilemmas" onClick={() => setMobileOpen(false)} className="block py-1">03 / Real Crossroads</a>
           <a href="#compatibility" onClick={() => setMobileOpen(false)} className="block py-1">✦ Compatibility</a>
-          <a href="#daily-signs" onClick={() => setMobileOpen(false)} className="block py-1">✦ Daily Signs</a>
+          <a href="#dilemmas" onClick={() => setMobileOpen(false)} className="block py-1">✦ Real Crossroads</a>
           <a href="#pricing" onClick={() => setMobileOpen(false)} className="block py-1">✦ Pricing</a>
-          <a href="#questions" onClick={() => setMobileOpen(false)} className="block py-1">05 / FAQ</a>
+          <a href="#questions" onClick={() => setMobileOpen(false)} className="block py-1">✦ FAQ</a>
           <button className="button-primary w-full cursor-pointer mt-2" onClick={() => go("onboarding")}>
             Begin Discovery →
           </button>
@@ -388,14 +399,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             />
           </div>
 
-          {/* Sticker Bottom-Right Flank: Standing Pink Rabbit (Burned/Transparent Background) */}
-          <div className="hidden md:block absolute right-2 xl:right-8 bottom-28 z-10 pointer-events-auto transform rotate-3 hover:-rotate-3 transition-transform duration-300">
-            <img
-              src="/stickers/pink-rabbit.png"
-              alt="Standing Pink Rabbit Talisman Sticker"
-              className="w-20 xl:w-26 h-auto filter drop-shadow-[0_16px_32px_rgba(5,32,54,0.18)] select-none mix-blend-multiply"
-            />
-          </div>
+
 
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#EAC157]/50 bg-white/80 shadow-sm text-xs font-mono tracking-widest text-[#052036] uppercase mb-8">
@@ -632,46 +636,59 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </div>
             </div>
           </div>
-        </section>
-
+        </section>        {/* ------------------------------------------------------------------ */}
+        {/* 02 / THE 6 MOVEMENTS: THE ILLUSTRATED MEMOIR                       */}
         {/* ------------------------------------------------------------------ */}
-        {/* 02 / THE 6 MOVEMENTS: THE ILLUSTRATED MEMOIR (Preserved & Intact)   */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="method border-t border-[rgba(234,193,87,0.2)]" id="story">
-          <div className="section-shell">
-            <div className="method-intro">
+        <section className="py-20 md:py-28 px-6 md:px-12 bg-[#F3ECE1] text-[#052036] border-t border-[#052036]/10" id="story">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
               <div>
-                <span className="eyebrow">02 / The Illustrated Memoir</span>
-                <h2 className="display">Knowing what was<br />previously unknown.</h2>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#052036]/20 bg-white/70 text-xs font-mono tracking-widest text-[#052036] uppercase mb-3">
+                  <span className="text-[#C89B3C]">✦</span>
+                  <span>02 / The Illustrated Memoir</span>
+                </div>
+                <h2 className="font-cormorant text-4xl sm:text-5xl md:text-6xl text-[#052036] font-normal leading-[1.02]">
+                  Knowing what was<br /><span className="italic">previously unknown.</span>
+                </h2>
               </div>
-              <p>Six movements through your interior architecture — from the emotions you swallow in silence to the cold peace of walking away.</p>
+              <p className="font-inter text-sm sm:text-base text-[#052036]/75 max-w-sm leading-relaxed font-normal">
+                Six movements through your interior architecture — from the emotions you swallow in silence to the cold peace of walking away.
+              </p>
             </div>
 
-            <div className="method-list">
+            <div className="divide-y divide-[#052036]/15 border-y border-[#052036]/15">
               {STORY_CHAPTERS.map((chapter) => (
                 <div
-                  className="method-row cursor-pointer group"
+                  className="py-7 md:py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center cursor-pointer group hover:bg-white/50 px-4 -mx-4 rounded-2xl transition-all duration-300"
                   key={chapter.numeral}
                   onClick={() => go("onboarding")}
                 >
-                  <span className="method-number">{chapter.numeral}</span>
-                  <div>
-                    <h3>{chapter.title}</h3>
-                    <span className="text-[11px] font-sans text-[#EAC157] font-semibold uppercase tracking-wider block mt-1">
-                      {chapter.theme}
+                  <div className="md:col-span-1 text-[#C89B3C] font-mono text-base sm:text-lg font-bold">
+                    {chapter.numeral}
+                  </div>
+                  <div className="md:col-span-5 space-y-1">
+                    <h3 className="font-cormorant text-2xl sm:text-3xl font-semibold text-[#052036] group-hover:text-[#8C6B1B] transition-colors">
+                      {chapter.title}
+                    </h3>
+                    <span className="text-[11px] font-mono text-[#8C6B1B] uppercase tracking-wider block font-bold">
+                      ✦ {chapter.theme}
                     </span>
                   </div>
-                  <p className="font-serif italic text-[#FAF9F6]">
+                  <div className="md:col-span-5 font-cormorant italic text-base sm:text-lg text-[#052036]/80 leading-snug">
                     "{chapter.quote}"
-                  </p>
-                  <Arrow />
+                  </div>
+                  <div className="md:col-span-1 flex justify-end">
+                    <span className="w-9 h-9 rounded-full bg-white/80 border border-[#052036]/10 flex items-center justify-center text-[#052036] group-hover:bg-[#052036] group-hover:text-white transition-all">
+                      <Arrow />
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ------------------------------------------------------------------ */}
+{/* ------------------------------------------------------------------ */}
         {/* TRANSIT CALENDAR (Screenshot 2 Design)                              */}
         {/* ------------------------------------------------------------------ */}
         <section id="transits" className="py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto border-t border-[#052036]/10">
@@ -786,93 +803,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </div>
             </div>
           </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* 03 / REAL CROSSROADS (The Dilemma Mirrors Preserved & Intact)       */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="threshold border-t border-[#052036]/10" id="dilemmas">
-          <div className="section-shell">
-            <div className="max-w-2xl mb-10 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#052036]/30 bg-[#FAF9F6] text-[10px] font-sans uppercase tracking-widest text-[#052036] font-bold mb-3">
-                <span> 03 / REAL CROSSROADS</span>
-              </div>
-              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads.</h2>
-              <p className="threshold-lede text-base font-medium text-[#052036]/90" style={{ marginTop: "10px" }}>
-                When staying destroys you and leaving costs everything. Select the standoff keeping you awake tonight:
-              </p>
-            </div>
-
-            {/* Selector Buttons */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {DILEMMA_MIRRORS.map((d) => (
-                <button
-                  key={d.id}
-                  onClick={() => setSelectedDilemma(d.id)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer ${selectedDilemma === d.id
-                      ? "bg-[#052036] text-[#FAF9F6] shadow-md border-2 border-[#EAC157] font-bold"
-                      : "bg-[#052036]/10 hover:bg-[#052036]/20 text-[#052036] border border-[#052036]/20 font-semibold"
-                    }`}>
-                  {d.tag}
-                </button>
-              ))}
-            </div>
-
-            {/* Dilemma Mirror Box */}
-            <div className="editorial-card border-2 border-[rgba(234,193,87,0.45)] bg-[#052036] text-[#FAF9F6] p-6 md:p-8 rounded-xl space-y-6 shadow-2xl relative">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[rgba(234,193,87,0.25)] pb-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#EAC157] bg-[#082842] text-[10px] font-sans text-[#EAC157] uppercase tracking-wider font-bold">
-                  <span>{activeDilemma.stampNote}</span>
-                </div>
-                <span className="text-[10px] font-sans text-[#c5d3df] tracking-widest uppercase font-bold">
-                  {activeDilemma.anchor}
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-widest text-[#c5d3df] block font-bold mb-1">
-                    The Real-World Dilemma
-                  </span>
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#FAF9F6] leading-snug font-bold italic">
-                    {activeDilemma.trigger}
-                  </h3>
-                </div>
-
-                <div className="pt-1">
-                  <span className="text-[10px] font-sans uppercase tracking-widest text-[#c5d3df] block font-bold mb-1">
-                    The Psychological Truth:
-                  </span>
-                  <p className="text-sm md:text-base text-[#FAF9F6]/90 leading-relaxed font-normal">
-                    {activeDilemma.glimpseOfTruth}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-5 rounded-lg border-l-4 border-[#EAC157] bg-[rgba(234,193,87,0.12)] space-y-2">
-                <span className="text-[11px] font-sans uppercase tracking-widest text-[#EAC157] block font-bold">
-                  The Hard Question You Keep Avoiding
-                </span>
-                <p className="font-serif text-xl md:text-2xl text-[#FAF9F6] font-bold italic leading-snug">
-                  "{activeDilemma.lingeringQuestion}"
-                </p>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-4">
-                <p className="text-xs text-[#c5d3df] font-sans">
-                  Your birth chart holds the exact planetary degrees driving this dynamic.
-                </p>
-                <button
-                  onClick={() => go("onboarding")}
-                  className="button-primary cursor-pointer text-xs font-bold whitespace-nowrap">
-                  Decode in Your Birth Sky →
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------------ */}
+        </section>{/* ------------------------------------------------------------------ */}
         {/* COMPATIBILITY (Screenshot 1 Design with Cutout Heart Sticker)       */}
         {/* ------------------------------------------------------------------ */}
         <section id="compatibility" className="py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto border-t border-[#052036]/10">
@@ -928,70 +859,199 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
           </div>
         </section>
+        {/* ------------------------------------------------------------------ */}
+        {/* 03 / REAL CROSSROADS (Short & Concise Editorial Format)             */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="py-14 md:py-20 px-6 md:px-12 bg-[#FAF6F0] text-[#052036] border-t border-[#052036]/10" id="dilemmas">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 text-left">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#052036]/20 bg-white/80 text-xs font-mono tracking-widest text-[#052036] uppercase mb-2">
+                  <span className="text-[#C89B3C]">✦</span>
+                  <span>03 / REAL CROSSROADS</span>
+                </div>
+                <h2 className="font-cormorant text-3xl sm:text-4xl md:text-5xl text-[#052036] font-normal leading-tight">
+                  Tough crossroads. <span className="italic">Honest mirrors.</span>
+                </h2>
+              </div>
+              <p className="font-inter text-xs sm:text-sm text-[#052036]/70 max-w-sm leading-relaxed">
+                Decoded through the planetary tension of your birth chart — read straight through:
+              </p>
+            </div>
 
+            {/* Concise 3-Column Dilemma Mirrors */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+              {DILEMMA_MIRRORS.slice(0, 3).map((d) => (
+                <div
+                  key={d.id}
+                  className="bg-white/95 rounded-2xl p-5 sm:p-6 border border-[#052036]/10 shadow-[0_8px_20px_rgba(5,32,54,0.03)] hover:border-[#C89B3C]/50 transition-all duration-200 flex flex-col justify-between text-left group"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between pb-3 border-b border-[#052036]/10">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#FAF4EA] text-[10px] font-mono uppercase tracking-wider text-[#052036] font-bold">
+                        <span className="text-[#C89B3C]">✦</span> {d.stampNote.split("//")[0].trim()}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#8C6B1B] font-semibold">
+                        🪐 {d.anchor.split("vs.")[0].trim()}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="font-cormorant text-lg sm:text-xl text-[#052036] font-semibold italic leading-snug">
+                        {d.trigger}
+                      </h3>
+                    </div>
+
+                    <p className="font-inter text-xs text-[#052036]/75 leading-relaxed line-clamp-3">
+                      {d.glimpseOfTruth}
+                    </p>
+
+                    <div className="p-3 rounded-xl bg-[#FAF6EE] border-l-2 border-[#C89B3C]">
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-[#8C6B1B] block font-bold mb-0.5">
+                        The Question You Avoid
+                      </span>
+                      <p className="font-cormorant text-sm text-[#052036] font-medium italic leading-snug">
+                        "{d.lingeringQuestion}"
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 mt-4 border-t border-[#052036]/10 flex items-center justify-between">
+                    <span className="text-[10px] font-mono text-[#052036]/50">{d.tag}</span>
+                    <button
+                      onClick={() => go("onboarding")}
+                      className="text-[11px] font-mono uppercase tracking-wider text-[#052036] font-bold hover:text-[#8C6B1B] inline-flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <span>Decode sky</span>
+                      <span>→</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
         {/* ------------------------------------------------------------------ */}
-        {/* CHANI-STYLE ALL 12 SIGNS OPEN & READABLE SECTION                   */}
+        {/* ✦ DAILY WEATHER FOR EVERY SIGN (Visual Zodiac Stickers Gallery)     */}
         {/* ------------------------------------------------------------------ */}
-        <section id="daily-signs" className="py-16 md:py-20 px-6 md:px-12 max-w-6xl mx-auto border-t border-[#052036]/10">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 mb-8 text-left">
+        <section id="daily-signs" className="py-14 md:py-20 px-6 md:px-12 max-w-6xl mx-auto border-t border-[#052036]/10 relative">
+          {/* Subtle Celestial Sticker Flank Decoration */}
+          <div className="hidden lg:block absolute -top-10 right-4 pointer-events-none opacity-40 transform rotate-12">
+            <img src="/stickers/cosmic-eye-orbit.png" alt="Cosmic Eye" className="w-24 h-auto mix-blend-multiply select-none" />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-8 text-left">
             <div>
-              <span className="text-xs font-mono text-[#052036]/80 uppercase tracking-widest block font-bold">
+              <span className="text-xs font-mono text-[#052036]/80 uppercase tracking-widest block font-bold mb-1">
                 ✦ DAILY WEATHER FOR EVERY SIGN
               </span>
-              <h2 className="font-cormorant text-3xl sm:text-4xl md:text-5xl text-[#052036] font-normal">
-                Today's celestial tone: Moon in {liveTransits.moonPhase.sign}
+              <h2 className="font-cormorant text-3xl sm:text-4xl md:text-5xl text-[#052036] font-normal leading-tight">
+                Today's celestial tone: <span className="italic font-normal">Moon in Sagittarius</span>
               </h2>
             </div>
-            <p className="text-xs font-mono text-[#052036]/60">
-              Scroll down to read your sign without clicking
+            <p className="text-xs font-mono text-[#052036]/60 max-w-xs">
+              Tap your zodiac talisman sticker to reveal today's reading
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {ZODIAC_DAILY_GUIDANCE.map((z) => (
-              <div
-                key={z.sign}
-                className="p-6 rounded-3xl bg-white/80 border border-[#052036]/10 hover:border-[#EAC157] hover:shadow-[0_16px_32px_rgba(5,32,54,0.08)] transition-all flex flex-col justify-between text-left"
-              >
-                <div>
-                  <div className="flex items-center justify-between border-b border-[#052036]/10 pb-3 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-serif" style={{ color: z.color }}>
-                        {z.glyph}
-                      </span>
-                      <div>
-                        <h4 className="font-cormorant text-2xl font-bold text-[#052036] leading-none">
-                          {z.sign}
-                        </h4>
-                        <span className="text-[10px] font-mono text-[#052036]/60">{z.dates}</span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full border border-[#052036]/15 text-[#052036] bg-[#FAF7F2]">
-                      {z.element}
+          {/* 12 Visual Zodiac Stickers Grid / Shelf */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-4 mb-8">
+            {ZODIAC_DAILY_GUIDANCE.map((z, idx) => {
+              const isSelected = (selectedDailySign || "Sagittarius") === z.sign;
+              const tilts = ["-rotate-2", "rotate-1", "-rotate-1", "rotate-2", "-rotate-3", "rotate-1"];
+              const tilt = tilts[idx % tilts.length];
+
+              return (
+                <div
+                  key={z.sign}
+                  onClick={() => setSelectedDailySign(z.sign)}
+                  className={`group relative p-3 rounded-2xl transition-all duration-300 cursor-pointer flex flex-col items-center text-center select-none ${
+                    isSelected
+                      ? "bg-white shadow-[0_12px_28px_rgba(5,32,54,0.12)] ring-2 ring-[#EAC157] scale-105 z-10"
+                      : "bg-white/60 hover:bg-white/95 hover:shadow-[0_8px_20px_rgba(5,32,54,0.06)] border border-[#052036]/8 hover:scale-102"
+                  }`}
+                >
+                  {/* Active Celestial Dot */}
+                  {isSelected && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#EAC157] text-[#052036] text-[9px] flex items-center justify-center font-bold shadow-sm animate-pulse">
+                      ✦
+                    </span>
+                  )}
+
+                  {/* Physical Sticker Graphic with Drop Shadow and Tilt */}
+                  <div className={`w-16 sm:w-20 aspect-square flex items-center justify-center transition-transform duration-300 transform group-hover:rotate-0 group-hover:scale-110 ${tilt}`}>
+                    <img
+                      src={z.sticker}
+                      alt={`${z.sign} Zodiac Sticker`}
+                      className="w-full h-full object-contain filter drop-shadow-[0_8px_14px_rgba(5,32,54,0.14)] pointer-events-none"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Sign Name and Glyph */}
+                  <div className="mt-2">
+                    <span className="font-cormorant text-base sm:text-lg font-semibold text-[#052036] block leading-none">
+                      {z.sign}
+                    </span>
+                    <span className="text-[10px] font-mono text-[#052036]/50 block mt-0.5">
+                      {z.glyph} · {z.element}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Active Zodiac Spotlight Reading Card */}
+          {(() => {
+            const activeSign = ZODIAC_DAILY_GUIDANCE.find(
+              (z) => z.sign === (selectedDailySign || "Sagittarius")
+            ) || ZODIAC_DAILY_GUIDANCE[8];
+
+            return (
+              <div className="p-6 sm:p-8 rounded-3xl bg-white/95 border border-[#052036]/10 shadow-[0_14px_32px_rgba(5,32,54,0.05)] text-left flex flex-col md:flex-row items-center gap-6 sm:gap-8 relative overflow-hidden">
+                {/* Visual Sticker Feature Display */}
+                <div className="shrink-0 flex flex-col items-center justify-center w-28 sm:w-36 aspect-square bg-[#FAF7F2] rounded-2xl p-3 border border-[#052036]/8 relative">
+                  <img
+                    src={activeSign.sticker}
+                    alt={activeSign.sign}
+                    className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(5,32,54,0.18)] transform -rotate-2 hover:rotate-0 transition-transform duration-300"
+                  />
+                  <span className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-[#052036] text-[#FAF9F6] text-[9px] font-mono uppercase tracking-wider font-bold shadow-sm">
+                    {activeSign.glyph} {activeSign.sign}
+                  </span>
+                </div>
+
+                {/* Horoscope Interpretation */}
+                <div className="space-y-2.5 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#8C6B1B] font-bold">
+                      ✦ {activeSign.theme}
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF7F2] border border-[#052036]/10 text-[#052036]/70">
+                      {activeSign.dates} · {activeSign.element}
                     </span>
                   </div>
 
-                  <h5 className="text-xs font-mono uppercase tracking-wider text-[#052036] font-bold mb-2">
-                    {z.theme}
-                  </h5>
-
-                  <p className="font-inter text-xs text-[#052036]/75 leading-relaxed">
-                    {z.guidance}
+                  <p className="font-inter text-sm sm:text-base text-[#052036]/85 leading-relaxed font-normal">
+                    {activeSign.guidance}
                   </p>
-                </div>
 
-                <div className="pt-3 mt-3 border-t border-[#052036]/10 flex items-center justify-between text-[11px] font-mono text-[#052036]/70">
-                  <span>✦ Swiss Ephemeris Alignment</span>
-                  <button
-                    onClick={() => go("onboarding")}
-                    className="text-[#052036] font-bold hover:underline cursor-pointer"
-                  >
-                    Read full chart →
-                  </button>
+                  <div className="pt-2 flex flex-wrap items-center gap-4">
+                    <button
+                      onClick={() => go("onboarding")}
+                      className="px-5 py-2.5 rounded-full bg-[#052036] text-[#FAF9F6] text-xs font-mono uppercase tracking-wider font-semibold hover:bg-[#082842] transition-colors cursor-pointer shadow-sm"
+                    >
+                      Calculate in Your Birth Degrees →
+                    </button>
+                    <span className="text-[11px] font-mono text-[#052036]/50">
+                      ✦ Live Swiss Ephemeris transit alignment
+                    </span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </section>
 
         {/* ------------------------------------------------------------------ */}
@@ -1172,7 +1232,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <footer className="closing">
         <div className="section-shell closing-inner">
           <div className="mb-6 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="AstroFindings Home">
-            <img src={lightLogo} alt="AstroFindings" className="h-9.5 w-auto select-none inline-block align-middle" />
+            <img src={darkLogo} alt="AstroFindings" className="h-9.5 w-auto select-none inline-block align-middle" />
           </div>
           <span className="eyebrow block mb-6 text-xs font-sans font-semibold tracking-[0.22em] uppercase text-[#052036]/80">
             The door is open

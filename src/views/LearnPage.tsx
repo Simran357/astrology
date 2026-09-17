@@ -59,7 +59,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#052036] text-[#FAF9F6] selection:bg-[#EAC157] selection:text-[#052036]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#052036] font-inter selection:bg-[#EAC157] selection:text-[#052036]">
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -69,19 +69,35 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-8 md:py-12">
-        {/* Page Header */}
-        <div className="mb-8">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#EAC157] block mb-2">
-            01 / Comprehensive Library
-          </span>
-          <h1 className="font-serif text-3xl md:text-5xl font-light text-[#FAF9F6] leading-tight">
-            Learn astrology,<br />
-            <em className="serif text-[#EAC157]">understand yourself.</em>
-          </h1>
-          <p className="text-sm md:text-base text-[#c5d3df] max-w-2xl mt-3 leading-relaxed">
-            No jargon without emotional truth. Every concept connects back to your psyche:
-            why you overthink, why you detach, what triggers your anxiety, and where you hold a soft corner.
-          </p>
+        {/* Page Header with Stickers */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex-1">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8C6B1B] font-semibold block mb-2">
+              01 / Comprehensive Library
+            </span>
+            <h1 className="font-cormorant text-3xl md:text-5xl font-normal text-[#052036] leading-tight">
+              Learn astrology,<br />
+              <em className="serif text-[#8C6B1B]">understand yourself.</em>
+            </h1>
+            <p className="text-sm md:text-base text-[#052036]/75 max-w-2xl mt-3 leading-relaxed">
+              No jargon without emotional truth. Every concept connects back to your psyche:
+              why you overthink, why you detach, what triggers your anxiety, and where you hold a soft corner.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <img
+              src="/stickers/apple-eye.png"
+              alt="Wisdom Eye"
+              className="w-16 h-16 sm:w-20 sm:h-20 object-contain filter drop-shadow-sm hover:scale-105 transition-transform"
+              onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+            />
+            <img
+              src="/stickers/heart-eye.png"
+              alt="Heart Eye"
+              className="w-14 h-14 sm:w-18 sm:h-18 object-contain filter drop-shadow-sm hidden md:block hover:scale-105 transition-transform"
+              onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+            />
+          </div>
         </div>
 
         {/* Tab Navigation Scrollable Bar */}
@@ -97,8 +113,8 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                 }}
                 className={`px-4 py-2.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                   isActive
-                    ? "bg-[rgba(234,193,87,0.18)] border border-[#EAC157] text-[#FAF9F6] shadow-sm"
-                    : "border border-[rgba(234,193,87,0.1)] text-[#c5d3df] hover:border-[rgba(234,193,87,0.25)] hover:text-[#FAF9F6]"
+                    ? "bg-[#052036] border border-[#052036] text-[#FAF9F6] shadow-sm font-semibold"
+                    : "bg-white border border-[#052036]/10 text-[#052036] hover:bg-[#FAF7F2]"
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -114,17 +130,17 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
         {activeTab === "basics" && (
           <div className="space-y-8 animate-fadeIn">
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 rounded-xl space-y-4">
+              <div className="border border-[#052036]/10 bg-white shadow-sm p-6 rounded-xl space-y-4">
                 <span className="text-[10px] font-mono text-[#EAC157] uppercase tracking-wider block">
                   Foundational Primer
                 </span>
-                <h2 className="font-serif text-2xl text-[#FAF9F6]">What is a Birth Chart?</h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] leading-relaxed">
+                <h2 className="font-cormorant text-2xl text-[#052036]">What is a Birth Chart?</h2>
+                <p className="text-xs md:text-sm text-[#052036]/70 leading-relaxed">
                   A birth chart (natal chart) is a snapshot of the exact sky at the second of your first breath.
                   It is not a prediction of fate; it is a psychological map of your instincts, emotional triggers,
                   and repeating mental habits.
                 </p>
-                <p className="text-xs text-[#c5d3df] leading-relaxed">
+                <p className="text-xs text-[#052036]/70 leading-relaxed">
                   When you know where the planets were positioned across the 12 signs and houses, you finally understand:
                   <strong> why you react this way</strong>, why certain relationships overwhelm you, and where your hidden comfort zone lies.
                 </p>
@@ -138,16 +154,16 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                 </div>
               </div>
 
-              <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 rounded-xl space-y-4">
+              <div className="border border-[#052036]/10 bg-white shadow-sm p-6 rounded-xl space-y-4">
                 <span className="text-[10px] font-mono text-[#EAC157] uppercase tracking-wider block">
                   Exact Coordinates
                 </span>
-                <h2 className="font-serif text-2xl text-[#FAF9F6]">Why Date, Time & Location Matter</h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] leading-relaxed">
+                <h2 className="font-cormorant text-2xl text-[#052036]">Why Date, Time & Location Matter</h2>
+                <p className="text-xs md:text-sm text-[#052036]/70 leading-relaxed">
                   The Earth rotates 360 degrees every 24 hours. That means every two hours, a completely new zodiac sign
                   rises on the eastern horizon — changing your <strong>Rising Sign (Ascendant)</strong> and rotating every single house in your chart.
                 </p>
-                <p className="text-xs text-[#c5d3df] leading-relaxed">
+                <p className="text-xs text-[#052036]/70 leading-relaxed">
                   Without an exact birth time, you know your Sun sign, but you cannot pinpoint:
                   <em> why you detach under stress, what triggers your heartbreak, or what area of life makes you cry.</em>
                 </p>
@@ -164,42 +180,42 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
 
             {/* Core Distinction Grid */}
             <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.8)] p-6 rounded-xl">
-              <h3 className="font-serif text-xl text-[#FAF9F6] mb-4">
+              <h3 className="font-cormorant text-xl text-[#052036] mb-4">
                 The Sacred Trinity: Planet, Sign & House
               </h3>
               <div className="grid sm:grid-cols-3 gap-4">
-                <div className="border border-[rgba(234,193,87,0.12)] p-4 rounded-xl bg-[rgba(8,40,66,0.5)]">
+                <div className="border border-[#052036]/10 p-4 rounded-xl bg-[#FAF7F2]">
                   <span className="text-xs font-mono text-[#EAC157] uppercase block mb-1">1. The Planet (WHAT)</span>
-                  <h4 className="font-serif text-lg text-[#FAF9F6]">The Psychological Actor</h4>
-                  <p className="text-xs text-[#c5d3df] mt-2 leading-relaxed">
+                  <h4 className="font-cormorant text-lg text-[#052036]">The Psychological Actor</h4>
+                  <p className="text-xs text-[#052036]/70 mt-2 leading-relaxed">
                     Represents the urge inside you. Venus is how you love and feel hurt; Mars is what triggers your defensiveness; Mercury is how you overthink.
                   </p>
                 </div>
 
-                <div className="border border-[rgba(234,193,87,0.12)] p-4 rounded-xl bg-[rgba(8,40,66,0.5)]">
+                <div className="border border-[#052036]/10 p-4 rounded-xl bg-[#FAF7F2]">
                   <span className="text-xs font-mono text-[#EAC157] uppercase block mb-1">2. The Sign (HOW)</span>
-                  <h4 className="font-serif text-lg text-[#FAF9F6]">The Emotional Flavor</h4>
-                  <p className="text-xs text-[#c5d3df] mt-2 leading-relaxed">
+                  <h4 className="font-cormorant text-lg text-[#052036]">The Emotional Flavor</h4>
+                  <p className="text-xs text-[#052036]/70 mt-2 leading-relaxed">
                     Represents the style of expression. Aries reacts instantly; Scorpio protects a soft corner with silence; Taurus retreats into its comfort zone.
                   </p>
                 </div>
 
-                <div className="border border-[rgba(234,193,87,0.12)] p-4 rounded-xl bg-[rgba(8,40,66,0.5)]">
+                <div className="border border-[#052036]/10 p-4 rounded-xl bg-[#FAF7F2]">
                   <span className="text-xs font-mono text-[#EAC157] uppercase block mb-1">3. The House (WHERE)</span>
-                  <h4 className="font-serif text-lg text-[#FAF9F6]">The Life Arena</h4>
-                  <p className="text-xs text-[#c5d3df] mt-2 leading-relaxed">
+                  <h4 className="font-cormorant text-lg text-[#052036]">The Life Arena</h4>
+                  <p className="text-xs text-[#052036]/70 mt-2 leading-relaxed">
                     Represents where that feeling plays out. 7th House is partnership & betrayal; 4th House is family roots; 10th House is vocation & shining.
                   </p>
                 </div>
               </div>
 
               {/* Curiosity Hook */}
-              <div className="mt-6 p-4 border border-[rgba(234,193,87,0.3)] bg-[rgba(234,193,87,0.06)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="mt-6 p-4 border border-[#052036]/15 bg-[rgba(234,193,87,0.06)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="font-serif text-base text-[#FAF9F6]">
+                  <h4 className="font-cormorant text-base text-[#052036]">
                     Ready to see your unique combination?
                   </h4>
-                  <p className="text-xs text-[#c5d3df]">
+                  <p className="text-xs text-[#052036]/70">
                     Your chart connects these three parts into a single personal diagnosis.
                   </p>
                 </div>
@@ -230,7 +246,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                       isSelected
                         ? "bg-[#EAC157] text-[#052036] font-medium"
-                        : "border border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.6)] text-[#FAF9F6] hover:border-[#EAC157]"
+                        : "border border-[rgba(234,193,87,0.15)] bg-white shadow-xs text-[#052036] hover:border-[#8C6B1B]"
                     }`}
                   >
                     <span>{sign.symbol}</span>
@@ -249,19 +265,19 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               const isUserMoon = user.moonSign.toLowerCase() === sign.name.toLowerCase();
 
               return (
-                <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4 gap-2">
+                <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#052036]/10 pb-4 gap-2">
                     <div>
                       <div className="flex items-center gap-3">
                         <span className="text-3xl text-[#EAC157]">{sign.symbol}</span>
-                        <h2 className="font-serif text-3xl text-[#FAF9F6]">{sign.name}</h2>
+                        <h2 className="font-cormorant text-3xl text-[#052036]">{sign.name}</h2>
                         {(isUserSun || isUserMoon) && (
                           <span className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(234,193,87,0.18)] text-[#EAC157] rounded-xl uppercase">
                             {isUserSun ? "Your Sun Sign" : "Your Moon Sign"}
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-[#c5d3df] mt-1 block">
+                      <span className="text-xs text-[#052036]/70 mt-1 block">
                         {sign.element} Element · {sign.modality} Modality · Ruled by {sign.rulingPlanet} · {sign.dates}
                       </span>
                     </div>
@@ -274,48 +290,48 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     </button>
                   </div>
 
-                  <p className="text-sm text-[#FAF9F6] leading-relaxed">{sign.overview}</p>
+                  <p className="text-sm text-[#052036] leading-relaxed">{sign.overview}</p>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Psychological Triggers & Reaction Pattern
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">
                           {sign.emotionalTendencies ||
                             "When feeling hurt or overwhelmed, this sign instinctively retreats or reacts strongly before finding stillness."}
                         </p>
                       </div>
 
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Love, Soft Corners & Betrayal
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{sign.love}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{sign.love}</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           What Makes You Shine & Career Instinct
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{sign.career}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{sign.career}</p>
                       </div>
 
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Communication & Defense Style
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{sign.communication}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{sign.communication}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Curiosity Loop Footer */}
-                  <div className="pt-4 border-t border-[rgba(234,193,87,0.1)] flex items-center justify-between flex-wrap gap-3">
-                    <p className="text-xs text-[#c5d3df]">
+                  <div className="pt-4 border-t border-[#052036]/8 flex items-center justify-between flex-wrap gap-3">
+                    <p className="text-xs text-[#052036]/70">
                       Does {sign.name} rule your Love (Venus), Mind (Mercury), or Emotions (Moon)?
                     </p>
                     <button
@@ -346,7 +362,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                       isSelected
                         ? "bg-[#EAC157] text-[#052036] font-medium"
-                        : "border border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.6)] text-[#FAF9F6] hover:border-[#EAC157]"
+                        : "border border-[rgba(234,193,87,0.15)] bg-white shadow-xs text-[#052036] hover:border-[#8C6B1B]"
                     }`}
                   >
                     <span>{planet.symbol}</span>
@@ -364,19 +380,19 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               );
 
               return (
-                <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4 gap-2">
+                <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#052036]/10 pb-4 gap-2">
                     <div>
                       <div className="flex items-center gap-3">
                         <span className="text-3xl text-[#EAC157]">{planet.symbol}</span>
-                        <h2 className="font-serif text-3xl text-[#FAF9F6]">{planet.name}</h2>
+                        <h2 className="font-cormorant text-3xl text-[#052036]">{planet.name}</h2>
                         {userPlacement && (
                           <span className="text-[10px] font-mono px-2 py-0.5 bg-[rgba(234,193,87,0.18)] text-[#EAC157] rounded-xl">
                             In Your Chart: {userPlacement.sign} (H{userPlacement.house})
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-[#c5d3df] mt-1 block">
+                      <span className="text-xs text-[#052036]/70 mt-1 block">
                         {planet.archetype} · Ruled by {planet.rulingSign} · {planet.represents}
                       </span>
                     </div>
@@ -389,45 +405,45 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     </button>
                   </div>
 
-                  <p className="text-sm text-[#FAF9F6] leading-relaxed">{planet.meaning}</p>
+                  <p className="text-sm text-[#052036] leading-relaxed">{planet.meaning}</p>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Emotional Impact: Overthinking & Detachment
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{planet.emotionalRole}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{planet.emotionalRole}</p>
                       </div>
 
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Relational Soft Corners & Vulnerability
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{planet.loveRole}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{planet.loveRole}</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Difficult Expression (Why You React This Way)
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{planet.difficultExpression}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{planet.difficultExpression}</p>
                       </div>
 
-                      <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
+                      <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)]">
                         <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                           Sovereignty: How This Planet Makes You Shine
                         </span>
-                        <p className="text-xs text-[#c5d3df] leading-relaxed">{planet.positiveExpression}</p>
+                        <p className="text-xs text-[#052036]/70 leading-relaxed">{planet.positiveExpression}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Curiosity Loop */}
-                  <div className="pt-4 border-t border-[rgba(234,193,87,0.1)] flex items-center justify-between flex-wrap gap-3">
-                    <p className="text-xs text-[#c5d3df]">
+                  <div className="pt-4 border-t border-[#052036]/8 flex items-center justify-between flex-wrap gap-3">
+                    <p className="text-xs text-[#052036]/70">
                       The general meaning of {planet.name} is free. Discover what it means specifically in your birth house:
                     </p>
                     <div className="flex items-center gap-3">
@@ -472,7 +488,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
                       isSelected
                         ? "bg-[#EAC157] text-[#052036] font-medium"
-                        : "border border-[rgba(234,193,87,0.15)] bg-[rgba(8,40,66,0.6)] text-[#FAF9F6] hover:border-[#EAC157]"
+                        : "border border-[rgba(234,193,87,0.15)] bg-white shadow-xs text-[#052036] hover:border-[#8C6B1B]"
                     }`}
                   >
                     House {house.number}
@@ -489,11 +505,11 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               );
 
               return (
-                <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4 gap-2">
+                <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#052036]/10 pb-4 gap-2">
                     <div>
                       <div className="flex items-center gap-3">
-                        <h2 className="font-serif text-3xl text-[#FAF9F6]">
+                        <h2 className="font-cormorant text-3xl text-[#052036]">
                           {house.number}
                           {house.number === 1
                             ? "st"
@@ -508,7 +524,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                           {house.traditionalName}
                         </span>
                       </div>
-                      <span className="text-xs text-[#c5d3df] mt-1 block">
+                      <span className="text-xs text-[#052036]/70 mt-1 block">
                         Archetype: {house.archetype} · Naturally aligned with {house.naturalSign}
                       </span>
                     </div>
@@ -521,23 +537,23 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                     </button>
                   </div>
 
-                  <p className="text-sm text-[#FAF9F6] leading-relaxed">{house.overview}</p>
+                  <p className="text-sm text-[#052036] leading-relaxed">{house.overview}</p>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)] space-y-2">
+                    <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)] space-y-2">
                       <span className="text-xs font-mono uppercase text-[#EAC157] block">
                         Psychological & Inner Meaning
                       </span>
-                      <p className="text-xs text-[#c5d3df] leading-relaxed">
+                      <p className="text-xs text-[#052036]/70 leading-relaxed">
                         {house.psychologicalMeaning}
                       </p>
                     </div>
 
-                    <div className="border border-[rgba(234,193,87,0.1)] p-4 rounded-xl bg-[rgba(6,28,48,0.5)] space-y-2">
+                    <div className="border border-[#052036]/8 p-4 rounded-xl bg-[rgba(6,28,48,0.5)] space-y-2">
                       <span className="text-xs font-mono uppercase text-[#EAC157] block">
                         What a Planet in This House Means
                       </span>
-                      <p className="text-xs text-[#c5d3df] leading-relaxed">
+                      <p className="text-xs text-[#052036]/70 leading-relaxed">
                         {house.planetsInHouseMeaning}
                       </p>
                     </div>
@@ -548,7 +564,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                       <span className="text-xs font-mono uppercase text-[#EAC157] block mb-1">
                         ✦ In Your Personal Birth Sky
                       </span>
-                      <p className="text-xs text-[#FAF9F6]">
+                      <p className="text-xs text-[#052036]">
                         You have{" "}
                         <strong>
                           {planetsInThisHouse.map((p) => `${p.planet} in ${p.sign}`).join(", ")}
@@ -559,8 +575,8 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                   )}
 
                   {/* Curiosity Loop */}
-                  <div className="pt-4 border-t border-[rgba(234,193,87,0.1)] flex items-center justify-between flex-wrap gap-3">
-                    <p className="text-xs text-[#c5d3df]">
+                  <div className="pt-4 border-t border-[#052036]/8 flex items-center justify-between flex-wrap gap-3">
+                    <p className="text-xs text-[#052036]/70">
                       Empty house or loaded house? Discover the secret ruler of your {house.number}th house:
                     </p>
                     <button
@@ -581,15 +597,15 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
         {/* ========================================================================= */}
         {activeTab === "placements" && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
+            <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#EAC157] tracking-wider block mb-1">
                   The Core Formula
                 </span>
-                <h2 className="font-serif text-3xl text-[#FAF9F6]">
+                <h2 className="font-cormorant text-3xl text-[#052036]">
                   Planet + Sign + House = Your Personal Truth
                 </h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] mt-2 max-w-2xl leading-relaxed">
+                <p className="text-xs md:text-sm text-[#052036]/70 mt-2 max-w-2xl leading-relaxed">
                   General horoscopes fail because they isolate only one variable. True astrology synthesizes
                   the <strong>Actor (Planet)</strong> with the <strong>Costume (Sign)</strong> inside the <strong>Stage (House)</strong>.
                 </p>
@@ -603,11 +619,11 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
 
                 <div className="grid sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-[11px] font-mono text-[#c5d3df] uppercase block mb-1">Planet</label>
+                    <label className="text-[11px] font-mono text-[#052036]/70 uppercase block mb-1">Planet</label>
                     <select
                       value={placementPlanet}
                       onChange={(e) => setPlacementPlanet(e.target.value)}
-                      className="w-full bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
+                      style={{ color: "#052036" }} className="w-full bg-white shadow-xs border border-[#052036]/15 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157]"
                     >
                       {PLANETS_DATA.map((p) => (
                         <option key={p.name} value={p.name}>
@@ -618,11 +634,11 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono text-[#c5d3df] uppercase block mb-1">Zodiac Sign</label>
+                    <label className="text-[11px] font-mono text-[#052036]/70 uppercase block mb-1">Zodiac Sign</label>
                     <select
                       value={placementSign}
                       onChange={(e) => setPlacementSign(e.target.value)}
-                      className="w-full bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
+                      style={{ color: "#052036" }} className="w-full bg-white shadow-xs border border-[#052036]/15 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157]"
                     >
                       {ZODIAC_SIGNS_DATA.map((s) => (
                         <option key={s.name} value={s.name}>
@@ -633,11 +649,11 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                   </div>
 
                   <div>
-                    <label className="text-[11px] font-mono text-[#c5d3df] uppercase block mb-1">House (Life Realm)</label>
+                    <label className="text-[11px] font-mono text-[#052036]/70 uppercase block mb-1">House (Life Realm)</label>
                     <select
                       value={placementHouse}
                       onChange={(e) => setPlacementHouse(Number(e.target.value))}
-                      className="w-full bg-[rgba(5,32,54,0.8)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
+                      style={{ color: "#052036" }} className="w-full bg-white shadow-xs border border-[#052036]/15 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157]"
                     >
                       {HOUSES_DATA.map((h) => (
                         <option key={h.number} value={h.number}>
@@ -649,14 +665,14 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                 </div>
 
                 {/* Synthesized Output */}
-                <div className="p-4 border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.9)] rounded-xl space-y-2">
+                <div className="p-4 border border-[#052036]/10 bg-[#FAF7F2] shadow-sm rounded-xl space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-base text-[#EAC157]">⚝</span>
-                    <h4 className="font-serif text-lg text-[#FAF9F6]">
+                    <h4 className="font-cormorant text-lg text-[#052036]">
                       Synthesis: {placementPlanet} in {placementSign} in House {placementHouse}
                     </h4>
                   </div>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     How you express your {placementPlanet.toLowerCase()} needs is shaped by the instinct of {placementSign},
                     and plays out most acutely in the realm of your {placementHouse}th House.
                     This configuration directly shapes whether you detach under stress, how you handle heartbreak,
@@ -698,15 +714,15 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
         {/* ========================================================================= */}
         {activeTab === "aspects" && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
+            <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#EAC157] tracking-wider block mb-1">
                   Planetary Conversations
                 </span>
-                <h2 className="font-serif text-3xl text-[#FAF9F6]">
+                <h2 className="font-cormorant text-3xl text-[#052036]">
                   How Do Planets Interact With Each Other?
                 </h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] mt-2 max-w-2xl leading-relaxed">
+                <p className="text-xs md:text-sm text-[#052036]/70 mt-2 max-w-2xl leading-relaxed">
                   Planets do not operate in isolation. They look at each other across geometric angles called <strong>Aspects</strong>.
                   Some aspects flow smoothly; others create intense internal friction that causes overthinking and emotional overwhelm.
                 </p>
@@ -752,17 +768,17 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
                 ].map((aspect) => (
                   <div
                     key={aspect.name}
-                    className="border border-[rgba(234,193,87,0.12)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-2"
+                    className="border border-[#052036]/10 bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-2"
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="font-serif text-base text-[#FAF9F6]">{aspect.name}</h3>
+                      <h3 className="font-cormorant text-base text-[#052036]">{aspect.name}</h3>
                       <span className="text-lg text-[#EAC157]">{aspect.glyph}</span>
                     </div>
                     <span className="text-[10px] font-mono text-[#EAC157] uppercase block">
                       {aspect.tone}
                     </span>
-                    <p className="text-xs text-[#c5d3df] leading-relaxed">{aspect.desc}</p>
-                    <p className="text-[11px] text-[#FAF9F6] italic pt-1 border-t border-[rgba(234,193,87,0.08)]">
+                    <p className="text-xs text-[#052036]/70 leading-relaxed">{aspect.desc}</p>
+                    <p className="text-[11px] text-[#052036] italic pt-1 border-t border-[rgba(234,193,87,0.08)]">
                       ✦ {aspect.psyche}
                     </p>
                   </div>
@@ -772,10 +788,10 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               {/* Curiosity Loop */}
               <div className="p-4 border border-[rgba(234,193,87,0.25)] bg-[rgba(234,193,87,0.06)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="font-serif text-base text-[#FAF9F6]">
+                  <h4 className="font-cormorant text-base text-[#052036]">
                     What planetary tensions are active in your chart?
                   </h4>
-                  <p className="text-xs text-[#c5d3df]">
+                  <p className="text-xs text-[#052036]/70">
                     See your exact Sun, Moon, and Saturn aspects in your interactive wheel.
                   </p>
                 </div>
@@ -795,15 +811,15 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
         {/* ========================================================================= */}
         {activeTab === "transits" && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
+            <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#EAC157] tracking-wider block mb-1">
                   Living Sky Timing
                 </span>
-                <h2 className="font-serif text-3xl text-[#FAF9F6]">
+                <h2 className="font-cormorant text-3xl text-[#052036]">
                   How Do Current Planets Affect Your Life?
                 </h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] mt-2 max-w-2xl leading-relaxed">
+                <p className="text-xs md:text-sm text-[#052036]/70 mt-2 max-w-2xl leading-relaxed">
                   Your birth chart is your permanent foundation, but the sky in the heavens keeps moving.
                   A <strong>Transit</strong> occurs when a planet right now in the sky passes over or aspects
                   a sensitive spot in your birth chart.
@@ -811,42 +827,42 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="border border-[rgba(234,193,87,0.12)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-3">
+                <div className="border border-[#052036]/10 bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-3">
                   <span className="text-xs font-mono uppercase text-[#EAC157]">
                     Short-Term Movement (Days to Weeks)
                   </span>
-                  <h3 className="font-serif text-lg text-[#FAF9F6]">Moon & Inner Planets</h3>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <h3 className="font-cormorant text-lg text-[#052036]">Moon & Inner Planets</h3>
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     The Moon changes signs every 2.5 days, altering collective emotional tides.
                     Mercury and Venus create short shifts in communication, sudden nostalgia, or brief relationship tensions.
                   </p>
-                  <p className="text-[11px] text-[#FAF9F6] italic">
+                  <p className="text-[11px] text-[#052036] italic">
                     "Why did I suddenly feel overwhelmed or miss someone yesterday?"
                   </p>
                 </div>
 
-                <div className="border border-[rgba(234,193,87,0.12)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-3">
+                <div className="border border-[#052036]/10 bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-3">
                   <span className="text-xs font-mono uppercase text-[#EAC157]">
                     Long-Term Shifts (Months to Years)
                   </span>
-                  <h3 className="font-serif text-lg text-[#FAF9F6]">Saturn, Uranus & Pluto</h3>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <h3 className="font-cormorant text-lg text-[#052036]">Saturn, Uranus & Pluto</h3>
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     Heavy planets stay in one area of your chart for years, dismantling old defense mechanisms,
                     testing relationships, and stripping away pretense until only what is authentic survives.
                   </p>
-                  <p className="text-[11px] text-[#FAF9F6] italic">
+                  <p className="text-[11px] text-[#052036] italic">
                     "Why did that entire past period feel so agonizingly heavy?"
                   </p>
                 </div>
               </div>
 
               {/* Curiosity Loop */}
-              <div className="p-5 border border-[#EAC157] bg-[rgba(8,40,66,0.9)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-5 border border-[#EAC157] bg-[#FAF7F2] shadow-sm rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="font-serif text-base text-[#FAF9F6]">
+                  <h4 className="font-cormorant text-base text-[#052036]">
                     What is happening in your sky right now?
                   </h4>
-                  <p className="text-xs text-[#c5d3df]">
+                  <p className="text-xs text-[#052036]/70">
                     Explore your personal timeline, upcoming shifts, and the moments when the emotional fog lifts.
                   </p>
                 </div>
@@ -868,13 +884,13 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
         {/* ========================================================================= */}
         {activeTab === "palm" && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.7)] p-6 md:p-8 rounded-xl space-y-6">
+            <div className="border border-[#052036]/10 bg-white shadow-sm p-6 md:p-8 rounded-xl space-y-6">
               <div>
                 <span className="text-[10px] font-mono uppercase text-[#EAC157] tracking-wider block mb-1">
                   Somatics & Palmistry
                 </span>
-                <h2 className="font-serif text-3xl text-[#FAF9F6]">The Three Primary Palm Lines</h2>
-                <p className="text-xs md:text-sm text-[#c5d3df] mt-2 max-w-2xl leading-relaxed">
+                <h2 className="font-cormorant text-3xl text-[#052036]">The Three Primary Palm Lines</h2>
+                <p className="text-xs md:text-sm text-[#052036]/70 mt-2 max-w-2xl leading-relaxed">
                   Your hands are nervous system conduits. The creases reflect how your brain processes
                   stress, emotional defense, and vital life energy over decades.
                 </p>
@@ -883,36 +899,36 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-2">
                   <span className="text-xs font-mono uppercase text-[#EAC157]">1. Heart Line</span>
-                  <h3 className="font-serif text-lg text-[#FAF9F6]">Heartbreak & Detachment</h3>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <h3 className="font-cormorant text-lg text-[#052036]">Heartbreak & Detachment</h3>
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     Runs horizontally below the fingers. Indicates how easily your feelings get hurt,
                     whether you hold a soft corner for those who hurt you, or whether you freeze and step back into emotional numbness.
                   </p>
-                  <p className="text-[11px] text-[#FAF9F6] italic pt-1">
+                  <p className="text-[11px] text-[#052036] italic pt-1">
                     Curved = emotionally expressive; Straight = suppresses feelings until boiling.
                   </p>
                 </div>
 
                 <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-2">
                   <span className="text-xs font-mono uppercase text-[#EAC157]">2. Head Line</span>
-                  <h3 className="font-serif text-lg text-[#FAF9F6]">Overthinking & Mental Patterns</h3>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <h3 className="font-cormorant text-lg text-[#052036]">Overthinking & Mental Patterns</h3>
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     Runs across the palm center. Shows how you process information, what triggers your anxiety spirals,
                     and how your nervous system handles sudden crisis or betrayal.
                   </p>
-                  <p className="text-[11px] text-[#FAF9F6] italic pt-1">
+                  <p className="text-[11px] text-[#052036] italic pt-1">
                     Deep & clear = focused execution; Sloping = intuitive imagination prone to overthinking.
                   </p>
                 </div>
 
                 <div className="border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.6)] p-5 rounded-xl space-y-2">
                   <span className="text-xs font-mono uppercase text-[#EAC157]">3. Life Line</span>
-                  <h3 className="font-serif text-lg text-[#FAF9F6]">Vitality & Comfort Zone</h3>
-                  <p className="text-xs text-[#c5d3df] leading-relaxed">
+                  <h3 className="font-cormorant text-lg text-[#052036]">Vitality & Comfort Zone</h3>
+                  <p className="text-xs text-[#052036]/70 leading-relaxed">
                     Curves around the base of the thumb. Measures your physical resilience, your relationship
                     to rest versus burnout, and your ability to ground yourself after emotional overwhelm.
                   </p>
-                  <p className="text-[11px] text-[#FAF9F6] italic pt-1">
+                  <p className="text-[11px] text-[#052036] italic pt-1">
                     Does not measure life length — it measures your grounded presence.
                   </p>
                 </div>
@@ -921,10 +937,10 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
               {/* Curiosity Loop */}
               <div className="p-4 border border-[rgba(234,193,87,0.25)] bg-[rgba(234,193,87,0.06)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="font-serif text-base text-[#FAF9F6]">
+                  <h4 className="font-cormorant text-base text-[#052036]">
                     What do your hands reveal about your emotional defenses?
                   </h4>
-                  <p className="text-xs text-[#c5d3df]">
+                  <p className="text-xs text-[#052036]/70">
                     Scan and synthesize your palm lines with our astrological AI engine.
                   </p>
                 </div>

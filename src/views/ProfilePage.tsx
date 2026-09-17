@@ -128,7 +128,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#052036] text-[#FAF9F6] selection:bg-[#EAC157] selection:text-[#052036]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#052036] font-inter selection:bg-[#EAC157] selection:text-[#052036]">
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -139,12 +139,12 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 py-8 md:py-12 space-y-8">
         {/* Header Breadcrumb */}
-        <div className="flex flex-wrap items-center justify-between border-b border-[rgba(234,193,87,0.12)] pb-4 gap-3">
+        <div className="flex flex-wrap items-center justify-between border-b border-[#052036]/10 pb-4 gap-3">
           <div>
             <p className="text-[11px] font-mono text-[#EAC157] tracking-widest uppercase">
               ✦ Personal Sky Vault · Account & Settings
             </p>
-            <h1 className="font-serif text-3xl md:text-4xl font-light text-[#FAF9F6] mt-1">
+            <h1 className="font-cormorant text-3xl md:text-4xl font-light text-[#052036] mt-1">
               Your Seeker Profile
             </h1>
           </div>
@@ -157,18 +157,18 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
         </div>
 
         {/* User Identity & Avatar Card */}
-        <div className="border border-[rgba(234,193,87,0.22)] bg-[radial-gradient(ellipse_at_top,rgba(8,40,66,0.9),rgba(6,28,48,0.95))] p-6 sm:p-8 rounded-xl shadow-xl space-y-6">
+        <div className="border border-[rgba(234,193,87,0.22)] bg-white shadow-md p-6 sm:p-8 rounded-xl shadow-xl space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-5">
               <div className="relative">
-                <img
-                  src={
-                    user.avatar ||
-                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop&auto=format"
-                  }
-                  alt={user.name}
-                  className="w-20 h-20 rounded-full object-cover bg-[#082842] border-2 border-[#EAC157] shadow-md"
-                />
+                <div className="w-20 h-20 rounded-2xl bg-[#FAF7F2] border-2 border-[#8C6B1B]/30 flex items-center justify-center shadow-md p-1">
+                  <img
+                    src={"/stickers/zodiac/" + (user.sunSign || "leo").toLowerCase() + ".png"}
+                    alt={user.name}
+                    className="w-full h-full object-contain filter drop-shadow-xs"
+                    onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+                  />
+                </div>
                 <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#052036] border border-[#EAC157] flex items-center justify-center shadow">
                   <ZodiacIcon
                     sign={user.risingSign.toLowerCase()}
@@ -180,22 +180,22 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
 
               <div>
                 <div className="flex items-center gap-2.5 flex-wrap">
-                  <h2 className="font-serif text-2xl text-[#FAF9F6]">{user.name}</h2>
+                  <h2 className="font-cormorant text-2xl text-[#052036]">{user.name}</h2>
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded-xl uppercase tracking-wider ${
                       isMembershipActive
                         ? "bg-[#EAC157] text-[#052036] font-semibold"
-                        : "bg-[rgba(234,193,87,0.15)] text-[#EAC157] border border-[rgba(234,193,87,0.3)]"
+                        : "bg-[rgba(234,193,87,0.15)] text-[#EAC157] border border-[#052036]/15"
                     }`}
                   >
                     {isMembershipActive ? "✦ Premium Dossier" : "Free Discovery"}
                   </span>
                 </div>
-                <p className="text-xs text-[#c5d3df] mt-1 font-mono">
+                <p className="text-xs text-[#052036]/70 mt-1 font-mono">
                   {user.email || "seeker.astral@gmail.com"} · Connected via{" "}
                   {user.authProvider === "google" ? "Google Account" : "Email & Password"}
                 </p>
-                <p className="text-[11px] text-[#c5d3df]/80 mt-0.5">
+                <p className="text-[11px] text-[#052036]/70/80 mt-0.5">
                   Member since {new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" })} · Whole-Sign Ephemeris
                 </p>
               </div>
@@ -224,7 +224,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
                 label: "Moon Sign",
                 value: user.moonSign,
                 desc: "Somatic Nervous System",
-                icon: <MoonSymbol size={16} className="text-[#c5d3df]" />,
+                icon: <MoonSymbol size={16} className="text-[#052036]/70" />,
               },
               {
                 label: "Rising Sign",
@@ -247,30 +247,30 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
                     p.label === "Sun Sign" ? "Sun" : p.label === "Moon Sign" ? "Moon" : "Ascendant"
                   )
                 }
-                className="border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.7)] p-4 rounded-xl text-left hover:border-[#EAC157] transition-all cursor-pointer group"
+                className="border border-[rgba(234,193,87,0.15)] bg-[#FAF7F2] p-4 rounded-xl text-left hover:border-[#EAC157] transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1.5">
                     {p.icon}
-                    <span className="text-[11px] font-mono text-[#c5d3df]">{p.label}</span>
+                    <span className="text-[11px] font-mono text-[#052036]/70">{p.label}</span>
                   </div>
                   <span className="text-[10px] font-mono text-[#EAC157] opacity-0 group-hover:opacity-100 transition-opacity">
                     →
                   </span>
                 </div>
-                <p className="font-serif text-lg text-[#FAF9F6] font-medium">{p.value}</p>
-                <p className="text-[10px] text-[#c5d3df] mt-0.5 line-clamp-1">{p.desc}</p>
+                <p className="font-cormorant text-lg text-[#052036] font-medium">{p.value}</p>
+                <p className="text-[10px] text-[#052036]/70 mt-0.5 line-clamp-1">{p.desc}</p>
               </button>
             ))}
           </div>
         </div>
 
         {/* Membership & Free vs Paid Control Card */}
-        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.75)] p-6 rounded-xl space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2 border-b border-[rgba(234,193,87,0.1)] pb-3">
+        <div className="border border-[#052036]/10 bg-white shadow-sm p-6 rounded-xl space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2 border-b border-[#052036]/8 pb-3">
             <div className="flex items-center gap-2">
               <span className="text-xs text-[#EAC157]">✦</span>
-              <span className="text-xs font-mono uppercase text-[#FAF9F6] font-semibold">
+              <span className="text-xs font-mono uppercase text-[#052036] font-semibold">
                 Membership & Access Level
               </span>
             </div>
@@ -283,12 +283,12 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 text-xs">
-            <div className="p-4 border border-[rgba(234,193,87,0.12)] bg-[rgba(6,28,48,0.6)] rounded-xl space-y-1.5">
-              <span className="font-mono text-[#c5d3df] uppercase block text-[10px]">
+            <div className="p-4 border border-[#052036]/10 bg-[#FAF7F2] rounded-xl space-y-1.5">
+              <span className="font-mono text-[#052036]/70 uppercase block text-[10px]">
                 Free Tier (Always Available)
               </span>
-              <p className="text-[#FAF9F6] font-serif text-sm">Discovery & Emotional Diagnosis</p>
-              <ul className="text-[#c5d3df] space-y-1 text-[11px] pt-1">
+              <p className="text-[#052036] font-cormorant text-sm">Discovery & Emotional Diagnosis</p>
+              <ul className="text-[#052036]/70 space-y-1 text-[11px] pt-1">
                 <li>✦ Full interactive whole-sign natal wheel</li>
                 <li>✦ Daily sky weather & Moon transit themes</li>
                 <li>✦ Core Energy & Emotional Pattern chapters</li>
@@ -296,12 +296,12 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
               </ul>
             </div>
 
-            <div className="p-4 border border-[rgba(234,193,87,0.3)] bg-[rgba(234,193,87,0.06)] rounded-xl space-y-1.5">
+            <div className="p-4 border border-[#052036]/15 bg-[rgba(234,193,87,0.06)] rounded-xl space-y-1.5">
               <span className="font-mono text-[#EAC157] uppercase block text-[10px] font-semibold">
                 {isMembershipActive ? "✦ Active Access" : "🔒 Premium Tier"}
               </span>
-              <p className="text-[#FAF9F6] font-serif text-sm">Resolution & Hope Windows</p>
-              <ul className="text-[#c5d3df] space-y-1 text-[11px] pt-1">
+              <p className="text-[#052036] font-cormorant text-sm">Resolution & Hope Windows</p>
+              <ul className="text-[#052036]/70 space-y-1 text-[11px] pt-1">
                 <li>✦ Exact Breakthrough calendar dates & hours</li>
                 <li>✦ Verbatim conversation scripts without guilt</li>
                 <li>✦ Synastric mind intent (What they secretly feel)</li>
@@ -312,13 +312,13 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
         </div>
 
         {/* Birth Coordinates & Ephemeris Inputs */}
-        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.75)] rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
+        <div className="border border-[#052036]/10 bg-white shadow-sm rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#052036]/8 pb-3">
             <div>
               <p className="text-xs font-mono uppercase text-[#EAC157]">
                 Astrological Coordinates
               </p>
-              <p className="text-xs text-[#c5d3df] mt-0.5">
+              <p className="text-xs text-[#052036]/70 mt-0.5">
                 Exact date, time, and city used to calculate your houses and live transits.
               </p>
             </div>
@@ -341,44 +341,44 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
           {isEditingBirth ? (
             <form onSubmit={handleSaveBirth} className="space-y-4 pt-1">
               <div>
-                <label className="text-xs text-[#c5d3df] font-mono block mb-1">Full Name</label>
+                <label className="text-xs text-[#052036]/70 font-mono block mb-1">Full Name</label>
                 <input
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
+                  className="w-full bg-white border border-[#052036]/20 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-[#c5d3df] font-mono block mb-1">Birth Date</label>
+                  <label className="text-xs text-[#052036]/70 font-mono block mb-1">Birth Date</label>
                   <input
                     type="date"
                     value={editDate}
                     onChange={(e) => setEditDate(e.target.value)}
-                    className="w-full bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] [color-scheme:dark]"
+                    className="w-full bg-white border border-[#052036]/20 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157] [color-scheme:dark]"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-[#c5d3df] font-mono block mb-1">Birth Time</label>
+                  <label className="text-xs text-[#052036]/70 font-mono block mb-1">Birth Time</label>
                   <input
                     type="time"
                     value={editTime}
                     onChange={(e) => setEditTime(e.target.value)}
-                    className="w-full bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] [color-scheme:dark]"
+                    className="w-full bg-white border border-[#052036]/20 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157] [color-scheme:dark]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-[#c5d3df] font-mono block mb-1">Birth Location</label>
+                <label className="text-xs text-[#052036]/70 font-mono block mb-1">Birth Location</label>
                 <input
                   type="text"
                   value={editLocation}
                   onChange={(e) => setEditLocation(e.target.value)}
                   placeholder="City, Country (e.g. New York, USA)"
-                  className="w-full bg-[rgba(5,32,54,0.85)] border border-[rgba(234,193,87,0.3)] rounded-xl px-3 py-2 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157]"
+                  className="w-full bg-white border border-[#052036]/20 rounded-xl px-3 py-2 text-xs text-[#052036] focus:outline-none focus:border-[#EAC157]"
                 />
               </div>
 
@@ -386,7 +386,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
                 <button
                   type="button"
                   onClick={() => setIsEditingBirth(false)}
-                  className="px-4 py-2 text-xs text-[#c5d3df] hover:text-[#FAF9F6] transition-colors cursor-pointer"
+                  className="px-4 py-2 text-xs text-[#052036]/70 hover:text-[#052036] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -401,28 +401,28 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
             </form>
           ) : (
             <div className="grid sm:grid-cols-3 gap-3 pt-1">
-              <div className="p-3 border border-[rgba(234,193,87,0.1)] rounded-xl bg-[rgba(6,28,48,0.6)]">
-                <span className="text-[10px] font-mono text-[#c5d3df] uppercase block">Birth Date</span>
-                <p className="text-xs text-[#FAF9F6] font-mono mt-0.5">{user.birthDate}</p>
+              <div className="p-3 border border-[#052036]/8 rounded-xl bg-[#FAF7F2]">
+                <span className="text-[10px] font-mono text-[#052036]/70 uppercase block">Birth Date</span>
+                <p className="text-xs text-[#052036] font-mono mt-0.5">{user.birthDate}</p>
               </div>
-              <div className="p-3 border border-[rgba(234,193,87,0.1)] rounded-xl bg-[rgba(6,28,48,0.6)]">
-                <span className="text-[10px] font-mono text-[#c5d3df] uppercase block">Birth Time</span>
-                <p className="text-xs text-[#FAF9F6] font-mono mt-0.5">{user.birthTime || "12:00"}</p>
+              <div className="p-3 border border-[#052036]/8 rounded-xl bg-[#FAF7F2]">
+                <span className="text-[10px] font-mono text-[#052036]/70 uppercase block">Birth Time</span>
+                <p className="text-xs text-[#052036] font-mono mt-0.5">{user.birthTime || "12:00"}</p>
               </div>
-              <div className="p-3 border border-[rgba(234,193,87,0.1)] rounded-xl bg-[rgba(6,28,48,0.6)]">
-                <span className="text-[10px] font-mono text-[#c5d3df] uppercase block">City & Timezone</span>
-                <p className="text-xs text-[#FAF9F6] font-mono mt-0.5 truncate">{user.birthLocation}</p>
+              <div className="p-3 border border-[#052036]/8 rounded-xl bg-[#FAF7F2]">
+                <span className="text-[10px] font-mono text-[#052036]/70 uppercase block">City & Timezone</span>
+                <p className="text-xs text-[#052036] font-mono mt-0.5 truncate">{user.birthLocation}</p>
               </div>
             </div>
           )}
         </div>
 
         {/* Focus Areas & Astrological Themes */}
-        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.75)] rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
+        <div className="border border-[#052036]/10 bg-white shadow-sm rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#052036]/8 pb-3">
             <div>
               <p className="text-xs font-mono uppercase text-[#EAC157]">Your Inquiry Interests</p>
-              <p className="text-xs text-[#c5d3df] mt-0.5">
+              <p className="text-xs text-[#052036]/70 mt-0.5">
                 Topics prioritized during your AI consultations and transit readings.
               </p>
             </div>
@@ -451,8 +451,8 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
                     onClick={() => toggleInterest(interest)}
                     className={`text-xs px-3 py-1.5 border rounded-xl transition-colors cursor-pointer ${
                       editInterests.includes(interest)
-                        ? "border-[#EAC157] text-[#FAF9F6] bg-[rgba(234,193,87,0.18)] font-medium"
-                        : "border-[rgba(234,193,87,0.15)] text-[#c5d3df] hover:border-[rgba(234,193,87,0.4)]"
+                        ? "bg-[#052036] text-[#FAF9F6] border-[#052036] font-semibold shadow-xs"
+                        : "border-[rgba(234,193,87,0.15)] text-[#052036]/70 hover:border-[rgba(234,193,87,0.4)]"
                     }`}
                   >
                     {interest}
@@ -468,7 +468,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
               ).map((interest) => (
                 <span
                   key={interest}
-                  className="text-xs px-3 py-1.5 border border-[rgba(234,193,87,0.18)] bg-[rgba(6,28,48,0.6)] text-[#FAF9F6] rounded-xl"
+                  className="text-xs px-3 py-1.5 border border-[rgba(234,193,87,0.18)] bg-[#FAF7F2] text-[#FAF9F6] rounded-xl"
                 >
                   ✦ {interest}
                 </span>
@@ -478,13 +478,13 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
         </div>
 
         {/* Psychological Inquiries & Saved Vault */}
-        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.75)] rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
+        <div className="border border-[#052036]/10 bg-white shadow-sm rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#052036]/8 pb-3">
             <div>
               <p className="text-xs font-mono uppercase text-[#EAC157]">
                 Inquiry Journal Vault
               </p>
-              <p className="text-xs text-[#c5d3df] mt-0.5">
+              <p className="text-xs text-[#052036]/70 mt-0.5">
                 Quickly re-examine your recent unspoken questions with live ephemeris transits.
               </p>
             </div>
@@ -500,18 +500,18 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
             {RECENT_INQUIRIES.map((inq, i) => (
               <div
                 key={i}
-                className="p-3.5 border border-[rgba(234,193,87,0.12)] bg-[rgba(6,28,48,0.6)] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[rgba(234,193,87,0.35)] transition-colors"
+                className="p-3.5 border border-[#052036]/10 bg-[#FAF7F2] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[rgba(234,193,87,0.35)] transition-colors"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-serif text-[#FAF9F6] font-medium">
+                    <span className="text-xs font-cormorant text-[#052036] font-medium">
                       {inq.topic}
                     </span>
                     <span className="text-[9px] font-mono px-1.5 py-0.2 bg-[rgba(234,193,87,0.15)] text-[#EAC157] rounded-xl uppercase">
                       {inq.category}
                     </span>
                   </div>
-                  <p className="text-xs text-[#c5d3df] mt-1 leading-relaxed">{inq.question}</p>
+                  <p className="text-xs text-[#052036]/70 mt-1 leading-relaxed">{inq.question}</p>
                 </div>
 
                 <button
@@ -526,12 +526,12 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
         </div>
 
         {/* Account Controls, Cloud Sync & Data Security */}
-        <div className="border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.75)] rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.1)] pb-3">
+        <div className="border border-[#052036]/10 bg-white shadow-sm rounded-xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[#052036]/8 pb-3">
             <span className="text-xs font-mono uppercase text-[#EAC157]">
               Data Privacy & Security
             </span>
-            <span className="text-[10px] font-mono text-[#c5d3df]">
+            <span className="text-[10px] font-mono text-[#052036]/70">
               {isSupabaseReady ? "✦ Supabase Cloud Enabled" : "✦ Local Vault Active"}
             </span>
           </div>
@@ -539,12 +539,12 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
           <div className="grid sm:grid-cols-2 gap-3 text-xs">
             <button
               onClick={handleExportData}
-              className="p-3 border border-[rgba(234,193,87,0.15)] bg-[rgba(6,28,48,0.6)] rounded-xl text-left hover:border-[#EAC157] transition-colors cursor-pointer"
+              className="p-3 border border-[rgba(234,193,87,0.15)] bg-[#FAF7F2] rounded-xl text-left hover:border-[#EAC157] transition-colors cursor-pointer"
             >
-              <p className="text-xs text-[#FAF9F6] font-mono">
+              <p className="text-xs text-[#052036] font-mono">
                 {copiedNotification ? "✓ Natal JSON Downloaded" : "Export Chart Data (JSON) ↗"}
               </p>
-              <p className="text-[11px] text-[#c5d3df] mt-0.5">
+              <p className="text-[11px] text-[#052036]/70 mt-0.5">
                 Download your complete ephemeris coordinates and house calculations.
               </p>
             </button>
@@ -554,7 +554,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
               className="p-3 border border-[rgba(220,100,80,0.25)] bg-[rgba(40,15,20,0.5)] rounded-xl text-left hover:border-[rgba(220,100,80,0.6)] transition-colors cursor-pointer"
             >
               <p className="text-xs text-[rgba(240,140,120,1)] font-mono">Sign Out of Salon</p>
-              <p className="text-[11px] text-[#c5d3df] mt-0.5">
+              <p className="text-[11px] text-[#052036]/70 mt-0.5">
                 End active session on this device and return to private sign-in.
               </p>
             </button>

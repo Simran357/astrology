@@ -63,9 +63,9 @@ export default function ClientAppShell({ children }: ClientAppShellProps) {
 
   return (
     <AppProvider currentPage={currentPage} onNavigate={navigate}>
-      <div className="min-h-full bg-[#052036] text-[#FAF9F6]">
+      <div className="min-h-full bg-[#FAF9F6] text-[#052036]">
         <Navigation currentPage={currentPage} onNavigate={navigate as (page: PageId) => void} />
-        <main className={isAppPage ? "pt-[var(--nav-height)] pb-20 md:pb-10" : ""}>
+        <main className={isAppPage ? "pt-14 md:pt-18 pb-24 md:pb-12" : ""}>
           {children}
         </main>
       </div>

@@ -39,10 +39,10 @@ export default function App() {
 
   return (
     <AppProvider currentPage={currentPage} onNavigate={navigate}>
-      <div className="min-h-full bg-[#052036] text-[#FAF9F6]">
+      <div className="min-h-full bg-[#FAF9F6] text-[#052036]">
         <Navigation currentPage={currentPage} onNavigate={navigate as (page: Page) => void}/>
 
-        <main className={isAppPage ? "md:ml-16 pb-20 md:pb-0" : ""}>
+        <main className={isAppPage ? "pt-14 md:pt-18 pb-24 md:pb-12" : ""}>
           {currentPage === "home" && <HomePage onNavigate={navigate}/>}
           {currentPage === "onboarding" && <OnboardingPage onNavigate={navigate}/>}
           {currentPage === "login" && <LoginPage onNavigate={navigate}/>}

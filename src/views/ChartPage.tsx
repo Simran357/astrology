@@ -24,7 +24,7 @@ const TABS = ["Placements", "Aspects", "Houses", "Overview"];
 
 const PLANET_ICON_MAP: Record<string, (props: { size?: number; className?: string }) => React.ReactNode> = {
   Sun: (p) => <SunSymbol size={p.size || 18} className={p.className || "text-[#EAC157]"} />,
-  Moon: (p) => <MoonSymbol size={p.size || 18} className={p.className || "text-[#c5d3df]"} />,
+  Moon: (p) => <MoonSymbol size={p.size || 18} className={p.className || "text-[#052036]/70"} />,
   Mercury: (p) => <MercurySymbol size={p.size || 18} className={p.className || "text-[#a0c4ff]"} />,
   Venus: (p) => <VenusSymbol size={p.size || 18} className={p.className || "text-[#f4acb7]"} />,
   Mars: (p) => <MarsSymbol size={p.size || 18} className={p.className || "text-[#e07070]"} />,
@@ -56,17 +56,17 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#052036] text-[#FAF9F6] flex flex-col items-center justify-center px-6 py-16 selection:bg-[#EAC157] selection:text-[#052036]">
-        <div className="max-w-md w-full border border-[rgba(234,193,87,0.3)] bg-[#082842] p-8 rounded-2xl text-center space-y-6 shadow-2xl relative">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#EAC157] bg-[#052036] text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
+      <div className="min-h-screen bg-[#FAF9F6] text-[#052036] font-inter flex flex-col items-center justify-center px-6 py-16 selection:bg-[#EAC157] selection:text-[#052036]">
+        <div className="max-w-md w-full border border-[#052036]/15 bg-white p-8 rounded-2xl text-center space-y-6 shadow-2xl relative">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#052036] bg-[#052036] text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
             <span>✦ PRIVATE NATAL VAULT · AUTHENTICATION REQUIRED</span>
           </div>
 
-          <h1 className="font-serif text-2xl md:text-3xl text-[#FAF9F6] leading-snug">
+          <h1 className="font-cormorant text-2xl md:text-3xl text-[#052036] leading-snug">
             Chart Access Protected
           </h1>
 
-          <p className="text-xs text-[#c5d3df] leading-relaxed font-sans">
+          <p className="text-xs text-[#052036]/70 leading-relaxed font-sans">
             Your full interactive birth chart, whole-sign planetary degrees, and aspect geometry cannot be accessed without an active session. Please sign in or complete onboarding to unlock your wheel.
           </p>
 
@@ -79,13 +79,13 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
             </button>
             <button
               onClick={() => onNavigate("onboarding")}
-              className="w-full py-3.5 border border-[rgba(234,193,87,0.4)] text-[#FAF9F6] text-xs uppercase tracking-widest hover:border-[#EAC157] transition-colors rounded-full cursor-pointer"
+              className="w-full py-3.5 border border-[rgba(234,193,87,0.4)] text-[#052036] text-xs uppercase tracking-widest hover:border-[#052036] transition-colors rounded-full cursor-pointer"
             >
               New Seeker? Begin Onboarding →
             </button>
             <button
               onClick={() => onNavigate("home")}
-              className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] tracking-wider pt-1 transition-colors cursor-pointer"
+              className="text-xs text-[#052036]/70 hover:text-[#052036] tracking-wider pt-1 transition-colors cursor-pointer"
             >
               ← Return to Salon Home
             </button>
@@ -124,7 +124,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#052036] text-[#FAF9F6]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#052036] font-inter">
       <div className="fixed inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 40% 60% at 20% 50%, rgba(234,193,87,0.06) 0%, transparent 70%)" }}/>
 
@@ -132,10 +132,18 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <p className="text-xs text-[#c5d3df] tracking-widest uppercase mb-2 font-mono">Natal chart</p>
-            <h1 className="font-serif text-3xl md:text-4xl font-normal text-[#FAF9F6]">{user.name}'s chart</h1>
-            <p className="text-sm text-[#c5d3df] mt-1.5">{user.birthDate} · {user.birthTime} · {user.birthLocation}</p>
+          <div className="flex items-center gap-4">
+            <img 
+              src="/stickers/cosmic-orbit-hand.png" 
+              alt="Cosmic Wheel" 
+              className="w-14 h-14 md:w-16 md:h-16 object-contain filter drop-shadow-sm shrink-0" 
+              onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+            />
+            <div>
+              <p className="text-xs text-[#8C6B1B] tracking-widest uppercase mb-1 font-mono font-semibold">Natal Architecture · Whole-Sign Sky</p>
+              <h1 className="font-cormorant text-3xl md:text-4xl font-normal text-[#052036]">{user.name}'s Chart</h1>
+              <p className="text-xs text-[#052036]/70 mt-1 font-mono">{user.birthDate} · {user.birthTime} · {user.birthLocation}</p>
+            </div>
           </div>
           <button onClick={() => onNavigate("reading")}
             className="px-6 py-2.5 bg-[#EAC157] text-[#052036] text-sm font-semibold hover:bg-[#d9b048] transition-colors rounded-full cursor-pointer shadow-md shrink-0 self-start sm:self-auto">
@@ -160,12 +168,12 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
               }}
             />
 
-            {/* Key placements row */}
+            {/* Key placements row with Stickers */}
             <div className="w-full mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { label: "Sun", value: user.sunSign, icon: <SunSymbol size={14} className="text-[#EAC157]"/> },
-                { label: "Moon", value: user.moonSign, icon: <MoonSymbol size={14} className="text-[#c5d3df]"/> },
-                { label: "Rising", value: user.risingSign, icon: <ZodiacIcon sign={user.risingSign.toLowerCase()} size={14} className="text-[#EAC157]"/> },
+                { label: "Sun", value: user.sunSign, sign: user.sunSign },
+                { label: "Moon", value: user.moonSign, sign: user.moonSign },
+                { label: "Rising", value: user.risingSign, sign: user.risingSign },
               ].map((p, i) => (
                 <button
                   key={i}
@@ -174,15 +182,21 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                     setHighlightedPlanet(target);
                     setExpandedPlanet(target);
                   }}
-                  className={`border p-3.5 rounded-xl text-left transition-colors cursor-pointer flex items-center justify-between sm:flex-col sm:items-start ${
+                  className={`border p-3 rounded-2xl text-left transition-all cursor-pointer flex items-center justify-between gap-3 shadow-xs ${
                     highlightedPlanet?.toLowerCase() === p.label.toLowerCase()
-                      ? "border-[#EAC157] bg-[rgba(234,193,87,0.12)]"
-                      : "border-[rgba(234,193,87,0.18)] bg-[#082842] hover:border-[rgba(234,193,87,0.4)]"
+                      ? "border-[#052036] bg-[#FAF7F2] ring-1 ring-[#052036]/20"
+                      : "border-[#052036]/10 bg-white hover:border-[#8C6B1B]/40 hover:bg-[#FAF7F2]/50"
                   }`}>
-                  <div className="flex items-center gap-1.5 sm:mb-1.5">{p.icon}
-                    <span className="text-xs text-[#c5d3df]">{p.label}</span>
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#8C6B1B] font-semibold block">{p.label} Sign</span>
+                    <p className="text-base font-cormorant font-semibold text-[#052036] leading-snug">{p.value}</p>
                   </div>
-                  <p className="text-sm font-serif text-[#FAF9F6]">{p.value}</p>
+                  <img
+                    src={"/stickers/zodiac/" + (p.sign || "aries").toLowerCase() + ".png"}
+                    alt={p.value}
+                    className="w-10 h-10 object-contain shrink-0"
+                    onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+                  />
                 </button>
               ))}
             </div>
@@ -191,13 +205,13 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
           {/* Right panel */}
           <div>
             {/* Tabs */}
-            <div className="flex gap-0 border-b border-[rgba(234,193,87,0.18)] mb-6">
+            <div className="flex gap-0 border-b border-[#052036]/10 mb-6">
               {TABS.map((tab, i) => (
                 <button key={i} onClick={() => setActiveTab(i)}
                   className={`px-4 py-2.5 text-sm transition-colors relative cursor-pointer font-sans ${
                     activeTab === i
                       ? "text-[#EAC157] font-semibold"
-                      : "text-[#c5d3df] hover:text-[#FAF9F6]"
+                      : "text-[#052036]/70 hover:text-[#052036]"
                   }`}>
                   {tab}
                   {activeTab === i && (
@@ -211,7 +225,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
             {activeTab === 0 && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-[11px] font-mono pb-2 border-b border-[rgba(234,193,87,0.15)]">
-                  <span className="text-[#c5d3df]">FREE: Spatial Coordinates</span>
+                  <span className="text-[#052036]/70">FREE: Spatial Coordinates</span>
                   <span className="text-[#EAC157] font-semibold">PAID: Psychological Synthesis</span>
                 </div>
                 {placements.map((planet) => {
@@ -219,7 +233,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                   const isHighlighted = highlightedPlanet?.toLowerCase() === planet.planet.toLowerCase();
                   const isExpanded = expandedPlanet === planet.planet;
                   return (
-                    <div key={planet.planet} className="border border-[rgba(234,193,87,0.16)] bg-[#082842] rounded-xl overflow-hidden transition-colors">
+                    <div key={planet.planet} className="border border-[#052036]/10 bg-white rounded-xl overflow-hidden transition-colors">
                       <button
                         onClick={() => {
                           const next = isExpanded ? null : planet.planet;
@@ -227,33 +241,33 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                           setHighlightedPlanet(next);
                         }}
                         className={`w-full flex items-center gap-4 py-3.5 px-4 transition-colors text-left cursor-pointer ${
-                          isHighlighted ? "bg-[rgba(234,193,87,0.12)] border-l-2 border-[#EAC157]" : "hover:bg-[rgba(234,193,87,0.05)]"
+                          isHighlighted ? "bg-[#FAF7F2] border-l-2 border-[#052036]" : "hover:bg-[#FAF7F2]"
                         }`}>
                         <div className="shrink-0">{iconRenderer({ size: 18 })}</div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline gap-2 flex-wrap">
-                            <span className="text-sm font-serif text-[#FAF9F6]">{planet.planet}</span>
+                            <span className="text-sm font-cormorant text-[#052036]">{planet.planet}</span>
                             <span className="font-mono text-xs text-[#EAC157]">{planet.sign} {Math.round(planet.degrees % 30)}°</span>
                           </div>
-                          <p className="text-xs text-[#c5d3df] mt-0.5">{planet.house}th House · {HOUSE_LIFE_AREAS[planet.house]?.domainLabel || "Life Area"}</p>
+                          <p className="text-xs text-[#052036]/70 mt-0.5">{planet.house}th House · {HOUSE_LIFE_AREAS[planet.house]?.domainLabel || "Life Area"}</p>
                         </div>
-                        <span className={`text-[#c5d3df] text-xs transition-transform ${isExpanded ? "rotate-180" : ""}`}>▾</span>
+                        <span className={`text-[#052036]/70 text-xs transition-transform ${isExpanded ? "rotate-180" : ""}`}>▾</span>
                       </button>
 
                       {isExpanded && (
-                        <div className="px-4 pb-4 pt-2 border-t border-[rgba(234,193,87,0.1)] bg-[#061c30] space-y-3">
+                        <div className="px-4 pb-4 pt-2 border-t border-[#052036]/8 bg-[#FAF7F2] space-y-3">
                           {/* Free Layer */}
                           <div>
-                            <span className="text-[10px] font-mono text-[#c5d3df] uppercase block">
+                            <span className="text-[10px] font-mono text-[#052036]/70 uppercase block">
                               Free Discovery · Placement Location
                             </span>
-                            <p className="text-xs text-[#FAF9F6] leading-relaxed mt-0.5">
+                            <p className="text-xs text-[#052036] leading-relaxed mt-0.5">
                               {planet.planet} sits in {planet.sign} in your {planet.house}th House. {planet.meaning}
                             </p>
                           </div>
 
                           {/* Paid Deep Layer */}
-                          <div className="p-4 border border-[rgba(234,193,87,0.25)] bg-[rgba(234,193,87,0.06)] rounded-lg space-y-3">
+                          <div className="p-4 border border-[#052036]/12 bg-[#FAF7F2] rounded-lg space-y-3">
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <span className="text-[10px] font-mono text-[#EAC157] uppercase font-semibold break-words">
                                 ✦ Deep Psychological Synthesis (Planet + Sign + House)
@@ -262,33 +276,33 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                                 AI SYNTHESIS
                               </span>
                             </div>
-                            <p className="text-xs text-[#c5d3df] leading-relaxed">
+                            <p className="text-xs text-[#052036]/70 leading-relaxed">
                               This exact combination explains why you react this way under pressure: your {planet.planet} instinct filters through {planet.sign}'s defense mechanisms inside your {planet.house}th House realm. It triggers your overthinking and dictates where you hold an unspoken soft corner.
                             </p>
 
                             {/* 3 Core Psychological Dimensions */}
                             <div className="grid sm:grid-cols-3 gap-2.5 pt-1">
-                              <div className="border border-[rgba(234,193,87,0.18)] bg-[#052036] p-3 rounded-lg">
-                                <span className="text-[10px] font-mono text-[#EAC157] uppercase block font-medium">
+                              <div className="border border-[#052036]/10 bg-white p-3 rounded-lg shadow-2xs">
+                                <span className="text-[10px] font-mono text-[#8C6B1B] uppercase block font-semibold">
                                   Triggers & Reactions
                                 </span>
-                                <p className="text-[11px] text-[#FAF9F6] mt-1 leading-snug">
+                                <p className="text-[11px] text-[#052036]/80 mt-1 leading-snug">
                                   Why you detach, step back into silence, and what makes you feel overwhelmed or defensive.
                                 </p>
                               </div>
-                              <div className="border border-[rgba(234,193,87,0.18)] bg-[#052036] p-3 rounded-lg">
-                                <span className="text-[10px] font-mono text-[#EAC157] uppercase block font-medium">
+                              <div className="border border-[#052036]/10 bg-white p-3 rounded-lg shadow-2xs">
+                                <span className="text-[10px] font-mono text-[#8C6B1B] uppercase block font-semibold">
                                   Soft Corners & Heartbreak
                                 </span>
-                                <p className="text-[11px] text-[#FAF9F6] mt-1 leading-snug">
+                                <p className="text-[11px] text-[#052036]/80 mt-1 leading-snug">
                                   Why you still have feelings despite betrayal, and what makes you suppress yourself and cry.
                                 </p>
                               </div>
-                              <div className="border border-[rgba(234,193,87,0.18)] bg-[#052036] p-3 rounded-lg">
-                                <span className="text-[10px] font-mono text-[#FAF9F6] uppercase block font-medium">
+                              <div className="border border-[#052036]/10 bg-white p-3 rounded-lg shadow-2xs">
+                                <span className="text-[10px] font-mono text-[#8C6B1B] uppercase block font-semibold">
                                   What Makes You Shine
                                 </span>
-                                <p className="text-[11px] text-[#FAF9F6] mt-1 leading-snug">
+                                <p className="text-[11px] text-[#052036]/80 mt-1 leading-snug">
                                   Breaking free from your comfort zone trap into undeniable authenticity and magnetic power.
                                 </p>
                               </div>
@@ -309,7 +323,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                               </button>
                               <button
                                 onClick={() => navigateWithHighlight("learn", planet.planet)}
-                                className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
+                                className="text-xs text-[#052036]/70 hover:text-[#052036] cursor-pointer"
                               >
                                 Learn more about {planet.planet} →
                               </button>
@@ -326,7 +340,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
             {activeTab === 1 && (
               <div className="space-y-4">
                 {aspects.map((aspect, i) => (
-                  <div key={i} className="border-b border-[rgba(234,193,87,0.12)] pb-4 last:border-0">
+                  <div key={i} className="border-b border-[#052036]/10 pb-4 last:border-0">
                     <div className="flex items-center gap-2 mb-1.5">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${
                         aspect.influence === "Harmonious" ? "bg-[rgba(100,180,100,0.15)] text-[rgba(140,220,140,0.95)]" :
@@ -334,9 +348,9 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                         aspect.influence === "Intensifying" ? "bg-[rgba(234,193,87,0.2)] text-[#EAC157]" :
                         "bg-[rgba(100,140,220,0.15)] text-[rgba(150,180,240,0.95)]"
                       }`}>{aspect.type}</span>
-                      <span className="text-sm font-medium text-[#FAF9F6]">{aspect.planet1} {aspect.type.toLowerCase()} {aspect.planet2}</span>
+                      <span className="text-sm font-medium text-[#052036]">{aspect.planet1} {aspect.type.toLowerCase()} {aspect.planet2}</span>
                     </div>
-                    <p className="text-sm text-[#c5d3df] leading-relaxed">{aspect.interpretation || "A key planetary dialogue shaping your temperament."}</p>
+                    <p className="text-sm text-[#052036]/70 leading-relaxed">{aspect.interpretation || "A key planetary dialogue shaping your temperament."}</p>
                   </div>
                 ))}
               </div>
@@ -352,12 +366,12 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                   const matchingPlacement = placements.find((p) => p.house === houseNum);
                   return (
                     <div key={i} className="flex items-start gap-4 py-2.5 border-b border-[rgba(234,193,87,0.08)]">
-                      <span className="font-mono text-xs text-[#c5d3df] w-6 shrink-0 mt-0.5">{houseNum}</span>
+                      <span className="font-mono text-xs text-[#052036]/70 w-6 shrink-0 mt-0.5">{houseNum}</span>
                       <div className="flex-1">
-                        <p className="text-sm text-[#FAF9F6]">
+                        <p className="text-sm text-[#052036]">
                           {label}
                         </p>
-                        <p className="text-xs text-[#c5d3df] mt-0.5">
+                        <p className="text-xs text-[#052036]/70 mt-0.5">
                           {matchingPlacement ? `${matchingPlacement.planet} in ${matchingPlacement.sign}` : subtitle}
                         </p>
                       </div>
@@ -369,14 +383,14 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
             {activeTab === 3 && (
               <div className="space-y-5">
-                <p className="text-sm text-[#c5d3df] leading-relaxed">
-                  Your chart is anchored by a <strong className="text-[#FAF9F6] font-semibold">{user.sunSign} Sun</strong>, illuminating your conscious creative drive and core vitality.
+                <p className="text-sm text-[#052036]/85 leading-relaxed">
+                  Your chart is anchored by a <strong className="text-[#052036] font-bold">{user.sunSign} Sun</strong>, illuminating your conscious creative drive and core vitality.
                 </p>
-                <p className="text-sm text-[#c5d3df] leading-relaxed">
-                  With your <strong className="text-[#FAF9F6] font-semibold">{user.moonSign} Moon</strong>, your emotional foundation requires genuine safety, steadiness, and authentic expression to feel at peace.
+                <p className="text-sm text-[#052036]/85 leading-relaxed">
+                  With your <strong className="text-[#052036] font-bold">{user.moonSign} Moon</strong>, your emotional foundation requires genuine safety, steadiness, and authentic expression to feel at peace.
                 </p>
-                <p className="text-sm text-[#c5d3df] leading-relaxed">
-                  Your <strong className="text-[#FAF9F6] font-semibold">{user.risingSign} Ascendant</strong> shapes how you first meet the world — offering a perceptive and protective presence that guards your inner sanctuary.
+                <p className="text-sm text-[#052036]/85 leading-relaxed">
+                  Your <strong className="text-[#052036] font-bold">{user.risingSign} Ascendant</strong> shapes how you first meet the world — offering a perceptive and protective presence that guards your inner sanctuary.
                 </p>
                 <button
                   onClick={() => onNavigate("reading")}
@@ -386,16 +400,16 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                 </button>
               </div>
             )}
-            <div className="mt-8 border border-[rgba(234,193,87,0.25)] bg-[#082842] p-6 rounded-2xl space-y-4 shadow-xl">
+            <div className="mt-8 border border-[#052036]/12 bg-white p-6 rounded-2xl space-y-4 shadow-xl">
               <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.15)] pb-3">
                 <span className="text-xs font-mono uppercase text-[#EAC157] tracking-wider font-semibold">
                   ✦ Deep Psychological Chart Inquiry
                 </span>
-                <span className="text-[10px] font-mono text-[#c5d3df]">
+                <span className="text-[10px] font-mono text-[#052036]/70">
                   Grounded in Whole-Sign Ephemeris
                 </span>
               </div>
-              <p className="text-xs text-[#c5d3df] leading-relaxed">
+              <p className="text-xs text-[#052036]/70 leading-relaxed">
                 Tap an unspoken inquiry below or ask your own question to understand why you react this way through your natal placements:
               </p>
 
@@ -414,7 +428,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                       setPsychQuestion(q);
                       handleAskPsychAI(q);
                     }}
-                    className="text-[11px] px-3 py-1.5 border border-[rgba(234,193,87,0.2)] bg-[#052036] text-[#FAF9F6] hover:border-[#EAC157] hover:bg-[rgba(234,193,87,0.08)] rounded-full transition-colors text-left cursor-pointer"
+                    className="text-[11px] px-3 py-1.5 border border-[#052036]/10 bg-[#FAF9F6] text-[#052036] font-inter hover:border-[#052036] hover:bg-[rgba(234,193,87,0.08)] rounded-full transition-colors text-left cursor-pointer"
                   >
                     ✦ {q}
                   </button>
@@ -428,7 +442,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
                   value={psychQuestion}
                   onChange={(e) => setPsychQuestion(e.target.value)}
                   placeholder="Ask why you react this way, or what triggers your heart..."
-                  className="flex-1 min-w-0 bg-[#052036] border border-[rgba(234,193,87,0.25)] rounded-full px-4 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] placeholder:text-[#c5d3df]/60"
+                  className="flex-1 min-w-0 bg-[#052036] border border-[#052036]/12 rounded-full px-4 py-2.5 text-xs text-[#FAF9F6] focus:outline-none focus:border-[#052036] placeholder:text-[#052036]/70/60"
                 />
                 <button
                   disabled={isAskingAI || !psychQuestion.trim()}
@@ -441,19 +455,19 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
 
               {/* AI Response Display */}
               {aiAnswer && (
-                <div className="mt-4 p-4 border border-[#EAC157] bg-[#061c30] rounded-xl space-y-2.5">
-                  <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.18)] pb-1.5">
+                <div className="mt-4 p-4 border border-[#052036] bg-[#FAF7F2] rounded-xl space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-[#052036]/10 pb-1.5">
                     <span className="text-[11px] font-mono text-[#EAC157] uppercase font-semibold">
                       ✦ Astrological Mirror ({aiAnswer.category})
                     </span>
                     <button
                       onClick={() => setAiAnswer(null)}
-                      className="text-[10px] text-[#c5d3df] hover:text-[#FAF9F6] cursor-pointer"
+                      className="text-[10px] text-[#052036]/70 hover:text-[#052036] cursor-pointer"
                     >
                       ✕ Close
                     </button>
                   </div>
-                  <p className="text-xs text-[#FAF9F6] leading-relaxed whitespace-pre-line font-sans">
+                  <p className="text-xs text-[#052036] leading-relaxed whitespace-pre-line font-sans">
                     {aiAnswer.text}
                   </p>
                   {aiAnswer.consultedPlanets && (

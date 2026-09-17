@@ -212,7 +212,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
   const activeQ = YES_QUESTIONS.find((q) => q.stepIndex === step);
 
   return (
-    <div className="min-h-screen bg-[#052036] text-[#FAF9F6] flex flex-col selection:bg-[#EAC157] selection:text-[#052036]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#052036] flex flex-col selection:bg-[#EAC157] selection:text-[#052036] font-inter">
       {/* Ambient background with stars */}
       <div className="fixed inset-0 pointer-events-none">
         <div
@@ -237,7 +237,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-[rgba(234,193,87,0.1)]">
+      <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-[#052036]/10">
         <div onClick={() => onNavigate("home")} className="cursor-pointer" aria-label="AstroFindings Home">
           <img src={darkLogo} alt="AstroFindings" className="h-7 w-auto select-none inline-block align-middle" />
         </div>
@@ -245,7 +245,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
         {step < 7 && (
           <button
             onClick={() => onNavigate("dashboard")}
-            className="text-xs text-[#c5d3df] hover:text-[#FAF9F6] transition-colors cursor-pointer font-mono uppercase tracking-wider">
+            className="text-xs text-[#052036]/60 hover:text-[#052036] transition-colors cursor-pointer font-mono uppercase tracking-wider">
             Skip to Chart →
           </button>
         )}
@@ -253,17 +253,17 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
       {/* Progress Bar */}
       <div className="relative z-10 px-6 md:px-12">
-        <div className="h-0.5 bg-[rgba(234,193,87,0.12)] w-full">
+        <div className="h-0.5 bg-[#052036]/10 w-full">
           <div
             className="h-0.5 bg-[#EAC157] transition-all duration-700 ease-out shadow-[0_0_8px_rgba(234,193,87,0.6)]"
             style={{ width: `${progress}%` }}
           />
         </div>
         <div className="flex justify-between items-center mt-2.5">
-          <span className="text-[10px] font-mono text-[#EAC157] tracking-widest uppercase">
+          <span className="text-[10px] font-mono text-[#8C6B1B] tracking-widest uppercase">
             Step {step + 1} of {STEPS.length} · {current.title}
           </span>
-          <span className="text-[10px] font-mono text-[#c5d3df]">
+          <span className="text-[10px] font-mono text-[#052036]/60">
             {current.category}
           </span>
         </div>
@@ -277,13 +277,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           {/* -------------------------------------------------------------- */}
           {step === 0 && (
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[rgba(234,193,87,0.4)] bg-[#052036]/90 text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[#052036]/15 bg-[#FAF7F2] text-[10px] font-mono text-[#8C6B1B] uppercase tracking-widest">
                 <span>✦ NATAL FOLIO · ENTRY IDENTITY</span>
               </div>
-              <h1 className="font-serif text-3xl md:text-4xl font-light text-[#FAF9F6] leading-snug">
+              <h1 className="font-cormorant text-3xl md:text-4xl font-normal text-[#052036] leading-snug">
                 What should we call you?
               </h1>
-              <p className="text-sm text-[#c5d3df] leading-relaxed">
+              <p className="text-sm text-[#052036]/60 leading-relaxed">
                 Your name anchors your personalized whole-sign chart archive and transits.
               </p>
               <div className="pt-2">
@@ -300,7 +300,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   }}
                   placeholder="Enter your name or chosen alias"
                   autoFocus
-                  className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] placeholder:text-[#c5d3df]/40 focus:outline-none focus:border-[#EAC157] transition-colors"
+                  style={{ color: "#052036" }}
+                  className="w-full bg-transparent border-b-2 border-[#052036]/20 py-3 text-xl text-[#052036] placeholder:text-[#052036]/40 focus:outline-none focus:border-[#EAC157] transition-colors font-sans"
                 />
               </div>
             </div>
@@ -311,13 +312,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           {/* -------------------------------------------------------------- */}
           {step === 1 && (
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[rgba(234,193,87,0.4)] bg-[#052036]/90 text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[#052036]/15 bg-[#FAF7F2] text-[10px] font-mono text-[#8C6B1B] uppercase tracking-widest">
                 <span>☉ SOLAR EPHEMERIS COORDINATE</span>
               </div>
-              <h1 className="font-serif text-3xl md:text-4xl font-light text-[#FAF9F6] leading-snug">
+              <h1 className="font-cormorant text-3xl md:text-4xl font-normal text-[#052036] leading-snug">
                 When were you born?
               </h1>
-              <p className="text-sm text-[#c5d3df] leading-relaxed">
+              <p className="text-sm text-[#052036]/60 leading-relaxed">
                 Your date of birth fixes the exact planetary longitude of the Sun, outer planets, and lunar nodes.
               </p>
               <div className="pt-2">
@@ -331,7 +332,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       handleNext();
                     }
                   }}
-                  className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] transition-colors [color-scheme:dark]"
+                  style={{ color: "#052036" }}
+                  className="w-full bg-transparent border-b-2 border-[#052036]/20 py-3 text-xl text-[#052036] focus:outline-none focus:border-[#C89B3C] transition-colors [color-scheme:light] font-sans"
                 />
               </div>
             </div>
@@ -342,13 +344,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           {/* -------------------------------------------------------------- */}
           {step === 2 && (
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[rgba(234,193,87,0.4)] bg-[#052036]/90 text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[#052036]/15 bg-[#FAF7F2] text-[10px] font-mono text-[#8C6B1B] uppercase tracking-widest">
                 <span>☽ LUNAR & ASCENDANT HORIZON</span>
               </div>
-              <h1 className="font-serif text-3xl md:text-4xl font-light text-[#FAF9F6] leading-snug">
+              <h1 className="font-cormorant text-3xl md:text-4xl font-normal text-[#052036] leading-snug">
                 What time were you born?
               </h1>
-              <p className="text-sm text-[#c5d3df] leading-relaxed">
+              <p className="text-sm text-[#052036]/60 leading-relaxed">
                 Birth time fixes your Ascendant (Rising sign) and the twelve houses. Every 4 minutes shifts the cosmic horizon by one degree.
               </p>
               <div className="pt-2">
@@ -362,7 +364,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       handleNext();
                     }
                   }}
-                  className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] transition-colors [color-scheme:dark]"
+                  style={{ color: "#052036" }}
+                  className="w-full bg-transparent border-b-2 border-[#052036]/20 py-3 text-xl text-[#052036] focus:outline-none focus:border-[#C89B3C] transition-colors [color-scheme:light] font-sans"
                 />
               </div>
               <div className="pt-2">
@@ -380,13 +383,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                     }}
                     className="w-4 h-4 rounded accent-[#EAC157] cursor-pointer"
                   />
-                  <span className="text-xs text-[#EAC157] hover:underline underline-offset-4 font-mono">
+                  <span className="text-xs text-[#8C6B1B] hover:underline underline-offset-4 font-mono">
                     ✦ I don't know my exact time (calculate using solar noon)
                   </span>
                 </label>
                 {data.isTimeApproximate && (
-                  <div className="mt-2.5 p-3 rounded-xl border border-[rgba(234,193,87,0.3)] bg-[#082842] text-xs text-[#c5d3df] font-sans">
-                    <span className="text-[#EAC157] font-semibold block mb-0.5">Approximate Chart Active</span>
+                  <div className="mt-2.5 p-3 rounded-xl border border-[#052036]/15 bg-[#FAF7F2] text-xs text-[#052036]/80 font-sans shadow-sm">
+                    <span className="text-[#8C6B1B] font-semibold block mb-0.5">Approximate Chart Active</span>
                     House cusps and Ascendant will be estimated based on solar noon. Planetary sign placements, degrees, and aspects remain exact.
                   </div>
                 )}
@@ -399,13 +402,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           {/* -------------------------------------------------------------- */}
           {step === 3 && (
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[rgba(234,193,87,0.4)] bg-[#052036]/90 text-[10px] font-mono text-[#EAC157] uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border border-dashed border-[#052036]/15 bg-[#FAF7F2] text-[10px] font-mono text-[#8C6B1B] uppercase tracking-widest">
                 <span>♄ GEOGRAPHIC EPHEMERIS & PINCODE</span>
               </div>
-              <h1 className="font-serif text-3xl md:text-4xl font-light text-[#FAF9F6] leading-snug">
+              <h1 className="font-cormorant text-3xl md:text-4xl font-normal text-[#052036] leading-snug">
                 Where were you born?
               </h1>
-              <p className="text-sm text-[#c5d3df] leading-relaxed">
+              <p className="text-sm text-[#052036]/60 leading-relaxed">
                 Enter your birthplace city or postal code. We use live geocoding coordinates and pincode resolution to calibrate your house cusps and topocentric sky.
               </p>
 
@@ -432,10 +435,11 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       }
                     }}
                     placeholder="Search city, state, or pincode (e.g. New Delhi 110001 or San Francisco 94102)"
-                    className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] placeholder:text-[#c5d3df]/40 focus:outline-none focus:border-[#EAC157] transition-colors pr-10"
+                    style={{ color: "#052036" }}
+                    className="w-full bg-transparent border-b-2 border-[#052036]/20 py-3 text-xl text-[#052036] placeholder:text-[#052036]/40 focus:outline-none focus:border-[#EAC157] transition-colors pr-10 font-sans"
                   />
                   {isLoadingGeo && (
-                    <div className="absolute right-2 top-3.5 text-xs font-mono text-[#EAC157] animate-pulse">
+                    <div className="absolute right-2 top-3.5 text-xs font-mono text-[#8C6B1B] animate-pulse">
                       Searching...
                     </div>
                   )}
@@ -443,27 +447,27 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
                 {/* Autocomplete Dropdown List */}
                 {showDropdown && suggestions.length > 0 && (
-                  <div className="absolute left-0 right-0 top-full mt-2 bg-[#052036] border border-[#EAC157]/40 rounded-xl shadow-2xl z-50 max-h-64 overflow-y-auto divide-y divide-[rgba(234,193,87,0.1)]">
+                  <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-[#052036]/15 rounded-xl shadow-2xl z-50 max-h-64 overflow-y-auto divide-y divide-[#052036]/10">
                     {suggestions.map((loc, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => handleSelectLocation(loc)}
-                        className="w-full text-left p-3 hover:bg-[#EAC157]/15 transition-colors cursor-pointer flex items-center justify-between group">
+                        className="w-full text-left p-3 hover:bg-[#FAF7F2] transition-colors cursor-pointer flex items-center justify-between group">
                         <div className="space-y-0.5">
-                          <p className="text-sm font-serif text-[#FAF9F6] group-hover:text-white">
+                          <p className="text-sm font-cormorant text-[#052036] group-hover:text-[#8C6B1B]">
                             {loc.city || loc.name}
                             {loc.postcode && (
-                              <span className="ml-2 text-xs font-mono text-[#EAC157] bg-[#EAC157]/15 px-1.5 py-0.5 rounded-xl">
+                              <span className="ml-2 text-xs font-mono text-[#8C6B1B] bg-[#EAC157]/15 px-1.5 py-0.5 rounded-xl">
                                 PIN: {loc.postcode}
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-[#c5d3df] font-mono">
+                          <p className="text-xs text-[#052036]/60 font-mono">
                             {[loc.state, loc.country].filter(Boolean).join(", ")}
                           </p>
                         </div>
-                        <span className="text-[10px] font-mono text-[#c5d3df]/60 group-hover:text-[#EAC157]">
+                        <span className="text-[10px] font-mono text-[#052036]/60/60 group-hover:text-[#8C6B1B]">
                           {loc.timezone}
                         </span>
                       </button>
@@ -473,9 +477,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               </div>
 
               {/* Current Selected Location Indicator */}
-              <div className="p-3.5 rounded-xl border border-[rgba(234,193,87,0.2)] bg-[rgba(8,40,66,0.5)] flex items-center justify-between text-xs font-mono">
-                <span className="text-[#c5d3df]">Active Birth Coordinate:</span>
-                <span className="text-[#EAC157] font-medium truncate ml-2">
+              <div className="p-3.5 rounded-xl border border-[#052036]/15 bg-[#FAF7F2] flex items-center justify-between text-xs font-mono shadow-sm">
+                <span className="text-[#052036]/60">Active Birth Coordinate:</span>
+                <span className="text-[#8C6B1B] font-medium truncate ml-2">
                   {data.birthLocation}
                 </span>
               </div>
@@ -488,19 +492,19 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           {activeQ && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 px-3 py-1  text-[10px] font-mono text-[#EAC157] uppercase tracking-widest rotate-[-1deg]">
+                <div className="inline-flex items-center gap-2 px-3 py-1  text-[10px] font-mono text-[#8C6B1B] uppercase tracking-widest rotate-[-1deg]">
                   <span>{activeQ.tag}</span>
                 </div>
-                <span className="text-[10px] font-mono text-[#c5d3df]">
+                <span className="text-[10px] font-mono text-[#052036]/60">
                   QUESTION 0{activeQ.qNumber} OF 03
                 </span>
               </div>
 
               <div>
-                <h1 className="font-serif text-2xl md:text-3xl font-light text-[#FAF9F6] leading-snug">
+                <h1 className="font-cormorant text-2xl md:text-3xl font-normal text-[#052036] leading-snug">
                   {activeQ.question}
                 </h1>
-                <p className="text-xs text-[#c5d3df] mt-2 font-light">
+                <p className="text-xs text-[#052036]/60 mt-2 font-light">
                   {activeQ.subtext}
                 </p>
               </div>
@@ -523,17 +527,17 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                         if (step === 6) setData((d) => ({ ...d, q3Answer: opt.id }));
                       }}
                       className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${isSelected
-                          ? "border-[#EAC157] bg-[rgba(234,193,87,0.08)] shadow-md"
-                          : "border-[rgba(234,193,87,0.18)] bg-[rgba(8,40,66,0.5)] hover:border-[rgba(234,193,87,0.4)]"
+                          ? "border-[#EAC157] bg-[#FAF7F2] shadow-md"
+                          : "border-[#052036]/15 bg-white hover:border-[#EAC157] hover:bg-[#FAF7F2] shadow-sm"
                         }`}>
                       <div className="flex items-start gap-3">
                         <div
-                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${isSelected ? "border-[#EAC157] bg-[#EAC157]" : "border-[#c5d3df]"
+                          className={`w-4 h-4 rounded-full mt-0.5 border flex items-center justify-center shrink-0 ${isSelected ? "border-[#EAC157] bg-[#EAC157]" : "border-[#052036]/30 bg-white"
                             }`}>
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#052036]" />}
                         </div>
                         <div className="space-y-1">
-                          <p className="text-sm font-serif text-[#FAF9F6] leading-snug font-normal">
+                          <p className="text-sm font-cormorant text-[#052036] leading-snug font-normal">
                             {opt.label}
                           </p>
                         </div>
@@ -550,10 +554,10 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                 const chosen = activeQ.options.find((o) => o.id === currentOptId) || activeQ.options[0];
                 return (
                   <div className="p-4 rounded-xl border-l-2 border-[#EAC157] bg-[rgba(234,193,87,0.06)] space-y-1">
-                    <span className="text-[10px] font-mono text-[#EAC157] tracking-wider uppercase font-semibold">
+                    <span className="text-[10px] font-mono text-[#8C6B1B] tracking-wider uppercase font-semibold">
                       THE MIRROR CONFIRMS
                     </span>
-                    <p className="font-serif italic text-xs text-[#FAF9F6] leading-relaxed">
+                    <p className="font-cormorant italic text-xs text-[#052036]/80 leading-relaxed">
                       "{chosen.whisper}"
                     </p>
                   </div>
@@ -569,26 +573,33 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
             <div className="space-y-8 animate-fadeIn">
               {/* Talismanic Seal */}
               <div className="text-center space-y-3">
-
-                <h1 className="font-serif text-3xl md:text-4xl text-[#FAF9F6] font-light">
+                <div className="flex justify-center mb-2">
+                  <img 
+                    src={"/stickers/zodiac/" + (user?.sunSign || "leo").toLowerCase() + ".png"} 
+                    alt={user?.sunSign || "Zodiac"} 
+                    className="w-20 h-20 md:w-24 md:h-24 object-contain filter drop-shadow-md hover:scale-105 transition-transform duration-300"
+                    onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+                  />
+                </div>
+                <h1 className="font-cormorant text-3xl md:text-4xl text-[#052036] font-normal">
                   Your First Cosmic Mirror, {data.name || "Seeker"}
                 </h1>
-                <p className="text-xs text-[#c5d3df] max-w-lg mx-auto">
+                <p className="text-xs text-[#052036]/60 max-w-lg mx-auto">
                   Calculated from your exact birth sky in {data.birthLocation}. Here is the architecture of your soul.
                 </p>
               </div>
 
               {/* The Trinity Card (Sun, Moon, Rising) */}
               <div className="grid sm:grid-cols-3 gap-4">
-                <div className="editorial-card border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.7)] p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-colors flex flex-col justify-between">
+                <div className="editorial-card border border-[#052036]/15 bg-white p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-all shadow-sm flex flex-col justify-between">
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#EAC157]">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#8C6B1B]">
                       ☉ The Sun · Core Will
                     </div>
-                    <div className="text-2xl font-serif text-[#FAF9F6] my-1">
+                    <div className="text-2xl font-cormorant text-[#052036] my-1">
                       {user?.sunSign || "Leo"}
                     </div>
-                    <p className="text-xs text-[#c5d3df] font-light leading-relaxed">
+                    <p className="text-xs text-[#052036]/60 font-light leading-relaxed">
                       Your sovereign creative fire, your authenticity under pressure, and what allows you to stop performing and truly shine.
                     </p>
                   </div>
@@ -600,21 +611,21 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       );
                       onNavigate("askai");
                     }}
-                    className="pt-2 text-[11px] font-mono text-[#EAC157] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
+                    className="pt-2 text-[11px] font-mono text-[#8C6B1B] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
                   >
                     Inscribe to Ask AstroFindings →
                   </button>
                 </div>
 
-                <div className="editorial-card border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.7)] p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-colors flex flex-col justify-between">
+                <div className="editorial-card border border-[#052036]/15 bg-white p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-all shadow-sm flex flex-col justify-between">
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#EAC157]">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#8C6B1B]">
                       ☽ The Moon · Emotional Patterns
                     </div>
-                    <div className="text-2xl font-serif text-[#FAF9F6] my-1">
+                    <div className="text-2xl font-cormorant text-[#052036] my-1">
                       {user?.moonSign || "Virgo"}
                     </div>
-                    <p className="text-xs text-[#c5d3df] font-light leading-relaxed">
+                    <p className="text-xs text-[#052036]/60 font-light leading-relaxed">
                       How you experience emotional overwhelm, why you shut down, why you carry unspoken anger or a soft corner, and the unconscious sanctuary your nervous system requires.
                     </p>
                   </div>
@@ -626,21 +637,21 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       );
                       onNavigate("askai");
                     }}
-                    className="pt-2 text-[11px] font-mono text-[#EAC157] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
+                    className="pt-2 text-[11px] font-mono text-[#8C6B1B] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
                   >
                     Inscribe to Ask AstroFindings →
                   </button>
                 </div>
 
-                <div className="editorial-card border border-[rgba(234,193,87,0.25)] bg-[rgba(8,40,66,0.7)] p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-colors flex flex-col justify-between">
+                <div className="editorial-card border border-[#052036]/15 bg-white p-5 rounded-xl text-center space-y-2 relative group hover:border-[#EAC157] transition-all shadow-sm flex flex-col justify-between">
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#EAC157]">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#8C6B1B]">
                       ↑ The Ascendant · The Shield
                     </div>
-                    <div className="text-2xl font-serif text-[#FAF9F6] my-1">
+                    <div className="text-2xl font-cormorant text-[#052036] my-1">
                       {user?.risingSign || "Scorpio"}
                     </div>
-                    <p className="text-xs text-[#c5d3df] font-light leading-relaxed">
+                    <p className="text-xs text-[#052036]/60 font-light leading-relaxed">
                       The lens through which you meet the outside world, why you erect a defensive boundary when safety is threatened, and how you observe before speaking.
                     </p>
                   </div>
@@ -652,7 +663,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       );
                       onNavigate("askai");
                     }}
-                    className="pt-2 text-[11px] font-mono text-[#EAC157] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
+                    className="pt-2 text-[11px] font-mono text-[#8C6B1B] hover:text-[#d9b048] transition-colors cursor-pointer border-t border-[rgba(234,193,87,0.15)] mt-2"
                   >
                     Inscribe to Ask AstroFindings →
                   </button>
@@ -660,26 +671,26 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               </div>
 
               {/* Bespoke Synthesis Reflecting the 3 YES Answers */}
-              <div className="border border-[rgba(234,193,87,0.3)] bg-[rgba(8,40,66,0.85)] p-6 md:p-8 rounded-xl space-y-4 shadow-2xl relative">
+              <div className="border border-[#052036]/15 bg-white p-6 md:p-8 rounded-xl space-y-4 shadow-md relative">
                 <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.15)] pb-3">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#EAC157]">
+                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#8C6B1B]">
                     THE SYNTHESIS OF YOUR PATTERN
                   </span>
-                  <span className="text-[10px] font-mono text-[#c5d3df]">
+                  <span className="text-[10px] font-mono text-[#052036]/60">
                     WHOLE-SIGN EPHEMERIS
                   </span>
                 </div>
 
-                <p className="font-serif text-base md:text-lg text-[#FAF9F6] leading-relaxed font-light">
-                  You confirmed that your instinct is to <span className="text-[#EAC157] font-medium">withdraw behind an ice wall</span> when intimacy gets intense, that you carry everyone else's emotional storms in silence, and that you feel hollow inside an outgrown life. In your birth chart, your <span className="text-[#EAC157]">{user?.moonSign} Moon</span> reveals why: your nervous system learned early that showing raw vulnerability brought isolation.
+                <p className="font-cormorant text-base md:text-lg text-[#052036] leading-relaxed font-normal">
+                  You confirmed that your instinct is to <span className="text-[#8C6B1B] font-medium">withdraw behind an ice wall</span> when intimacy gets intense, that you carry everyone else's emotional storms in silence, and that you feel hollow inside an outgrown life. In your birth chart, your <span className="text-[#8C6B1B]">{user?.moonSign} Moon</span> reveals why: your nervous system learned early that showing raw vulnerability brought isolation.
                 </p>
 
-                <p className="text-xs md:text-sm text-[#c5d3df] leading-relaxed font-light">
-                  Regarding your crossroads: the sky confirms that your current restlessness is not an impending breakdown. It is the friction of a soul shedding outgrown armor. Your <span className="text-[#FAF9F6]">{user?.risingSign} Rising</span> is a shield built for sovereignty, and your <span className="text-[#FAF9F6]">{user?.sunSign} Sun</span> is ready to stop performing.
+                <p className="text-xs md:text-sm text-[#052036]/60 leading-relaxed font-light">
+                  Regarding your crossroads: the sky confirms that your current restlessness is not an impending breakdown. It is the friction of a soul shedding outgrown armor. Your <span className="text-[#052036] font-bold">{user?.risingSign} Rising</span> is a shield built for sovereignty, and your <span className="text-[#052036] font-bold">{user?.sunSign} Sun</span> is ready to stop performing.
                 </p>
 
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[rgba(234,193,87,0.12)]">
-                  <div className="flex items-center gap-2 text-xs text-[#EAC157] font-mono">
+                  <div className="flex items-center gap-2 text-xs text-[#8C6B1B] font-mono">
                     <span>✦ 10 Natal Planets Mapped</span>
                     <span>·</span>
                     <span>✦ Whole-Sign Houses Calibrated</span>
@@ -694,7 +705,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                       );
                       onNavigate("askai");
                     }}
-                    className="px-4 py-2 bg-[rgba(234,193,87,0.15)] border border-[#EAC157] hover:bg-[#EAC157] hover:text-[#052036] text-[#FAF9F6] text-xs font-mono rounded-xl transition-all cursor-pointer"
+                    className="px-4 py-2 bg-[rgba(234,193,87,0.15)] border border-[#EAC157] hover:bg-[#EAC157] hover:text-[#052036] text-[#052036] text-xs font-mono rounded-xl transition-all cursor-pointer"
                   >
                     Consult Ask AstroFindings on My Emotional Pattern →
                   </button>
@@ -702,8 +713,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               </div>
 
               {/* No real astrologers notice */}
-              <div className="p-3 border border-[rgba(234,193,87,0.15)] bg-[#052036]/60 rounded-xl text-center text-xs text-[#c5d3df]">
-                <span className="text-[#EAC157]">100% Self-guided exploration: </span>
+              <div className="p-3 border border-[#052036]/15 bg-[#FAF7F2] rounded-xl text-center text-xs text-[#052036]/80">
+                <span className="text-[#8C6B1B]">100% Self-guided exploration: </span>
                 Your chart interpretations, live astronomical transits, and relational synastry are fully unlocked without consultation fees.
               </div>
             </div>
@@ -713,7 +724,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
           <div className="flex items-center justify-between pt-8 border-t border-[rgba(234,193,87,0.1)] mt-8">
             <button
               onClick={() => step > 0 && setStep((s) => s - 1)}
-              className={`text-xs font-mono uppercase tracking-wider text-[#c5d3df] hover:text-[#FAF9F6] transition-colors cursor-pointer ${step === 0 || step === 7 ? "invisible" : ""
+              className={`text-xs font-mono uppercase tracking-wider text-[#052036]/60 hover:text-[#052036] transition-colors cursor-pointer ${step === 0 || step === 7 ? "invisible" : ""
                 }`}>
               ← Back
             </button>
@@ -728,7 +739,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                 }
               }}
               disabled={isCalculating}
-              className="px-8 py-3.5 bg-[#EAC157] text-[#052036] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#d9b048] transition-all duration-200 rounded-full shadow-lg cursor-pointer disabled:opacity-50">
+              className="px-8 py-3.5 bg-[#052036] text-[#FAF9F6] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#d9b048] transition-all duration-200 rounded-full shadow-lg cursor-pointer disabled:opacity-50">
               {isCalculating
                 ? "Calculating Ephemeris..."
                 : step === 6

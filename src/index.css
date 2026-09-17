@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Arima:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
@@ -45,13 +45,11 @@
 }
 
 :root {
-  /* Brand Guide Colors */
-  /* Deep Space: #052036 -> hsl(207 83% 12%) */
-  /* Cosmic Gold: #EAC157 -> hsl(43 78% 63%) */
+  /* Brand Guide Colors: Light Editorial Theme by Default */
   /* Soft Ivory: #FAF9F6 -> hsl(45 33% 97%) */
-  /* White: #FFFFFF -> hsl(0 0% 100%) */
-  --background: 207 83% 12%;
-  --foreground: 45 33% 97%;
+  /* Deep Space: #052036 -> hsl(207 83% 12%) */
+  --background: 45 33% 97%;
+  --foreground: 207 83% 12%;
   --border: 207 50% 22%;
   --input: 207 50% 20%;
   --ring: 43 78% 63%;
@@ -85,7 +83,7 @@
   --chart-4: 43 70% 75%;
   --chart-5: 4 68% 58%;
   --app-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --app-font-serif: 'Arima', Georgia, serif;
+  --app-font-serif: 'Cormorant Garamond', Georgia, serif;
   --app-font-mono: 'DM Mono', monospace;
   --radius: 0.75rem;
   --shadow-2xs: 0 1px 2px hsl(207 83% 6% / .2);
@@ -169,13 +167,13 @@
 :root {
   --nav-height: 72px;
   /* Brand Style Guide Variables */
-  --ink: #052036;
-  /* Deep Space */
-  --ink-soft: #082842;
-  --ink-raised: #0c3354;
-  --paper: #FAF9F6;
+  --ink: #FAF9F6;
   /* Soft Ivory */
-  --paper-dim: #c5d3df;
+  --ink-soft: #FFFFFF;
+  --ink-raised: #F5EFEB;
+  --paper: #052036;
+  /* Deep Space */
+  --paper-dim: rgba(5, 32, 54, 0.75);
   --rust: #EAC157;
   /* Cosmic Gold */
   --sage: #EAC157;
@@ -183,7 +181,7 @@
   --gold: #EAC157;
   /* Cosmic Gold */
   --white: #FFFFFF;
-  --line: rgba(234, 193, 87, 0.22);
+  --line: rgba(5, 32, 54, 0.12);
 }
 
 @media (max-width: 768px) {
@@ -238,9 +236,10 @@
 .site-header,
 .app-header {
   align-items: center;
-  background: rgba(5, 32, 54, 0.95);
+  background: rgba(250, 249, 246, 0.95);
   backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(234, 193, 87, 0.18);
+  border-bottom: 1px solid rgba(5, 32, 54, 0.1);
+  color: #052036;
   display: flex;
   height: var(--nav-height) !important;
   justify-content: space-between;
@@ -432,7 +431,7 @@
 }
 
 .hero h1 {
-  color: var(--white);
+  color: #052036;
   font-family: var(--app-font-serif);
   font-size: clamp(3.8rem, 8.2vw, 8rem);
   line-height: .92;
@@ -595,7 +594,7 @@
 }
 
 .chart-card h2 {
-  color: var(--white);
+  color: #052036;
   font-family: var(--app-font-serif);
   font-size: 2.1rem;
   line-height: 1;
@@ -734,7 +733,7 @@
 .method h2,
 .readings h2,
 .threshold h2 {
-  color: var(--white);
+  color: #052036;
   font-family: var(--app-font-serif);
   font-size: clamp(3rem, 6vw, 6.6rem);
   line-height: .92;
@@ -775,7 +774,7 @@
 }
 
 .method-row h3 {
-  color: var(--white);
+  color: #052036;
   font: 600 clamp(1.5rem, 2.8vw, 2.6rem)/1.1 var(--app-font-serif);
   margin: 0;
 }
@@ -854,7 +853,7 @@
 }
 
 .reading-main h3 {
-  color: var(--white);
+  color: #052036;
   font: 600 clamp(1.6rem, 3vw, 2.9rem)/.98 var(--app-font-serif);
   margin: 0 0 14px;
 }
@@ -929,7 +928,7 @@
 
 .interlude-quote {
   border-left: 2px solid var(--gold);
-  color: var(--white);
+  color: #052036;
   font: 600 clamp(2rem, 4vw, 4.4rem)/1 var(--app-font-serif);
   margin: 0;
   padding-left: 28px;
@@ -1026,7 +1025,7 @@
 }
 
 .letter-copy h2 {
-  color: var(--white);
+  color: #052036;
   font-size: clamp(2.8rem, 5vw, 5.3rem);
   line-height: .95;
   margin: 16px 0 24px;
@@ -1058,10 +1057,10 @@
 .form-input,
 .form-select,
 .form-textarea {
-  background: #052036;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  color: var(--paper);
+  background: #FFFFFF;
+  border: 1px solid rgba(5, 32, 54, 0.18);
+  border-radius: 12px;
+  color: #052036;
   outline: none;
   padding: 14px;
   transition: border-color .25s ease, box-shadow .25s ease;
@@ -1187,7 +1186,7 @@
 }
 
 .booking-side h3 {
-  color: var(--white);
+  color: #052036;
   font: 600 2rem/1 var(--app-font-serif);
   margin: 0 0 30px;
 }
@@ -1235,7 +1234,7 @@
 }
 
 .faq-intro h2 {
-  color: var(--white);
+  color: #052036;
   font-size: clamp(2.8rem, 5vw, 5.4rem);
   line-height: .92;
   margin: 15px 0 0;
@@ -1253,7 +1252,7 @@
   align-items: center;
   background: none;
   border: 0;
-  color: var(--white);
+  color: #052036;
   cursor: pointer;
   display: flex;
   font: 500 1.2rem/1.3 var(--app-font-serif);
@@ -1815,9 +1814,9 @@
 .editorial-card input,
 .ai-console textarea,
 .form-stack input {
-  background: var(--ink-raised);
-  border: 1px solid var(--line);
-  color: var(--paper);
+  background: #FFFFFF;
+  border: 1px solid rgba(5, 32, 54, 0.15);
+  color: #052036 !important;
   outline: none;
   padding: 14px 15px;
   width: 100%;
@@ -2107,4 +2106,12 @@
   background-color: #FAF7F2;
   background-image: radial-gradient(rgba(5, 32, 54, 0.08) 1.2px, transparent 1.2px);
   background-size: 24px 24px;
+}
+
+/* Universal Input & Text Contrast Guarantee */
+input, textarea, select {
+  color: #052036 !important;
+}
+input::placeholder, textarea::placeholder {
+  color: rgba(5, 32, 54, 0.45) !important;
 }

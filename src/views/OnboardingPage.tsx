@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useApp } from "../context/AppContext";
 import { searchLocations, GeocodedLocation } from "../services/geocodingService";
+import AstroFindingsDarkLogo from "../components/AstroFindingsDarkLogo";
 
 interface OnboardingPageProps {
   onNavigate: (page: string) => void;
@@ -103,6 +104,8 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
   const [isLoadingGeo, setIsLoadingGeo] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const isNavigatingRef = useRef(false);
 
   const current = STEPS[step];
   const progress = ((step + 1) / STEPS.length) * 100;
@@ -149,27 +152,53 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
     setShowDropdown(false);
   };
 
-  const handleNext = async () => {
-    if (step < 6) {
-      setStep((s) => s + 1);
-    } else if (step === 6) {
-      // Step 6 (Q3) -> Step 7 (Reveal): Calculate exact whole-sign ephemeris
-      await updateUser({
-        name: data.name.trim() || "Seeker",
-        birthDate: data.birthDate || "1994-08-09",
-        birthTime: data.birthTime || "12:00",
-        birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
-        interests: [
-          "Detachment & Overthinking Patterns",
-          "Heartbreak & Suppressed Emotions",
-          "Comfort Zone & Stepping Into Power",
-        ],
-      });
-      setStep(7);
-    } else {
-      login(); onNavigate("chart");
-    }
-  };
+  const handleNext = useCallback(() => {
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 350);
+
+    setStep((currentStep) => {
+      if (currentStep < 6) {
+        return currentStep + 1;
+      } else if (currentStep === 6) {
+        updateUser({
+          name: data.name.trim() || "Seeker",
+          birthDate: data.birthDate || "1994-08-09",
+          birthTime: data.birthTime || "12:00",
+          birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
+          interests: [
+            "Detachment & Overthinking Patterns",
+            "Heartbreak & Suppressed Emotions",
+            "Comfort Zone & Stepping Into Power",
+          ],
+        });
+        return 7;
+      } else {
+        login();
+        onNavigate("chart");
+        return currentStep;
+      }
+    });
+  }, [data, updateUser, login, onNavigate]);
+
+  // Enter key listener: when user types name on Step 0 or presses Enter, proceed to next step
+  useEffect(() => {
+    if (step !== 0) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [step, handleNext]);
 
   const activeQ = YES_QUESTIONS.find((q) => q.stepIndex === step);
 
@@ -200,12 +229,9 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
 
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-[rgba(234,193,87,0.1)]">
-        <button onClick={() => onNavigate("home")} className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-6 h-6 border border-[#EAC157] rounded-full flex items-center justify-center text-[10px] font-mono text-[#EAC157] group-hover:scale-110 transition-transform">
-            AF
-          </div>
-          <span className="font-serif text-base text-[#FAF9F6] tracking-wide">AstroFindings</span>
-        </button>
+        <div onClick={() => onNavigate("home")} className="cursor-pointer" aria-label="AstroFindings Home">
+          <AstroFindingsDarkLogo size="sm" />
+        </div>
 
         {step < 7 && (
           <button
@@ -253,9 +279,16 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               </p>
               <div className="pt-2">
                 <input
+                  ref={nameInputRef}
                   type="text"
                   value={data.name}
                   onChange={(e) => setData((d) => ({ ...d, name: e.target.value }))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleNext();
+                    }
+                  }}
                   placeholder="Enter your name or chosen alias"
                   autoFocus
                   className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] placeholder:text-[#c5d3df]/40 focus:outline-none focus:border-[#EAC157] transition-colors"
@@ -283,6 +316,12 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   type="date"
                   value={data.birthDate}
                   onChange={(e) => setData((d) => ({ ...d, birthDate: e.target.value }))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleNext();
+                    }
+                  }}
                   className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] transition-colors [color-scheme:dark]"
                 />
               </div>
@@ -308,6 +347,12 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   type="time"
                   value={data.birthTime}
                   onChange={(e) => setData((d) => ({ ...d, birthTime: e.target.value }))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleNext();
+                    }
+                  }}
                   className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] transition-colors [color-scheme:dark]"
                 />
               </div>
@@ -348,6 +393,16 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                     }}
                     onFocus={() => {
                       if (suggestions.length > 0) setShowDropdown(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (suggestions.length > 0) {
+                          handleSelectLocation(suggestions[0]);
+                        } else {
+                          handleNext();
+                        }
+                      }
                     }}
                     placeholder="Search city, state, or pincode (e.g. New Delhi 110001 or San Francisco 94102)"
                     className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] placeholder:text-[#c5d3df]/40 focus:outline-none focus:border-[#EAC157] transition-colors pr-10"
@@ -640,7 +695,14 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
             </button>
 
             <button
+              type="button"
               onClick={handleNext}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleNext();
+                }
+              }}
               disabled={isCalculating}
               className="px-8 py-3.5 bg-[#EAC157] text-[#052036] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-[#d9b048] transition-all duration-200 rounded-full shadow-lg cursor-pointer disabled:opacity-50">
               {isCalculating

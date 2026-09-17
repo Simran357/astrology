@@ -13,7 +13,7 @@ import {
 } from "../services/aiAstrologyService";
 import { TRANSIT_SHIFTS_DATA } from "../data/transitShiftsData";
 import { AFFIRMATIONS_DATA } from "../data/wellnessData";
-import AstroFindingsLogo from "../components/AstroFindingsLogo";
+import AstroFindingsLogo, { AstroFindingsDarkLogo, AstroFindingsLightLogo } from "../components/AstroFindingsLogo";
 
 interface Props {
   onNavigate: (page: string) => void;
@@ -131,8 +131,9 @@ export function LoginPage({ onNavigate }: Props) {
         <div
           className="flex justify-center mb-6 cursor-pointer"
           onClick={() => onNavigate("home")}
+          aria-label="AstroFindings Home"
         >
-          <AstroFindingsLogo size="md" variant="dark" />
+          <AstroFindingsDarkLogo size="md" />
         </div>
 
         <div className="flex items-center justify-between">
@@ -286,8 +287,9 @@ export function SignupPage({ onNavigate }: Props) {
         <div
           className="flex justify-center mb-6 cursor-pointer"
           onClick={() => onNavigate("home")}
+          aria-label="AstroFindings Home"
         >
-          <AstroFindingsLogo size="md" variant="dark" />
+          <AstroFindingsDarkLogo size="md" />
         </div>
 
         <div className="flex items-center justify-between">

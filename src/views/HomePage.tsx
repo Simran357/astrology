@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import AstroFindingsLogo from "../components/AstroFindingsLogo";
+import { useState } from "react";
+import AstroFindingsLogo, { AstroFindingsDarkLogo, AstroFindingsLightLogo } from "../components/AstroFindingsLogo";
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -141,134 +141,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedDilemma, setSelectedDilemma] = useState<string>("golden_handcuffs");
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  const headerRef = useRef<HTMLElement>(null);
-  const mobileMenuRef = useRef<HTMLElement>(null);
 
   const activeDilemma = DILEMMA_MIRRORS.find((d) => d.id === selectedDilemma) || DILEMMA_MIRRORS[0];
 
-  const go = useCallback((page: string) => {
+  const go = (page: string) => {
     setMobileOpen(false);
     onNavigate(page);
-  }, [onNavigate]);
-
-  // Smooth anchor scrolling handler
-  const scrollToAnchor = useCallback((e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent, id: string) => {
-    e.preventDefault();
-    setMobileOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      const headerOffset = 76;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  }, []);
-
-  // 1. Window scroll listener: tracks header blur/shadow and scroll-to-top button visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 20);
-      setShowScrollTop(scrollY > 350);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // 2. Window keydown listener: handles Escape (close mobile menu / FAQ), Left/Right arrows (switch dilemmas), and Home (top)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      // Do not intercept if user is typing in an editable field
-      if (
-        target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT" ||
-          target.isContentEditable)
-      ) {
-        return;
-      }
-
-      // Escape key: dismiss mobile menu first, or close open FAQ accordion
-      if (e.key === "Escape") {
-        if (mobileOpen) {
-          e.preventDefault();
-          setMobileOpen(false);
-          return;
-        }
-        if (openQuestion !== null) {
-          e.preventDefault();
-          setOpenQuestion(null);
-          return;
-        }
-      }
-
-      // ArrowLeft & ArrowRight: cycle through the dilemma mirrors
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        e.preventDefault();
-        setSelectedDilemma((current) => {
-          const currentIndex = DILEMMA_MIRRORS.findIndex((d) => d.id === current);
-          if (currentIndex === -1) return DILEMMA_MIRRORS[0].id;
-          const nextIndex =
-            e.key === "ArrowRight"
-              ? (currentIndex + 1) % DILEMMA_MIRRORS.length
-              : (currentIndex - 1 + DILEMMA_MIRRORS.length) % DILEMMA_MIRRORS.length;
-          return DILEMMA_MIRRORS[nextIndex].id;
-        });
-        return;
-      }
-
-      // Home key: scroll to top
-      if (e.key === "Home" && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mobileOpen, openQuestion]);
-
-  // 3. Window resize listener: automatically closes mobile nav when expanding to desktop viewport
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 900 && mobileOpen) {
-        setMobileOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [mobileOpen]);
-
-  // 4. Pointerdown listener: detect clicks/taps outside mobile nav drawer to close it
-  useEffect(() => {
-    if (!mobileOpen) return;
-
-    const handlePointerDown = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(target) &&
-        headerRef.current &&
-        !headerRef.current.contains(target)
-      ) {
-        setMobileOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [mobileOpen]);
+  };
 
   const faq = [
     [
@@ -290,162 +169,42 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   ];
 
   return (
-    <div className="home-root selection:bg-[#EAC157] selection:text-[#052036] relative">
+    <div className="home-root selection:bg-[#EAC157] selection:text-[#052036]">
       {/* ------------------------------------------------------------------ */}
-      {/* HEADER & NAVIGATION (Brand Logo + Pill CTA + Scroll Listener State) */}
+      {/* HEADER & NAVIGATION (Brand Logo + Pill CTA)                        */}
       {/* ------------------------------------------------------------------ */}
-      <header
-        ref={headerRef}
-        className={`site-header transition-all duration-300 ${
-          isScrolled ? "shadow-2xl bg-[#052036]/95 border-b border-[rgba(234,193,87,0.3)]" : ""
-        }`}
-      >
-        <div
-          role="button"
-          tabIndex={0}
-          className="cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          onClick={() => go("home")}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              go("home");
-            }
-          }}
-          aria-label="AstroFindings Home"
-        >
-          <AstroFindingsLogo size="sm" variant="dark" />
+      <header className="site-header">
+        <div className="cursor-pointer" onClick={() => go("home")} aria-label="AstroFindings Home">
+          <AstroFindingsDarkLogo size="sm" />
         </div>
 
         <nav className="site-nav" aria-label="Primary navigation">
-          <a
-            href="#why"
-            onClick={(e) => scrollToAnchor(e, "why")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            Against the Script
-          </a>
-          <a
-            href="#story"
-            onClick={(e) => scrollToAnchor(e, "story")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The 6 Movements
-          </a>
-          <a
-            href="#dilemmas"
-            onClick={(e) => scrollToAnchor(e, "dilemmas")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The Dilemmas
-          </a>
-          <a
-            href="#about"
-            onClick={(e) => scrollToAnchor(e, "about")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The Philosophy
-          </a>
-          <a
-            href="#questions"
-            onClick={(e) => scrollToAnchor(e, "questions")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            FAQ
-          </a>
+          <a href="#why">Against the Script</a>
+          <a href="#story">The 6 Movements</a>
+          <a href="#dilemmas">The Dilemmas</a>
+          <a href="#about">The Philosophy</a>
+          <a href="#questions">FAQ</a>
         </nav>
 
-        <button
-          className="header-cta cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none"
-          onClick={() => go("onboarding")}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              go("onboarding");
-            }
-          }}
-        >
+        <button className="header-cta cursor-pointer" onClick={() => go("onboarding")}>
           Begin Discovery →
         </button>
-
-        <button
-          className="menu-toggle cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setMobileOpen(!mobileOpen);
-            }
-          }}
-          aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={mobileOpen}
-        >
+        <button className="menu-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
           {mobileOpen ? "×" : "☰"}
         </button>
       </header>
 
-      {/* Mobile Menu Backdrop */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-30 md:hidden transition-opacity"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Mobile Navigation Drawer */}
-      {mobileOpen && (
-        <nav
-          ref={mobileMenuRef}
-          className="mobile-nav is-open z-40"
-          aria-label="Mobile navigation"
-          role="dialog"
-          aria-modal="true"
-        >
-          <a
-            href="#why"
-            onClick={(e) => scrollToAnchor(e, "why")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            Against the Script
-          </a>
-          <a
-            href="#story"
-            onClick={(e) => scrollToAnchor(e, "story")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The 6 Movements
-          </a>
-          <a
-            href="#dilemmas"
-            onClick={(e) => scrollToAnchor(e, "dilemmas")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The Dilemmas
-          </a>
-          <a
-            href="#about"
-            onClick={(e) => scrollToAnchor(e, "about")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            The Philosophy
-          </a>
-          <a
-            href="#questions"
-            onClick={(e) => scrollToAnchor(e, "questions")}
-            className="focus-visible:ring-2 focus-visible:ring-[#EAC157] rounded-sm"
-          >
-            FAQ
-          </a>
-          <button
-            className="button-primary w-full cursor-pointer focus-visible:ring-2 focus-visible:ring-[#052036]"
-            onClick={() => go("onboarding")}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                go("onboarding");
-              }
-            }}
-          >
+        <nav className="mobile-nav is-open">
+          <div className="pb-3 mb-2 border-b border-[rgba(234,193,87,0.15)] flex justify-between items-center">
+            <AstroFindingsDarkLogo size="sm" onClick={() => go("home")} />
+          </div>
+          <a href="#why" onClick={() => setMobileOpen(false)}>Against the Script</a>
+          <a href="#story" onClick={() => setMobileOpen(false)}>The 6 Movements</a>
+          <a href="#dilemmas" onClick={() => setMobileOpen(false)}>The Dilemmas</a>
+          <a href="#about" onClick={() => setMobileOpen(false)}>The Philosophy</a>
+          <a href="#questions" onClick={() => setMobileOpen(false)}>FAQ</a>
+          <button className="button-primary w-full cursor-pointer" onClick={() => go("onboarding")}>
             Begin Discovery →
           </button>
         </nav>
@@ -456,72 +215,34 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* "Same Stars. A Brighter You."                                      */}
       {/* ------------------------------------------------------------------ */}
       <main>
-        <section className="hero" id="top">
-          <div className="section-shell hero-grid">
-            <div className="hero-copy">
-              <div className="hero-kicker">00 / A private practice in public</div>
-              <h1 className="display">
-                Your chart
-                <br />
-                is not your <em>fate.</em>
-              </h1>
-              <p className="hero-lede">
-                I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.
-              </p>
-              <div className="hero-actions">
-                <button
-                  className="button-primary cursor-pointer focus-visible:ring-2 focus-visible:ring-[#052036]"
-                  onClick={() => go("onboarding")}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      go("onboarding");
-                    }
-                  }}
-                >
-                  Decode your birth sky <Arrow />
-                </button>
-                <a
-                  className="button-quiet focus-visible:ring-2 focus-visible:ring-[#EAC157]"
-                  href="#story"
-                  onClick={(e) => scrollToAnchor(e, "story")}
-                >
-                  How I read <Down />
-                </a>
-              </div>
-              <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
+              <section className="hero" id="top">
+        <div className="section-shell hero-grid">
+          <div className="hero-copy">
+            <div className="hero-kicker">00 / A private practice in public</div>
+            <h1 className="display">Your chart<br/>is not your <em>fate.</em></h1>
+            <p className="hero-lede">I read the sky as a language of pressure, longing, and choice. No horoscopes. No cosmic customer service. Just a sharper story about the life you are already living.</p>
+            <div className="hero-actions">
+              <button className="button-primary cursor-pointer" onClick={() => go("onboarding")}>Decode your birth sky <Arrow/></button>
+              <a className="button-quiet" href="#story">How I read <Down/></a>
             </div>
-            <div className="hero-art">
-              <div className="orbit">
-                <span className="orbit-line" />
-                <span className="orbit-dot" />
-                <span className="orbit-dot sage" />
-              </div>
-              <span className="hero-side-label">A study in contradiction</span>
-              <div className="chart-card">
-                <div className="chart-top">
-                  <span>Case 0047</span>
-                  <span>Mutable / fixed</span>
-                </div>
-                <svg className="chart-glyph" viewBox="0 0 190 146" fill="none">
-                  <circle cx="95" cy="73" r="55" stroke="hsl(42 33% 89%/.6)" />
-                  <circle cx="95" cy="73" r="35" stroke="hsl(163 31% 58%/.8)" />
-                  <path d="M40 73h110M95 18v110M56 34l78 78M134 34 56 112" stroke="hsl(42 72% 69%/.55)" />
-                  <path d="M95 18 134 34 150 73 126 116 71 122 40 73 56 34z" stroke="hsl(16 79% 61%/.95)" strokeWidth="1.5" />
-                  <circle cx="95" cy="18" r="4" fill="hsl(16 79% 61%)" />
-                  <circle cx="150" cy="73" r="4" fill="hsl(163 31% 58%)" />
-                  <circle cx="71" cy="122" r="4" fill="hsl(42 72% 69%)" />
-                </svg>
-                <h2 className="serif">
-                  The useful
-                  <br />
-                  discomfort.
-                </h2>
-                <p>A reading is not a verdict. It is a room with better lighting.</p>
-              </div>
+            <p className="hero-note">For the curious, the skeptical, and the suspiciously self-aware.</p>
+          </div>
+          <div className="hero-art">
+            <div className="orbit"><span className="orbit-line"/><span className="orbit-dot"/><span className="orbit-dot sage"/></div>
+            <span className="hero-side-label">A study in contradiction</span>
+            <div className="chart-card">
+              <div className="chart-top"><span>Case 0047</span><span>Mutable / fixed</span></div>
+              <svg className="chart-glyph" viewBox="0 0 190 146" fill="none">
+                <circle cx="95" cy="73" r="55" stroke="hsl(42 33% 89%/.6)"/><circle cx="95" cy="73" r="35" stroke="hsl(163 31% 58%/.8)"/>
+                <path d="M40 73h110M95 18v110M56 34l78 78M134 34 56 112" stroke="hsl(42 72% 69%/.55)"/>
+                <path d="M95 18 134 34 150 73 126 116 71 122 40 73 56 34z" stroke="hsl(16 79% 61%/.95)" strokeWidth="1.5"/>
+                <circle cx="95" cy="18" r="4" fill="hsl(16 79% 61%)"/><circle cx="150" cy="73" r="4" fill="hsl(163 31% 58%)"/><circle cx="71" cy="122" r="4" fill="hsl(42 72% 69%)"/>
+              </svg>
+              <h2 className="serif">The useful<br/>discomfort.</h2><p>A reading is not a verdict. It is a room with better lighting.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* ------------------------------------------------------------------ */}
         {/* 01 / AGAINST THE SCRIPT (Light Theme Showcase)                    */}
@@ -529,18 +250,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         {/* ------------------------------------------------------------------ */}
         <section className="manifesto" id="why">
           <div className="section-shell manifesto-grid">
-            <div>
-              <span className="eyebrow">01 / Against the script</span>
-            </div>
+            <div><span className="eyebrow">01 / Against the script</span></div>
             <div>
               <h2 className="display">Astrology is a mirror, not a muzzle.</h2>
               <div className="manifesto-copy">
-                <p>
-                  <strong>Most readings hand you a personality sticker.</strong> You are told you are intense, nurturing, analytical — then sent back into the same old room.
-                </p>
-                <p>
-                  I am more interested in what the chart makes difficult to ignore: the desire beneath the performance, the power you keep lending away, the contradiction that might become a choice.
-                </p>
+                <p><strong>Most readings hand you a personality sticker.</strong> You are told you are intense, nurturing, analytical — then sent back into the same old room.</p>
+                <p>I am more interested in what the chart makes difficult to ignore: the desire beneath the performance, the power you keep lending away, the contradiction that might become a choice.</p>
                 <div className="manifesto-aside">Not prediction. Not diagnosis. A practice of noticing.</div>
               </div>
             </div>
@@ -555,32 +270,17 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div className="method-intro">
               <div>
                 <span className="eyebrow">02 / The Illustrated Memoir</span>
-                <h2 className="display">
-                  Knowing what was
-                  <br />
-                  previously unknown.
-                </h2>
+                <h2 className="display">Knowing what was<br />previously unknown.</h2>
               </div>
-              <p>
-                Six movements through your interior architecture — from the emotions you swallow in silence to the cold peace of walking away.
-              </p>
+              <p>Six movements through your interior architecture — from the emotions you swallow in silence to the cold peace of walking away.</p>
             </div>
 
-            <div className="method-list" role="list">
+            <div className="method-list">
               {STORY_CHAPTERS.map((chapter) => (
                 <div
-                  className="method-row cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none"
+                  className="method-row cursor-pointer group"
                   key={chapter.numeral}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Movement ${chapter.numeral}: ${chapter.title}. Click or press Enter to begin.`}
                   onClick={() => go("onboarding")}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      go("onboarding");
-                    }
-                  }}
                 >
                   <span className="method-number">{chapter.numeral}</span>
                   <div>
@@ -605,44 +305,26 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <section className="threshold" id="dilemmas">
           <div className="section-shell">
             <div className="max-w-2xl mb-10 text-left">
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#052036]/30 bg-[#FAF9F6] text-[10px] font-sans uppercase tracking-widest text-[#052036] font-bold">
-                  <span> 03 / REAL CROSSROADS</span>
-                </div>
-                <span className="text-[11px] font-mono text-[#052036]/70 hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#052036]/8">
-                  <kbd className="font-mono bg-white/80 px-1.5 py-0.5 rounded text-[10px] font-bold shadow-xs">←</kbd>
-                  <kbd className="font-mono bg-white/80 px-1.5 py-0.5 rounded text-[10px] font-bold shadow-xs">→</kbd>
-                  <span>Arrow keys to switch</span>
-                </span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-dashed border-[#052036]/30 bg-[#FAF9F6] text-[10px] font-sans uppercase tracking-widest text-[#052036] font-bold mb-3">
+                <span> 03 / REAL CROSSROADS</span>
               </div>
-              <h2 className="display" style={{ marginBottom: "16px" }}>
-                Tough crossroads.
-              </h2>
+              <h2 className="display" style={{ marginBottom: "16px" }}>Tough crossroads.</h2>
               <p className="threshold-lede text-base font-medium text-[#052036]/90" style={{ marginTop: "10px" }}>
                 When staying destroys you and leaving costs everything. Select the standoff keeping you awake tonight:
               </p>
             </div>
 
             {/* Selector Buttons */}
-            <div className="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Dilemma selection">
+            <div className="flex flex-wrap gap-2 mb-8">
               {DILEMMA_MIRRORS.map((d) => (
                 <button
                   key={d.id}
-                  role="tab"
-                  aria-selected={selectedDilemma === d.id}
                   onClick={() => setSelectedDilemma(d.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedDilemma(d.id);
-                    }
-                  }}
-                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none ${
+                  className={`px-4 py-2.5 rounded-full text-xs font-sans uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                     selectedDilemma === d.id
-                      ? "bg-[#052036] text-[#FAF9F6] shadow-md border-2 border-[#EAC157] font-bold scale-[1.02]"
+                      ? "bg-[#052036] text-[#FAF9F6] shadow-md border-2 border-[#EAC157] font-bold"
                       : "bg-[#052036]/10 hover:bg-[#052036]/20 text-[#052036] border border-[#052036]/20 font-semibold"
-                  }`}
-                >
+                  }`}>
                   {d.tag}
                 </button>
               ))}
@@ -694,14 +376,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 </p>
                 <button
                   onClick={() => go("onboarding")}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      go("onboarding");
-                    }
-                  }}
-                  className="button-primary cursor-pointer text-xs font-bold whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#052036]"
-                >
+                  className="button-primary cursor-pointer text-xs font-bold whitespace-nowrap">
                   Decode in Your Birth Sky →
                 </button>
               </div>
@@ -710,9 +385,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 04 / BEFORE YOU CROSS THE THRESHOLD (The Philosophy)               */}
+        {/* 04 / BEFORE YOU CROSS THE THRESHOLD                                */}
         {/* ------------------------------------------------------------------ */}
-        <section className="threshold" id="about">
+        <section className="threshold" id="threshold">
           <div className="section-shell">
             <span className="eyebrow" style={{ color: "#052036", opacity: 0.8 }}>
               04 / Before you cross the threshold
@@ -741,11 +416,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="section-shell faq-grid">
             <div className="faq-intro">
               <span className="eyebrow">05 / Questions at the threshold</span>
-              <h2 className="display">
-                Still skeptical?
-                <br />
-                Good.
-              </h2>
+              <h2 className="display">Still skeptical?<br />Good.</h2>
               <p className="text-xs text-[#c5d3df] mt-2 leading-relaxed">
                 AstroFindings (astrofindings.com) is dedicated to clean, honest self-inquiry without cosmic pretension.
               </p>
@@ -754,16 +425,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               {faq.map((x, i) => (
                 <div className="faq-item" key={x[0]}>
                   <button
-                    className="faq-trigger cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none"
+                    className="faq-trigger cursor-pointer"
                     onClick={() => setOpenQuestion(openQuestion === i ? null : i)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setOpenQuestion(openQuestion === i ? null : i);
-                      }
-                    }}
-                    aria-expanded={openQuestion === i}
-                  >
+                    aria-expanded={openQuestion === i}>
                     <span>{x[0]}</span>
                     <span className="text-[#EAC157] text-xl">{openQuestion === i ? "−" : "+"}</span>
                   </button>
@@ -782,37 +446,18 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* ------------------------------------------------------------------ */}
       <footer className="closing">
         <div className="section-shell closing-inner">
+          <div className="mb-6 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="AstroFindings Home">
+            <AstroFindingsLightLogo size="md" />
+          </div>
           <span className="eyebrow block mb-6 text-xs font-sans font-semibold tracking-[0.22em] uppercase text-[#052036]/80">
             The door is open
           </span>
-          <h2 className="display">
-            Come with a question.
-            <br />
-            <em>Leave with a choice.</em>
-          </h2>
+          <h2 className="display">Come with a question.<br /><em>Leave with a choice.</em></h2>
           <div className="closing-actions">
-            <button
-              className="button-dark cursor-pointer focus-visible:ring-2 focus-visible:ring-[#052036]"
-              onClick={() => go("onboarding")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  go("onboarding");
-                }
-              }}
-            >
+            <button className="button-dark cursor-pointer" onClick={() => go("onboarding")}>
               Begin Your Journey of Discovery <Arrow />
             </button>
-            <button
-              className="button-quiet cursor-pointer focus-visible:ring-2 focus-visible:ring-[#052036]"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              }}
-            >
+            <button className="button-quiet cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
               Back to the beginning ↑
             </button>
           </div>
@@ -822,25 +467,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </div>
         </div>
       </footer>
-
-      {/* Floating Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#052036]/90 border border-[#EAC157]/60 text-[#EAC157] text-xs font-mono tracking-wider shadow-2xl backdrop-blur-md hover:bg-[#082842] hover:border-[#EAC157] hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#EAC157] focus-visible:outline-none"
-          aria-label="Back to top"
-          title="Back to top (or press Home)"
-        >
-          <span className="text-sm font-bold">↑</span>
-          <span className="hidden sm:inline font-sans font-medium text-[11px] uppercase tracking-wider text-[#FAF9F6]">Top</span>
-        </button>
-      )}
     </div>
   );
 }

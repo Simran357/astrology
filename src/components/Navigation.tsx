@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
-import AstroFindingsLogo from "./AstroFindingsLogo";
+import AstroFindingsLogo, { AstroFindingsDarkLogo } from "./AstroFindingsLogo";
 
 type Page = "home" | "dashboard" | "chart" | "reading" | "learn" | "profile" | "onboarding" | "login" | "signup" | "timeline" | "relationships" | "askai" | "wellness" | "palm";
 interface NavigationProps { currentPage: Page; onNavigate: (page: Page) => void; }
@@ -29,7 +29,7 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
    <>
      <header className="site-header app-header">
        <div className="cursor-pointer" onClick={()=>{ setMobileOpen(false); onNavigate("home"); }} aria-label="AstroFindings home">
-         <AstroFindingsLogo size="sm" variant="dark" showTagline={false} />
+         <AstroFindingsDarkLogo size="sm" showTagline={false} />
        </div>
        <nav className="site-nav">
          {items.filter(x=>x.id!=="home").map(x=>(
@@ -57,6 +57,9 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
 
      {mobileOpen && (
        <nav className="mobile-nav is-open" aria-label="Mobile navigation">
+         <div className="pb-3 mb-2 border-b border-[rgba(234,193,87,0.15)] flex justify-between items-center">
+           <AstroFindingsDarkLogo size="sm" showTagline={false} onClick={() => { setMobileOpen(false); onNavigate("home"); }} />
+         </div>
          {items.filter(x=>x.id!=="home").map(x=>(
            <button
              key={x.id}

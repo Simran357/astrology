@@ -62,18 +62,20 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <section className="ticker" aria-label="AstroFindings principles"><span>curiosity over certainty</span><b>✦</b><span>agency over inevitability</span><b>✦</b><span>specific questions over cosmic fog</span><b>✦</b></section>
 
         <section id="method" className="story-section story-reveal method-new">
+          <div className="orbit-sticker" aria-hidden="true"><span>READ<br />THE<br />WEATHER</span><b>✦</b></div>
           <div className="section-index">01 / THE METHOD</div>
           <div><h2>Read the weather.<br /><em>Choose the clothes.</em></h2><p className="section-lede">Your birth chart is a snapshot of the sky when you arrived. We turn that snapshot into a living, visual language for the parts of you that repeat.</p><div className="method-steps"><div><b>01</b><span>Enter your sky</span><small>Date, time, and place — held gently.</small></div><div><b>02</b><span>See the pattern</span><small>Planets become relationships, not labels.</small></div><div><b>03</b><span>Keep your agency</span><small>The interpretation is yours to use.</small></div></div></div>
         </section>
 
         <section id="chart" className="chart-story story-reveal">
+          <div className="chart-stamp" aria-hidden="true"><span>YOUR<br />SKY<br />HAS<br />RECEIPTS</span><b>✦</b></div>
           <div className="chart-copy"><p className="new-label">FIELD NOTES / 002</p><h2>A diagram<br />with a pulse.</h2><p>Not a personality quiz. Not a cosmic mood board. A precise map of tension, talent, longing, and timing — made personal to you.</p><button className="new-outline" onClick={() => onNavigate("onboarding")}>Make my map <Arrow /></button></div>
           <div className="chart-art"><div className="chart-orbit orbit-a" /><div className="chart-orbit orbit-b" /><div className="chart-orbit orbit-c" /><div className="chart-sun">☼</div><span className="chart-note note-a">the part<br />that wants more</span><span className="chart-note note-b">the part<br />that protects</span></div>
         </section>
 
-        <section className="quote-break story-reveal"><span className="quote-sticker">LOOK<br />UP,<br />THEN<br /><i>IN.</i></span><blockquote>“The point is not to become someone else. It is to notice the exact moment you start abandoning yourself.”</blockquote><cite>— AstroFindings field guide</cite></section>
+        <section className="quote-break story-reveal"><div className="quote-sun" aria-hidden="true">☼</div><span className="quote-sticker">LOOK<br />UP,<br />THEN<br /><i>IN.</i></span><blockquote>“The point is not to become someone else. It is to notice the exact moment you start abandoning yourself.”</blockquote><cite>— AstroFindings field guide</cite></section>
 
-        <section id="questions" className="questions-new story-reveal"><div><p className="new-label">FIELD NOTES / 003</p><h2>Keep your<br /><i>questions.</i></h2></div><div className="faq-new">{faqs.map(([question, answer], index) => <div key={question} className="faq-new-item"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{question}</span><b>{openFaq === index ? "−" : "+"}</b></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
+        <section id="questions" className="questions-new story-reveal"><div className="question-moon" aria-hidden="true" /><div><p className="new-label">FIELD NOTES / 003</p><h2>Keep your<br /><i>questions.</i></h2></div><div className="faq-new">{faqs.map(([question, answer], index) => <div key={question} className="faq-new-item"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{question}</span><b>{openFaq === index ? "−" : "+"}</b></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
 
         <section className="final-card story-reveal"><div className="final-scribble">✳</div><p className="new-label">THE DOOR IS OPEN</p><h2>Bring the question<br /><i>you keep making smaller.</i></h2><button className="new-primary" onClick={() => onNavigate("onboarding")}>Begin your reading <Arrow /></button></section>
       </main>

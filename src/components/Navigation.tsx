@@ -29,7 +29,7 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
    <>
      <header className="site-header app-header">
        <div className="cursor-pointer" onClick={()=>{ setMobileOpen(false); onNavigate("home"); }} aria-label="AstroFindings home">
-         <AstroFindingsDarkLogo size="sm" showTagline={false} />
+         <AstroFindingsDarkLogo size="sm" />
        </div>
        <nav className="site-nav">
          {items.filter(x=>x.id!=="home").map(x=>(
@@ -58,7 +58,7 @@ export default function Navigation({currentPage,onNavigate}:NavigationProps){
      {mobileOpen && (
        <nav className="mobile-nav is-open" aria-label="Mobile navigation">
          <div className="pb-3 mb-2 border-b border-[rgba(234,193,87,0.15)] flex justify-between items-center">
-           <AstroFindingsDarkLogo size="sm" showTagline={false} onClick={() => { setMobileOpen(false); onNavigate("home"); }} />
+           <AstroFindingsDarkLogo size="sm" onClick={() => { setMobileOpen(false); onNavigate("home"); }} />
          </div>
          {items.filter(x=>x.id!=="home").map(x=>(
            <button

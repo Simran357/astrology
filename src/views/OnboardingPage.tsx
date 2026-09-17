@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useApp } from "../context/AppContext";
 import { searchLocations, GeocodedLocation } from "../services/geocodingService";
-import AstroFindingsDarkLogo from "../components/AstroFindingsDarkLogo";
+import { AstroFindingsDarkLogo } from "../components/AstroFindingsLogo";
 
 interface OnboardingPageProps {
   onNavigate: (page: string) => void;
@@ -152,36 +152,33 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
     setShowDropdown(false);
   };
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     if (isNavigatingRef.current) return;
     isNavigatingRef.current = true;
     setTimeout(() => {
       isNavigatingRef.current = false;
     }, 350);
 
-    setStep((currentStep) => {
-      if (currentStep < 6) {
-        return currentStep + 1;
-      } else if (currentStep === 6) {
-        updateUser({
-          name: data.name.trim() || "Seeker",
-          birthDate: data.birthDate || "1994-08-09",
-          birthTime: data.birthTime || "12:00",
-          birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
-          interests: [
-            "Detachment & Overthinking Patterns",
-            "Heartbreak & Suppressed Emotions",
-            "Comfort Zone & Stepping Into Power",
-          ],
-        });
-        return 7;
-      } else {
-        login();
-        onNavigate("chart");
-        return currentStep;
-      }
-    });
-  }, [data, updateUser, login, onNavigate]);
+    if (step < 6) {
+      setStep((s) => s + 1);
+    } else if (step === 6) {
+      setStep(7);
+      await updateUser({
+        name: data.name.trim() || "Seeker",
+        birthDate: data.birthDate || "1994-08-09",
+        birthTime: data.birthTime || "12:00",
+        birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
+        interests: [
+          "Detachment & Overthinking Patterns",
+          "Heartbreak & Suppressed Emotions",
+          "Comfort Zone & Stepping Into Power",
+        ],
+      });
+    } else {
+      login();
+      onNavigate("chart");
+    }
+  }, [step, data, updateUser, login, onNavigate]);
 
   // Enter key listener: when user types name on Step 0 or presses Enter, proceed to next step
   useEffect(() => {

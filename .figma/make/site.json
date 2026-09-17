@@ -1,10 +1,1 @@
-{
-  "description": "Explore personalized astrology insights through an elegant interface that interprets your birth chart and cosmic patterns for deeper self-understanding.",
-  "robots": {
-    "index": false
-  },
-  "accessibility": {
-    "addBypassLinks": false,
-    "ignoreReducedMotion": false
-  }
-}
+{}

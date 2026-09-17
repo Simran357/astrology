@@ -18,6 +18,19 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
 
   const navigate = (page: string) => {
+    // Route guard: Prevent accessing chart-dependent features without valid birth data onboarding
+    const chartDependent = ["chart", "reading", "dashboard", "timeline", "askai"];
+    let hasCompletedOnboarding = false;
+    try {
+      hasCompletedOnboarding = localStorage.getItem("astrofindings_onboarding_done") === "true";
+    } catch {}
+
+    if (chartDependent.includes(page) && !hasCompletedOnboarding) {
+      setCurrentPage("onboarding");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     setCurrentPage(page as Page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

@@ -6,11 +6,11 @@ import {
   PersonProfile,
   DEFAULT_USER_PROFILE,
   INITIAL_PEOPLE_PROFILES,
-  calculateUserProfile,
 } from "../services/astrologyEngine";
 import { calculateLiveTransits, LiveTransitData } from "../services/transitEngine";
 import { lookupLocation } from "../services/geocodingService";
 import { calculateNatalEphemeris } from "../services/ephemerisEngine";
+import { resolveHistoricalTimezone } from "../services/timezoneService";
 import {
   signInWithEmail,
   signUpWithEmail,
@@ -54,12 +54,15 @@ interface AppContextType {
   navigateWithHighlight: (page: string, planet?: string) => void;
   isMembershipActive: boolean;
   toggleMembership: () => void;
+  startCheckout: (planId?: string) => Promise<void>;
+  subscriptionStatus: string;
   isLoggedIn: boolean;
   login: (email?: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   signup: (name: string, email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   isSupabaseReady: boolean;
+  hasCompletedOnboarding: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -68,6 +71,7 @@ const USER_STORAGE_KEY = "astral_heretic_user_profile";
 const PEOPLE_STORAGE_KEY = "astral_heretic_people_profiles";
 const MEMBERSHIP_STORAGE_KEY = "astral_heretic_membership";
 const AUTH_STORAGE_KEY = "astrofindings_auth_session";
+const ONBOARDING_COMPLETED_KEY = "astrofindings_onboarding_done";
 
 export const AppProvider: React.FC<{
   children: React.ReactNode;
@@ -76,6 +80,14 @@ export const AppProvider: React.FC<{
 }> = ({ children, currentPage, onNavigate }) => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isSupabaseReady] = useState(isSupabaseConfigured);
+
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     try {
@@ -91,13 +103,90 @@ export const AppProvider: React.FC<{
   const [user, setUser] = useState<UserProfileData>(() => {
     try {
       const saved = localStorage.getItem(USER_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : DEFAULT_USER_PROFILE;
-    } catch {
-      return DEFAULT_USER_PROFILE;
-    }
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...DEFAULT_USER_PROFILE, ...parsed };
+      }
+    } catch {}
+    return DEFAULT_USER_PROFILE;
   });
 
-  // Supabase Auth state listener & session check
+  // Membership state & server-verified entitlement
+  const [isMembershipActive, setIsMembershipActive] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(MEMBERSHIP_STORAGE_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
+
+  // Sync server-side entitlement status
+  const checkServerEntitlements = useCallback(async () => {
+    try {
+      const session = await getCurrentSession();
+      const headers: Record<string, string> = {};
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+      const res = await fetch("/api/subscriptions/status", { headers });
+      if (res.ok) {
+        const data = await res.json();
+        setIsMembershipActive(data.isPremium);
+        setSubscriptionStatus(data.status || "free");
+        try {
+          localStorage.setItem(MEMBERSHIP_STORAGE_KEY, String(data.isPremium));
+        } catch {}
+      }
+    } catch (e) {
+      console.warn("Failed to check subscription status:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkServerEntitlements();
+  }, [checkServerEntitlements, isLoggedIn]);
+
+  const toggleMembership = () => {
+    // Local dev override helper
+    setIsMembershipActive((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(MEMBERSHIP_STORAGE_KEY, String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const startCheckout = async (planId: string = "monthly") => {
+    try {
+      const session = await getCurrentSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
+      const res = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          planId,
+          returnUrl: `${window.location.origin}/dashboard?payment=success`,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+        }
+      }
+    } catch (e) {
+      console.error("Checkout initiation failed:", e);
+    }
+  };
+
+  // Auth session sync
   useEffect(() => {
     const checkSession = async () => {
       const session = await getCurrentSession();
@@ -128,8 +217,6 @@ export const AppProvider: React.FC<{
           avatar: session.user.user_metadata?.avatar_url || prev.avatar,
           authProvider: (session.user.app_metadata?.provider as any) || "google",
         }));
-      } else if (!session && isSupabaseConfigured()) {
-        // Only log out if using real supabase and explicitly null
       }
     });
 
@@ -152,6 +239,7 @@ export const AppProvider: React.FC<{
         if (res.user) {
           setUser((prev) => ({
             ...prev,
+            id: res.user?.id || prev.id,
             email: res.user?.email || prev.email,
             name: res.user?.name || prev.name,
             avatar: res.user?.avatar || prev.avatar,
@@ -194,6 +282,7 @@ export const AppProvider: React.FC<{
       } catch {}
       setUser((prev) => ({
         ...prev,
+        id: res.user?.id || prev.id,
         name: name || prev.name,
         email: email || prev.email,
         avatar: res.user?.avatar || prev.avatar,
@@ -216,6 +305,7 @@ export const AppProvider: React.FC<{
       } catch {}
       setUser((prev) => ({
         ...prev,
+        id: res.user?.id || prev.id,
         email: res.user?.email || "seeker.astral@gmail.com",
         name: res.user?.name || "Astral Seeker",
         avatar: res.user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&auto=format",
@@ -244,26 +334,6 @@ export const AppProvider: React.FC<{
     }
   });
 
-
-  // Membership state (free vs premium)
-  const [isMembershipActive, setIsMembershipActive] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem(MEMBERSHIP_STORAGE_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
-
-  const toggleMembership = () => {
-    setIsMembershipActive((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(MEMBERSHIP_STORAGE_KEY, String(next));
-      } catch {}
-      return next;
-    });
-  };
-
   // Live astronomical transits based on user's current placements
   const [liveTransits, setLiveTransits] = useState<LiveTransitData>(() => {
     const todayStr = new Date().toISOString().split("T")[0];
@@ -279,7 +349,6 @@ export const AppProvider: React.FC<{
     refreshTransits();
   }, [refreshTransits]);
 
-  // Save User to LocalStorage
   const persistUser = (newUser: UserProfileData) => {
     setUser(newUser);
     try {
@@ -287,7 +356,6 @@ export const AppProvider: React.FC<{
     } catch {}
   };
 
-  // Save People to LocalStorage
   const persistPeople = (newPeople: PersonProfile[]) => {
     setPeople(newPeople);
     try {
@@ -295,25 +363,42 @@ export const AppProvider: React.FC<{
     } catch {}
   };
 
-  // Update User Profile with recalculated astrology
+  /**
+   * Updates user profile with real ephemeris calculation,
+   * historical UTC offset resolution, and persistence to backend Supabase.
+   */
   const updateUser = async (data: Partial<UserProfileData>) => {
     setIsCalculating(true);
     try {
       const updatedBasic = { ...user, ...data };
       const geocoded = await lookupLocation(updatedBasic.birthLocation);
-      const ephemeris = calculateNatalEphemeris(
-        updatedBasic.birthDate,
-        updatedBasic.birthTime || "12:00",
+
+      // Historical timezone resolution (accounts for historical DST changes on birth date)
+      const tzResolution = resolveHistoricalTimezone(
         geocoded.latitude,
         geocoded.longitude,
-        geocoded.timezone
+        updatedBasic.birthDate,
+        updatedBasic.birthTime || "12:00"
+      );
+
+      const effectiveTime = tzResolution.isTimeApproximate ? "12:00" : (updatedBasic.birthTime || "12:00");
+
+      const ephemeris = calculateNatalEphemeris(
+        updatedBasic.birthDate,
+        effectiveTime,
+        geocoded.latitude,
+        geocoded.longitude,
+        tzResolution.timezone,
+        updatedBasic.houseSystem || "Placidus"
       );
 
       const completeUser: UserProfileData = {
         ...updatedBasic,
         latitude: geocoded.latitude,
         longitude: geocoded.longitude,
-        timezone: geocoded.timezone,
+        timezone: tzResolution.timezone,
+        historicalUtcOffsetMinutes: tzResolution.historicalUtcOffsetMinutes,
+        isTimeApproximate: tzResolution.isTimeApproximate,
         sunSign: ephemeris.sunSign,
         moonSign: ephemeris.moonSign,
         risingSign: ephemeris.risingSign,
@@ -321,9 +406,35 @@ export const AppProvider: React.FC<{
         aspects: ephemeris.aspects,
         houses: ephemeris.houses,
         elements: ephemeris.elements,
+        chartJson: ephemeris.chartJson,
       };
 
       persistUser(completeUser);
+      setHasCompletedOnboarding(true);
+      try {
+        localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
+      } catch {}
+
+      // Persist to server API & Supabase database
+      const session = await getCurrentSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
+      await fetch("/api/natal/chart", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          birthDate: updatedBasic.birthDate,
+          birthTime: effectiveTime,
+          birthLocation: updatedBasic.birthLocation,
+          latitude: geocoded.latitude,
+          longitude: geocoded.longitude,
+          timezone: tzResolution.timezone,
+          houseSystem: updatedBasic.houseSystem || "Placidus",
+        }),
+      }).catch((e) => console.warn("Chart persistence warning:", e));
     } catch (err) {
       console.error("Error updating user chart:", err);
       persistUser({ ...user, ...data });
@@ -379,8 +490,6 @@ export const AppProvider: React.FC<{
     persistPeople(people.filter((p) => p.id !== id));
   };
 
-
-  // Cross-page navigation with highlight (e.g., "See your Moon" -> /chart with Moon highlighted)
   const navigateWithHighlight = (page: string, planet?: string) => {
     if (planet) {
       setHighlightedPlanet(planet);
@@ -388,11 +497,24 @@ export const AppProvider: React.FC<{
     onNavigate(page);
   };
 
+  // Safe navigation guard to prevent accessing chart without birth data
+  const safeNavigate = (page: string) => {
+    const chartDependent = ["chart", "reading", "dashboard"];
+    const hasBirthData = Boolean(user.birthDate && user.birthLocation && hasCompletedOnboarding);
+
+    if (chartDependent.includes(page) && !hasBirthData) {
+      onNavigate("onboarding");
+      return;
+    }
+
+    onNavigate(page);
+  };
+
   return (
     <AppContext.Provider
       value={{
         currentPage,
-        navigate: onNavigate,
+        navigate: safeNavigate,
         user,
         updateUser,
         isCalculating,
@@ -402,18 +524,20 @@ export const AppProvider: React.FC<{
         addPerson,
         updatePerson,
         deletePerson,
-
         highlightedPlanet,
         setHighlightedPlanet,
         navigateWithHighlight,
         isMembershipActive,
         toggleMembership,
+        startCheckout,
+        subscriptionStatus,
         isLoggedIn,
         login,
         signup,
         loginWithGoogle,
         logout,
         isSupabaseReady,
+        hasCompletedOnboarding,
       }}
     >
       {children}

@@ -1,6 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useApp } from "../context/AppContext";
+import { getCurrentSession } from "../services/supabaseClient";
 import {
   MoonSymbol,
   SunSymbol,
@@ -17,6 +19,25 @@ interface DashboardPageProps {
 
 export default function DashboardPage({ onNavigate }: DashboardPageProps) {
   const { user, liveTransits, navigateWithHighlight } = useApp();
+  const [dailyHoroscope, setDailyHoroscope] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchHoroscope = async () => {
+      try {
+        const session = await getCurrentSession();
+        const headers: Record<string, string> = {};
+        if (session?.access_token) {
+          headers["Authorization"] = "Bearer " + session.access_token;
+        }
+        const res = await fetch("/api/horoscope/today", { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setDailyHoroscope(data);
+        }
+      } catch (e) {}
+    };
+    fetchHoroscope();
+  }, [user.birthDate]);
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   const firstName = user.name ? user.name.split(" ")[0] : "Seeker";
@@ -101,7 +122,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
               </div>
 
               <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#FFFFFF] leading-snug">
-                Why your impulse today is to detach, step back into silence, and overthink.
+                {dailyHoroscope?.headline || "Why your impulse today is to detach, step back into silence, and overthink."}
               </h2>
 
               <p className="text-sm text-[#FAF9F6]/90 leading-relaxed font-sans">

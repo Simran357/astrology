@@ -93,6 +93,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
     latitude: 37.7749,
     longitude: -122.4194,
     timezone: "America/Los_Angeles",
+    isTimeApproximate: false,
     q1Answer: "yes_retreat",
     q2Answer: "yes_anchor",
     q3Answer: "yes_hollow",
@@ -159,6 +160,13 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       isNavigatingRef.current = false;
     }, 350);
 
+    if (step === 1) {
+      const bDate = new Date(data.birthDate);
+      if (isNaN(bDate.getTime()) || bDate.getFullYear() < 1900 || bDate > new Date()) {
+        alert("Please enter a valid birth date between 1900 and today.");
+        return;
+      }
+    }
     if (step < 6) {
       setStep((s) => s + 1);
     } else if (step === 6) {
@@ -166,8 +174,12 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
       await updateUser({
         name: data.name.trim() || "Seeker",
         birthDate: data.birthDate || "1994-08-09",
-        birthTime: data.birthTime || "12:00",
+        birthTime: data.isTimeApproximate ? "12:00" : (data.birthTime || "12:00"),
         birthLocation: data.birthLocation || "San Francisco, 94102, CA, USA",
+        latitude: data.latitude,
+        longitude: data.longitude,
+        timezone: data.timezone,
+        isTimeApproximate: data.isTimeApproximate,
         interests: [
           "Detachment & Overthinking Patterns",
           "Heartbreak & Suppressed Emotions",
@@ -353,13 +365,31 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
                   className="w-full bg-transparent border-b-2 border-[rgba(234,193,87,0.3)] py-3 text-xl text-[#FAF9F6] focus:outline-none focus:border-[#EAC157] transition-colors [color-scheme:dark]"
                 />
               </div>
-              <div className="flex items-center justify-between pt-1">
-                <button
-                  type="button"
-                  onClick={() => setData((d) => ({ ...d, birthTime: "12:00" }))}
-                  className="text-xs text-[#EAC157] hover:underline underline-offset-4 cursor-pointer font-mono">
-                  ✦ I don't know my exact time (calculate using solar noon)
-                </button>
+              <div className="pt-2">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={data.isTimeApproximate}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setData((d) => ({
+                        ...d,
+                        isTimeApproximate: checked,
+                        birthTime: checked ? "12:00" : d.birthTime,
+                      }));
+                    }}
+                    className="w-4 h-4 rounded accent-[#EAC157] cursor-pointer"
+                  />
+                  <span className="text-xs text-[#EAC157] hover:underline underline-offset-4 font-mono">
+                    ✦ I don't know my exact time (calculate using solar noon)
+                  </span>
+                </label>
+                {data.isTimeApproximate && (
+                  <div className="mt-2.5 p-3 rounded-xl border border-[rgba(234,193,87,0.3)] bg-[#082842] text-xs text-[#c5d3df] font-sans">
+                    <span className="text-[#EAC157] font-semibold block mb-0.5">Approximate Chart Active</span>
+                    House cusps and Ascendant will be estimated based on solar noon. Planetary sign placements, degrees, and aspects remain exact.
+                  </div>
+                )}
               </div>
             </div>
           )}

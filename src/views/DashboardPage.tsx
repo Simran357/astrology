@@ -85,6 +85,12 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
 
         {/* Greeting */}
         <div className="dashboard-header mb-12">
+          <div className="dashboard-visual-strip" aria-label="Astrology archive collage">
+            <div className="dashboard-visual-label">YOUR<br />PERSONAL<br /><i>FIELD GUIDE</i></div>
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-3xYsvjTvWnmVQwWwMC0qY1CjkmU5Wi.png" alt="Textured celestial eye collage" />
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kN1OXlGmBLemVfV2KYGHFil9UVVOPH.png" alt="Vintage hand holding a moon" />
+            <span className="dashboard-orbit-note">read the<br /><i>evidence</i> ↗</span>
+          </div>
           <div className="dashboard-sticker" aria-hidden="true"><span>YOUR<br />SKY<br />NOT<br />YOUR<br />FATE</span><i>✦</i></div>
           <p className="dashboard-kicker text-xs font-mono text-[#f0c870] tracking-widest uppercase mb-2">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
@@ -93,6 +99,16 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
             {greeting}, {firstName}
           </h1>
           <p className="dashboard-subtitle text-[#bfb7aa] mt-2 text-sm">Sun in {user.sunSign} · Moon in {user.moonSign} · {user.risingSign} rising</p>
+        </div>
+
+        {/* Archive shelf */}
+        <div className="dashboard-shelf dashboard-card">
+          <div><p className="dashboard-shelf-kicker">ARCHIVE / 01</p><h2>Your sky, in fragments.</h2><p>Save the symbols, patterns, and questions that keep returning.</p></div>
+          <div className="dashboard-shelf-items">
+            <button onClick={() => onNavigate("chart")}><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20at%202.17.52%E2%80%AFPM-1qQs6XqWhhFl2NXhsokqiTweMdN4Fo.png" alt="Heart and eye symbol" /><span>your inner compass</span></button>
+            <button onClick={() => onNavigate("learn")}><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20at%202.25.38%E2%80%AFPM-5iRZYtjt5usmWOhrqhAcVNN94awP2a.png" alt="Pink watercolor rabbit" /><span>soft instincts</span></button>
+            <button onClick={() => onNavigate("reading")}><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-dFPASxJUCCJ2MzJdLGC1VJr9mpPA3l.png" alt="Gold star cutout" /><span>small omens</span></button>
+          </div>
         </div>
 
         {/* Main grid */}

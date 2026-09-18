@@ -523,17 +523,38 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </section>
 
         {/* ------------------------------------------------------------------ */}
-        {/* 01 / AGAINST THE SCRIPT (Original Section 01 Preserved)            */}
+        {/* 01 / AGAINST THE SCRIPT (Editorial Cartography Philosophy)        */}
         {/* ------------------------------------------------------------------ */}
         <section className="manifesto border-t border-[#052036]/10" id="why">
-          <div className="section-shell manifesto-grid">
-            <div><span className="eyebrow">01 / Against the script</span></div>
+          <div className="section-shell manifesto-grid items-start">
+            <div className="flex flex-col justify-start space-y-6">
+              <div>
+                <span className="eyebrow">01 / Against the script</span>
+              </div>
+              <div className="hidden lg:block pt-3 w-full max-w-[370px] xl:max-w-[430px]">
+                <img
+                  src="/stickers/look-closer-card.png"
+                  alt="Astro Archive 07 — Look Closer"
+                  className="w-full h-auto object-contain filter drop-shadow-[0_24px_45px_rgba(5,32,54,0.16)] select-none pointer-events-auto transform -rotate-2 hover:rotate-0 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
             <div>
               <h2 className="display">Astrology is a mirror, not a muzzle.</h2>
               <div className="manifesto-copy">
                 <p><strong>Most readings hand you a personality sticker.</strong> You are told you are intense, nurturing, analytical — then sent back into the same old room.</p>
                 <p>I am more interested in what the chart makes difficult to ignore: the desire beneath the performance, the power you keep lending away, the contradiction that might become a choice.</p>
                 <div className="manifesto-aside">Not prediction. Not diagnosis. A practice of noticing.</div>
+
+                {/* Mobile / Tablet View */}
+                <div className="lg:hidden mt-10 flex justify-center w-full">
+                  <img
+                    src="/stickers/look-closer-card.png"
+                    alt="Astro Archive 07 — Look Closer"
+                    className="w-full max-w-[310px] sm:max-w-[360px] h-auto object-contain filter drop-shadow-[0_18px_35px_rgba(5,32,54,0.14)] select-none pointer-events-auto transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -755,11 +776,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             {/* Left Visual: Warm Beige Card with Artistic Portrait Sticker */}
             <div className="lg:col-span-6 flex justify-center">
               <div className="w-full max-w-md aspect-square bg-[#F5E9CE] rounded-3xl p-8 flex items-center justify-center relative shadow-sm overflow-hidden border border-[#052036]/5">
-                <div className="relative transform hover:scale-105 transition-transform duration-300">
+                <div className="relative transform hover:scale-105 transition-transform duration-300 flex items-center justify-center">
                   <img
                     src="/stickers/journal-portrait.png"
                     alt="Artistic Transit Journaling Portrait"
-                    className="w-48 sm:w-56 h-auto filter drop-shadow-[0_20px_40px_rgba(5,32,54,0.18)] select-none mix-blend-multiply transform -rotate-2"
+                    className="max-h-64 sm:max-h-72 w-auto object-contain filter drop-shadow-[0_15px_30px_rgba(5,32,54,0.12)] select-none mix-blend-multiply transform -rotate-2"
                   />
                   <span className="absolute -top-3 -right-3 text-[#EAC157] text-2xl animate-pulse">✦</span>
                 </div>

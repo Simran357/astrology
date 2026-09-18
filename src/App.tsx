@@ -44,7 +44,7 @@ function AppRouter({
   onNavigate,
 }: {
   currentPage: Page;
-  onNavigate: (page: Page) => void;
+  onNavigate: (page: string) => void;
 }) {
   const { isLoggedIn, isAuthLoading, setIntendedPage, hasCompletedOnboarding } = useApp();
 

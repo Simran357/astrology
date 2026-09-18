@@ -15,6 +15,7 @@ export interface ServerReadingRequest {
     timezone?: string;
   };
   question: string;
+  readingType?: "free" | "deep";
   optionalSecondPerson?: {
     name?: string;
     birthDate?: string;
@@ -30,6 +31,7 @@ export interface ServerReadingRequest {
 export interface StructuredAstrologyReading {
   title: string;
   category: "love" | "career" | "emotions" | "timing" | "decisions" | "general";
+  readingType?: "free" | "deep";
   summary: string;
   sections: {
     title: string;
@@ -46,6 +48,7 @@ export interface StructuredAstrologyReading {
     transit: string;
     impact: string;
   }[];
+  nextDeeperPrompt?: string;
   mindReadingDisclaimer?: string;
   engineUsed: string;
   isApiGenerated: boolean;
@@ -112,8 +115,23 @@ function classifyQuestionTheme(question: string) {
   return "emotions" as const;
 }
 
-export async function processAstrologyReading(payload: ServerReadingRequest): Promise<{ status: number; body: any }> {
+export async function processAstrologyReading(
+  payload: ServerReadingRequest,
+  options?: { isEntitledToDeep?: boolean }
+): Promise<{ status: number; body: any }> {
   const requestId = `ast_req_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  const readingType: "free" | "deep" = payload.readingType === "deep" ? "deep" : "free";
+
+  // Paid entitlement enforcement: client cannot unlock deep reading without verified subscription
+  if (readingType === "deep" && !options?.isEntitledToDeep) {
+    return {
+      status: 403,
+      body: {
+        error: "Deep AI Reading requires an active subscription.",
+        requiresUpgrade: true,
+      },
+    };
+  }
 
   // Validation
   if (!payload.question || typeof payload.question !== "string" || !payload.question.trim()) {
@@ -165,7 +183,7 @@ export async function processAstrologyReading(payload: ServerReadingRequest): Pr
   let mindReadingDisclaimer: string | undefined = undefined;
   if (asksAboutAnotherPerson && !hasSecondPerson) {
     mindReadingDisclaimer =
-      "Chart Boundary: Because only your birth chart is registered, this consultation reads your emotional architecture, relational expectations, and intuitive radar. It does not fabricate or guess another person's private thoughts.";
+      "Chart Boundary: Because only your birth chart is registered, this AI reading interprets your emotional architecture, relational expectations, and intuitive radar. It does not fabricate or guess another person's private thoughts.";
   }
 
   // 5. Select Relevant Placements & Transits based on category
@@ -239,6 +257,7 @@ export async function processAstrologyReading(payload: ServerReadingRequest): Pr
         userName: userBirth.name || "Seeker",
         question: payload.question,
         category,
+        readingType,
         natalChart,
         liveTransits,
         relevantPlacements,
@@ -268,6 +287,7 @@ export async function processAstrologyReading(payload: ServerReadingRequest): Pr
       userName: userBirth.name || "Seeker",
       question: payload.question,
       category,
+      readingType,
       natalChart,
       liveTransits,
       relevantPlacements,
@@ -349,6 +369,7 @@ async function executeServerAiCall(params: {
   userName: string;
   question: string;
   category: "love" | "career" | "emotions" | "timing" | "decisions" | "general";
+  readingType: "free" | "deep";
   natalChart: any;
   liveTransits: any;
   relevantPlacements: any[];
@@ -362,7 +383,7 @@ async function executeServerAiCall(params: {
   promptLength: number;
   responseLength: number;
 }> {
-  const { userName, question, category, natalChart, liveTransits, relevantPlacements, relevantTransits, mindReadingDisclaimer } = params;
+  const { userName, question, category, readingType, natalChart, liveTransits, relevantPlacements, relevantTransits, mindReadingDisclaimer } = params;
 
   const placementsSummary = natalChart.placements
     .map((p: any) => `${p.planet} in ${p.sign} (${p.degrees}°) House ${p.house} [Element: ${p.element}, Modality: ${p.modality}]`)
@@ -385,20 +406,46 @@ async function executeServerAiCall(params: {
     ? `\nSECOND PERSON / SYNASTRY COORDINATES:\n- Sun: ${params.secondPersonChart.sunSign}\n- Moon: ${params.secondPersonChart.moonSign}\n- Rising: ${params.secondPersonChart.risingSign}\n- Placements: ${params.secondPersonChart.placements.map((p: any) => `${p.planet} in ${p.sign} (House ${p.house})`).join(", ")}`
     : "";
 
-  const systemPrompt = `You are AstroFindings, a whole-sign astrological consultation engine.
-Formulate an epistolary, psychologically profound consultation dossier for ${userName}.
-
-CRITICAL REQUIREMENTS:
-1. Ground your interpretation in the verified coordinates below. NEVER fabricate planets, houses, degrees, or aspects.
-2. Directly answer ${userName}'s exact question: "${question}". Do not force unrelated relationship or trauma clichés onto a career, timing, or financial inquiry.
-3. Respond ONLY with STRICT VALID JSON adhering exactly to this schema:
+  const isFree = readingType === "free";
+  const promptIntro = isFree
+    ? `You are AstroFindings, a perceptive whole-sign AI Astrologer providing an initial Free Astrology Insight for ${userName}.
+Provide an immediate, genuinely helpful astrological perspective on: "${question}".
+Deliver clarity, context, hope, and grounded direction.
+Respond ONLY with STRICT VALID JSON adhering exactly to this schema:
+{
+  "title": "A concise title linking their core placement to this theme",
+  "category": "${category}",
+  "summary": "2-3 sentences explaining what is happening underneath this situation with empathetic clarity",
+  "sections": [
+    {
+      "title": "✦ Celestial Root: What's Happening",
+      "dimensionTag": "Current Pattern",
+      "text": "Identify their primary placement and explain why this pattern or feeling is naturally occurring."
+    },
+    {
+      "title": "✦ Grounded Perspective: What May Help",
+      "dimensionTag": "Perspective & Relief",
+      "text": "Offer practical, compassionate reframing and a somatic check-in on what to observe or soothe."
+    },
+    {
+      "title": "✦ Hope & Direction Forward",
+      "dimensionTag": "Direction & Hope",
+      "text": "Provide clarity, current sky context, and a constructive, hopeful way forward."
+    }
+  ],
+  "nextDeeperPrompt": "Want to understand what's underneath this? The Deep Reading unlocks your complete natal geometry, all 12 house axes, exact aspect degrees, karmic roots, and long-range planetary timing."
+}`
+    : `You are AstroFindings, a whole-sign AI Astrologer providing a Deep Personalized Astrological Reading for ${userName}.
+Formulate an authoritative, deeply perceptive reading dossier grounded strictly in the natal coordinates and transits below.
+Thoroughly explore all 5 psychological and celestial dimensions.
+Respond ONLY with STRICT VALID JSON adhering exactly to this schema:
 {
   "title": "A short title capturing the core astrological dynamic of this question",
   "category": "${category}",
   "summary": "2-3 sentences providing an immediate, unsparing glimpse of truth",
   "sections": [
     {
-      "title": "✦ Celestial Architecture & Sign Tension",
+      "title": "✦ Celestial Architecture & Planetary Blueprint",
       "dimensionTag": "Planetary Architecture",
       "text": "Detailed analysis of how the specific signs, houses, and planetary aspects govern the question."
     },
@@ -408,22 +455,24 @@ CRITICAL REQUIREMENTS:
       "text": "How early conditioning or past cycles laid the ground for this dynamic."
     },
     {
-      "title": "✦ Present Reality & Direct Dynamics",
+      "title": "✦ Present Reality & Friction Threshold",
       "dimensionTag": "Present Reality",
       "text": "Analysis of the current friction, real-world patterns, and choices at hand."
     },
     {
-      "title": "✦ Unconscious Blind Spots & Somatic Indicators",
+      "title": "✦ Subconscious Blind Spots & Somatic Radar",
       "dimensionTag": "Blind Spots",
       "text": "Subconscious habits, avoidance tendencies, or somatic tension."
     },
     {
-      "title": "✦ Future Evolution & Timing Shift",
+      "title": "✦ Cosmic Timing & Future Evolution",
       "dimensionTag": "Future Shift",
       "text": "How this pattern matures and how upcoming planetary cycles offer a breakthrough."
     }
   ]
-}
+}`;
+
+  const systemPrompt = `${promptIntro}
 
 NATAL COORDINATES FOR ${userName.toUpperCase()}:
 - Sun: ${natalChart.sunSign} (${natalChart.placements.find((p: any) => p.planet === "Sun")?.degrees || 0}° in House ${natalChart.placements.find((p: any) => p.planet === "Sun")?.house || 1})
@@ -456,7 +505,7 @@ NATAL COORDINATES FOR ${userName.toUpperCase()}:
           model: modelUsed,
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: `Generate the bespoke consultation dossier for: "${question}"` },
+            { role: "user", content: `Generate the bespoke reading dossier for: "${question}"` },
           ],
           temperature: 0.7,
           response_format: { type: "json_object" },
@@ -487,7 +536,7 @@ NATAL COORDINATES FOR ${userName.toUpperCase()}:
           model: modelUsed,
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: `Generate the consultation dossier for: "${question}"` },
+            { role: "user", content: `Generate the reading dossier for: "${question}"` },
           ],
           temperature: 0.7,
           response_format: { type: "json_object" },
@@ -535,12 +584,14 @@ NATAL COORDINATES FOR ${userName.toUpperCase()}:
 
   return {
     reading: {
-      title: parsed.title || `Astrological Inscription on ${category.toUpperCase()}`,
+      title: parsed.title || `Astrological Reading on ${category.toUpperCase()}`,
       category,
+      readingType,
       summary: parsed.summary || "Your calculated natal coordinates reveal the structural undercurrent of this inquiry.",
       sections: parsed.sections || [],
       relevantPlacements,
       relevantTransits,
+      nextDeeperPrompt: parsed.nextDeeperPrompt || (readingType === "free" ? "Want to understand what's underneath this? The Deep Reading unlocks your complete natal geometry, all 12 house axes, exact aspect degrees, karmic roots, and long-range planetary timing." : undefined),
       mindReadingDisclaimer,
       engineUsed: `${providerUsed} (${modelUsed})`,
       isApiGenerated: true,
@@ -555,18 +606,20 @@ NATAL COORDINATES FOR ${userName.toUpperCase()}:
 /**
  * Built-in Ephemeris Synthesis for server-side generation when no AI provider keys are configured.
  * Genuinely synthesizes the calculated Sun, Moon, Rising, MC, planetary houses, aspects, and house life areas.
+ * Generates high-clarity Free Insights or rich Deep Readings based on readingType.
  */
 function generateServerEphemerisSynthesis(params: {
   userName: string;
   question: string;
   category: "love" | "career" | "emotions" | "timing" | "decisions" | "general";
+  readingType: "free" | "deep";
   natalChart: any;
   liveTransits: any;
   relevantPlacements: any[];
   relevantTransits: any[];
   mindReadingDisclaimer?: string;
 }): StructuredAstrologyReading {
-  const { userName, question, category, natalChart, liveTransits, relevantPlacements, relevantTransits, mindReadingDisclaimer } = params;
+  const { userName, question, category, readingType, natalChart, liveTransits, relevantPlacements, relevantTransits, mindReadingDisclaimer } = params;
 
   const sun = natalChart.placements.find((p: any) => p.planet === "Sun") || { sign: natalChart.sunSign, house: 1, degrees: 15, element: "Fire" };
   const moon = natalChart.placements.find((p: any) => p.planet === "Moon") || { sign: natalChart.moonSign, house: 4, degrees: 15, element: "Water" };
@@ -582,6 +635,88 @@ function generateServerEphemerisSynthesis(params: {
   const primaryHouseNum = category === "career" ? 10 : category === "love" ? 7 : category === "decisions" ? 9 : 4;
   const houseMeta = HOUSE_LIFE_AREAS[primaryHouseNum] || HOUSE_LIFE_AREAS[1];
 
+  // --------------------------------------------------------------------------
+  // FREE ASTROLOGY INSIGHT (Instant clarity, perspective, hope, and direction)
+  // --------------------------------------------------------------------------
+  if (readingType === "free") {
+    let freeTitle = "";
+    let freeSummary = "";
+    const freeSections: StructuredAstrologyReading["sections"] = [];
+
+    if (category === "love") {
+      freeTitle = `Venus in ${venus.sign} & 7th House: Relational Insight`;
+      freeSummary = `Your love question activates your ${venus.sign} Venus (House ${venus.house}) and your 7th House axis. Your chart requires genuine emotional consistency and transparency before your heart lets down its guard.`;
+      freeSections.push({
+        title: "✦ Celestial Root: What's Happening",
+        dimensionTag: "Current Pattern",
+        text: `With Venus placed in ${venus.sign} and Moon in ${moon.sign}, your relational radar is intensely intuitive. What feels like hesitation or exhaustion is your chart warning you against one-sided dynamics. You are not asking for too much; your nature simply demands authentic devotion.`,
+      });
+      freeSections.push({
+        title: "✦ Grounded Perspective: What May Help",
+        dimensionTag: "Perspective & Relief",
+        text: `Step back from testing people through silence. State your simple truth clearly without apologizing for having standards. Somatically, release the tension held in your ${moon.element === "Water" ? "stomach and chest" : "shoulders and jaw"}—you do not have to carry the emotional weight of another person.`,
+      });
+      freeSections.push({
+        title: "✦ Hope & Direction Forward",
+        dimensionTag: "Direction & Hope",
+        text: `The current planetary transits (${relevantTransits.map((t) => t.transit).join(", ") || "Active Sky"}) are helping you clear relational ambiguity. Real reciprocity is possible when you stop auditioning for belonging and stand quietly in your dignity.`,
+      });
+    } else if (category === "career") {
+      freeTitle = `Midheaven in ${mc} & Mars in ${mars.sign}: Calling & Execution`;
+      freeSummary = `Your career inquiry engages your ${mc} Midheaven, Sun in ${sun.sign} (House ${sun.house}), and Mars in ${mars.sign}. The friction you feel is a sign that your craft has outgrown your current environment.`;
+      freeSections.push({
+        title: "✦ Celestial Root: What's Happening",
+        dimensionTag: "Current Pattern",
+        text: `Your ${mars.sign} Mars and ${sun.sign} Sun demand recognized authorship, not passive compliance. When forced to do meaningless work or wait for permission, your vitality rapidly drains. Your restlessness is not failure—it is the call to build on your own terms.`,
+      });
+      freeSections.push({
+        title: "✦ Grounded Perspective: What May Help",
+        dimensionTag: "Perspective & Relief",
+        text: `Do not mistake over-preparation for readiness. You do not need another certification or external sign-off to claim your value. Focus your momentum on the single initiative where you have sovereign creative control.`,
+      });
+      freeSections.push({
+        title: "✦ Hope & Direction Forward",
+        dimensionTag: "Direction & Hope",
+        text: `Upcoming celestial shifts are removing administrative roadblocks. By setting clear boundaries around your time and expertise, you will position yourself for public recognition and sustainable mastery.`,
+      });
+    } else {
+      freeTitle = `Moon in ${moon.sign} & Ascendant in ${rising}: Inner Navigation`;
+      freeSummary = `Your inquiry touches your core emotional rhythm: ${moon.sign} Moon in House ${moon.house} and your ${rising} Ascendant. Your nervous system is signaling that it is time to realign with your inner truth.`;
+      freeSections.push({
+        title: "✦ Celestial Root: What's Happening",
+        dimensionTag: "Current Pattern",
+        text: `Your ${moon.sign} Moon operates through deep instinctual sensitivity. When external demands become overwhelming, your natural defense is to withdraw or over-analyze. You are not broken—you are simply processing life at a profound depth.`,
+      });
+      freeSections.push({
+        title: "✦ Grounded Perspective: What May Help",
+        dimensionTag: "Perspective & Relief",
+        text: `Give yourself permission to pause without guilt. Your body registers truth before your intellect catches up. Slow down, honor your somatic radar, and let the emotional storm pass before taking irreversible action.`,
+      });
+      freeSections.push({
+        title: "✦ Hope & Direction Forward",
+        dimensionTag: "Direction & Hope",
+        text: `The celestial sky is stabilizing your emotional axis. Trust that stillness is your greatest power right now. Clarity will emerge naturally as soon as the mental noise subsides.`,
+      });
+    }
+
+    return {
+      title: freeTitle,
+      category,
+      readingType: "free",
+      summary: freeSummary,
+      sections: freeSections,
+      relevantPlacements,
+      relevantTransits,
+      nextDeeperPrompt: "Want to understand what's underneath this? The Deep Reading unlocks your complete natal geometry, all 12 house axes, exact aspect degrees, karmic roots, and long-range planetary timing.",
+      mindReadingDisclaimer,
+      engineUsed: "Free Built-in Ephemeris Synthesis",
+      isApiGenerated: false,
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // DEEP PERSONALIZED READING (Full 5 dimensions, karmic roots, aspect geometry)
+  // --------------------------------------------------------------------------
   let title = "";
   let summary = "";
   const sections: StructuredAstrologyReading["sections"] = [];
@@ -596,12 +731,12 @@ function generateServerEphemerisSynthesis(params: {
       text: `In whole-sign terms, your intimate partnerships are anchored by Venus in ${venus.sign} (House ${venus.house}) and your 7th House axis. With Venus in ${venus.sign}, you value authentic resonance and consistency far above superficial charm. Meanwhile, your ${moon.sign} Moon in House ${moon.house} functions as your emotional sanctuary: when you detect disingenuous behavior or emotional ambiguity, your protective instincts activate swiftly.`,
     });
     sections.push({
-      title: "✦ Past Roots & Attachment Imprints",
+      title: "✦ Formative Roots & Attachment Imprints",
       dimensionTag: "Past Roots",
       text: `Your formative conditioning taught you to be cautious with your deepest devotions. Placed in ${moon.sign}, your early environment required you to read the emotional room before expressing needs. Consequently, you developed a habit of demonstrating loyalty while keeping a guarded inner perimeter until safety is proven.`,
     });
     sections.push({
-      title: "✦ Present Reality & Boundary Dynamics",
+      title: "✦ Present Reality & Friction Threshold",
       dimensionTag: "Present Reality",
       text: `Regarding "${question}": your immediate challenge is distinguishing between healthy discernment and protective isolation. In close bonds, you give deeply, but expect equal reciprocity. When that balance falters, you lean back to observe rather than pleading for consideration.`,
     });
@@ -611,7 +746,7 @@ function generateServerEphemerisSynthesis(params: {
       text: `Your subconscious tendency is to test consistency through silence. Rather than naming a boundary directly, you withdraw your warmth and wait to see if the other person notices. Somatically, unspoken tension settles into your ${moon.element === "Water" ? "stomach and digestive system" : moon.element === "Earth" ? "jaw and shoulders" : "chest and breathing patterns"}.`,
     });
     sections.push({
-      title: "✦ Future Evolution & Relational Recalibration",
+      title: "✦ Cosmic Timing & Future Evolution",
       dimensionTag: "Future Shift",
       text: `With active transits moving through your chart (${relevantTransits.map((t) => t.transit).join(", ") || "Current Sky Transits"}), you are stepping into sovereign partnership. You will find clarity by speaking your non-negotiables early, trading anxious guessing for reciprocal peace.`,
     });
@@ -630,17 +765,17 @@ function generateServerEphemerisSynthesis(params: {
       text: `In your early professional or educational trajectory, authority figures often rewarded compliance over innovation. You learned to work harder than those around you to secure an unquestionable standard of competence. This forged exceptional skill, but also a tendency to carry more than your share of the workload.`,
     });
     sections.push({
-      title: "✦ Present Reality: Execution & Crossroads",
+      title: "✦ Present Reality & Friction Threshold",
       dimensionTag: "Present Reality",
       text: `Regarding your inquiry: "${question}". What feels like friction is actually your capacity outgrowing your current container. With ${houseMeta.simpleTitle.toLowerCase()}, playing small or waiting for external permission is no longer sustainable for your energy.`,
     });
     sections.push({
-      title: "✦ Unconscious Blind Spots in Leadership",
+      title: "✦ Subconscious Blind Spots & Somatic Radar",
       dimensionTag: "Blind Spots",
       text: `Your primary blind spot is confusing over-preparation with readiness. You often believe you need one more credential, one more sign-off, or 100% certainty before claiming your rightful position. This over-functioning drains your vitality and slows momentum.`,
     });
     sections.push({
-      title: "✦ Future Evolution & Professional Mastery",
+      title: "✦ Cosmic Timing & Future Evolution",
       dimensionTag: "Future Shift",
       text: `Upcoming transits (${relevantTransits.map((t) => t.transit).join(", ") || "Cosmic Shifts"}) mark a decisive transition from execution to leadership. As you assert your craft without apology, you will attract opportunities aligned with your authentic sovereign value.`,
     });
@@ -649,27 +784,27 @@ function generateServerEphemerisSynthesis(params: {
     summary = `Your internal world is directed by your ${moon.sign} Moon in House ${moon.house} and your ${rising} Ascendant. Your chart calls for honoring your intuitive signals rather than intellectualizing them.`;
 
     sections.push({
-      title: "✦ Celestial Architecture & Nervous System Rhythm",
+      title: "✦ Celestial Architecture & Planetary Blueprint",
       dimensionTag: "Planetary Architecture",
       text: `Your rising sign in ${rising} establishes your primary lens on reality, while your ${moon.sign} Moon in the ${moon.house}th House governs your instinctive nervous system. Placed in ${moon.element} element, your emotional processing is ${moon.element === "Fire" ? "rapid, passionate, and protective" : moon.element === "Water" ? "deep, empathetic, and intuitive" : moon.element === "Air" ? "analytical, reflective, and observant" : "grounded, patient, and sensory"}.`,
     });
     sections.push({
-      title: "✦ Past Conditioning & Defense Mechanisms",
+      title: "✦ Formative Roots & Karmic Conditioning",
       dimensionTag: "Past Roots",
       text: `In earlier life chapters, you learned to manage your vulnerability independently. When emotional storms occurred, you adapted by becoming the steady, self-reliant observer. This created remarkable resilience, but sometimes makes asking for support feel unfamiliar.`,
     });
     sections.push({
-      title: "✦ Present Reality & The Current Dilemma",
+      title: "✦ Present Reality & Friction Threshold",
       dimensionTag: "Present Reality",
       text: `In response to: "${question}". The tension you feel is an invitation to align outer action with inner truth. Your ${sun.sign} Sun in House ${sun.house} seeks expression, and hesitating to honor your inner standard is what generates restlessness.`,
     });
     sections.push({
-      title: "✦ Unconscious Blind Spots & Somatic Awareness",
+      title: "✦ Subconscious Blind Spots & Somatic Radar",
       dimensionTag: "Blind Spots",
       text: `Your blind spot is attempting to solve emotional thresholds purely through mental rationalization. Your body registers truth before your intellect catches up. Notice where your somatic radar signals fatigue or resistance.`,
     });
     sections.push({
-      title: "✦ Future Evolution & Internal Sovereign Peace",
+      title: "✦ Cosmic Timing & Future Evolution",
       dimensionTag: "Future Shift",
       text: `As current celestial shifts (${relevantTransits.map((t) => t.transit).join(", ") || "Live Transits"}) activate your natal chart, your thinking pattern shifts toward sovereign peace: trusting your instincts without needing to defend them to others.`,
     });
@@ -678,6 +813,7 @@ function generateServerEphemerisSynthesis(params: {
   return {
     title,
     category,
+    readingType: "deep",
     summary,
     sections,
     relevantPlacements,

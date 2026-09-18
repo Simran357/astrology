@@ -172,7 +172,7 @@ function classifyQuestion(question: string): QuestionContext {
 }
 
 /* -------------------------------------------------------------------------- */
-/* External API LLM Consultation                                              */
+/* External API LLM Reading Generation                                        */
 /* -------------------------------------------------------------------------- */
 
 async function queryExternalLLM(
@@ -196,9 +196,9 @@ async function queryExternalLLM(
         .join(", ")}`
     : "Live transits active";
 
-  const systemPrompt = `You are AstroFindings, an authentic, deeply perceptive whole-sign astrological consultation engine.
+  const systemPrompt = `You are AstroFindings, an authentic, deeply perceptive whole-sign AI Astrologer.
 You are NOT a chat bot. You do not write casual robot greetings or conversational pleasantries like "Hello! How can I assist you today?".
-Instead, you formulate an authoritative, emotionally poignant Astrological Inscription Dossier for ${user.name}.
+Instead, you formulate an authoritative, emotionally poignant AI Astrological Reading Dossier for ${user.name}.
 You write in the sharp, emotionally resonant literary style of Co-Star and Chani Nicholas: psychologically observant, honest, and grounded in raw human feelings.
 
 ${user.isTimeApproximate ? `
@@ -523,11 +523,13 @@ export async function getPersonalizedAstrologyReading({
   user,
   question,
   liveTransits,
+  readingType = "free",
   optionalSecondPerson,
   customSettings,
 }: {
   user: UserProfileData;
   question: string;
+  readingType?: "free" | "deep";
   liveTransits?: LiveTransitData | null;
   optionalSecondPerson?: PersonProfile | null;
   customSettings?: AISettings;
@@ -545,12 +547,13 @@ export async function getPersonalizedAstrologyReading({
       const llmText = await queryExternalLLM(settings, user, liveTransits || null, question, []);
       const context = classifyQuestion(question);
       return {
-        title: `Astrological Inscription for ${user.name || "Seeker"}`,
+        title: `Astrological Reading for ${user.name || "Seeker"}`,
         category: context.category,
+        readingType,
         summary: llmText.slice(0, 180) + "...",
         sections: [
           {
-            title: "✦ Astrological Consultation Dossier",
+            title: "✦ AI Astrologer Reading Dossier",
             dimensionTag: "Bespoke Dossier",
             text: llmText,
           },
@@ -581,6 +584,7 @@ export async function getPersonalizedAstrologyReading({
         timezone: user.timezone,
       },
       question,
+      readingType,
       optionalSecondPerson: optionalSecondPerson
         ? {
             name: optionalSecondPerson.name,
@@ -616,10 +620,11 @@ export async function getPersonalizedAstrologyReading({
   return {
     title: `Inquiry on ${context.category.toUpperCase()}`,
     category: context.category,
+    readingType,
     summary: `Grounded in your ${user.moonSign} Moon and ${user.sunSign} Sun.`,
     sections: [
       {
-        title: "✦ Inscription Dossier",
+        title: "✦ AI Astrological Dossier",
         dimensionTag: "Full Interpretation",
         text: synth.text,
       },
@@ -631,20 +636,23 @@ export async function getPersonalizedAstrologyReading({
       influence: cp,
     })),
     relevantTransits: liveTransits?.activeShifts?.slice(0, 2).map((s) => ({ transit: s.transit || "", impact: s.impact || "" })) || [],
+    nextDeeperPrompt: readingType === "free" ? "Want to understand what's underneath this? The Deep Reading unlocks your complete natal geometry, all 12 house axes, exact aspect degrees, karmic roots, and long-range planetary timing." : undefined,
     engineUsed: "Free Built-in Ephemeris Synthesis",
     isApiGenerated: false,
   };
 }
 
-export async function askAstrologyConsultant(
+export async function askAIAstrologer(
   user: UserProfileData,
   liveTransits: LiveTransitData | null,
   question: string,
+  readingType: "free" | "deep" = "free",
   _history: Array<{ sender: "user" | "ai"; text: string }> = []
 ): Promise<AIResponse> {
   const structured = await getPersonalizedAstrologyReading({
     user,
     question,
+    readingType,
     liveTransits,
   });
 
@@ -664,3 +672,6 @@ export async function askAstrologyConsultant(
     structuredReading: structured,
   };
 }
+
+// Backwards-compatible alias
+export const askAstrologyConsultant = askAIAstrologer;

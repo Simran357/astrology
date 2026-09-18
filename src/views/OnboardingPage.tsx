@@ -719,7 +719,7 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
               {/* No real astrologers notice */}
               <div className="p-3 border border-[#052036]/15 bg-[#FAF7F2] rounded-xl text-center text-xs text-[#052036]/80">
                 <span className="text-[#8C6B1B]">100% Self-guided exploration: </span>
-                Your chart interpretations, live astronomical transits, and relational synastry are fully unlocked without consultation fees.
+                Your chart interpretations, live astronomical transits, and relational synastry are fully unlocked without hidden fees.
               </div>
             </div>
           )}

@@ -30,7 +30,8 @@ interface SectionInterpretation {
   presentLoveAndFriendship: string;
   emotionalAngerAndBlindspot: string;
   futureShiftAndThinking: string;
-  consultationPrompt: string;
+  readingPrompt: string;
+  consultationPrompt?: string;
 }
 
 export default function ReadingPage({ onNavigate }: ReadingPageProps) {
@@ -61,7 +62,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `Today, in romantic relationships and friendships, this manifests as an oscillation between intense warmth and sudden protective detachment. In love, you want a partner who admires your intellect and strength, but you secretly test them to see if they can hold space for your fatigue when you stop performing. In friendships, you are often the reliable pillar whom everyone comes to for guidance, yet you rarely reveal when you feel empty or unsupported.`,
         emotionalAngerAndBlindspot: `Your subconscious blind spot is over-functioning: you take control of situations not out of arrogance, but out of anxiety that if you don't orchestrate things, they will crumble. When feeling unseen or disrespected, your anger doesn't always erupt loudly; instead, it curdles into cold silence, quiet withdrawal of affection, or feeling like nobody understands the weight you carry.`,
         futureShiftAndThinking: `As your thinking pattern matures, you will stop confusing exhaustion with nobility. The coming planetary cycles are pushing you to stop auditioning for belonging. You will discover that your true power doesn't come from being invulnerable or flawless, but from declaring what you will no longer tolerate. Your future thinking will shift from 'How do I fix this for everyone?' to 'What aligns with my sovereign peace?'`,
-        consultationPrompt: `Explain my Sun in ${sunP.sign} in the ${sunP.house}th House: Where am I still suppressing my true authority to keep others comfortable, what subconscious blind spots am I ignoring in my relationships, and how will my thinking pattern evolve in the coming year?`,
+        readingPrompt: `Explain my Sun in ${sunP.sign} in the ${sunP.house}th House: Where am I still suppressing my true authority to keep others comfortable, what subconscious blind spots am I ignoring in my relationships, and how will my thinking pattern evolve in the coming year?`,
       },
       {
         id: "emotional",
@@ -78,7 +79,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `What you experience today: In relationships and love, you carry a fierce soft corner for those who have seen your true self, yet you are terrified of becoming emotionally dependent. If you feel misunderstood or criticized, your reflex is to snap in sudden anger or abruptly lean back behind an impenetrable wall of silence. In friendships, you are loyal to the bone, but you secretly feel that no one checks on your heart with the same tenderness you offer others. When you feel lonely, you clean, work, or obsessively overthink rather than reaching out.`,
         emotionalAngerAndBlindspot: `What you are not noticing: Your body is absorbing what your pride refuses to speak. When you swallow irritation, it translates into physical somatic symptoms—tightness in the jaw, digestive knots, tension in the shoulders, and restless insomnia. Your subconscious blindspot is assuming that because you understand why people hurt you, you are obligated to forgive them immediately. You hold onto guilt for having normal human anger.`,
         futureShiftAndThinking: `How your thinking pattern will evolve ahead: You are stepping out of the cycle of chronic emergency. You will realize that having a soft corner does not require leaving your front door unlocked for those who repeatedly hurt you. Ahead, your mind will learn to de-escalate the panic: anger will transform from an explosive reactive defense into a clear, quiet, unbreakable boundary. You will discover the somatic peace of saying 'I don't have to fix this today.'`,
-        consultationPrompt: `Deep Natal Inquiry: My Moon is in ${moonP.sign} in the ${moonP.house}th House. Why do I experience visceral emotional overwhelm and sudden anger or shutdown? What unconscious childhood conditioning drives this, why do I feel lonely in friendships, and what future shifts are coming in my emotional thinking pattern?`,
+        readingPrompt: `Deep Natal Inquiry: My Moon is in ${moonP.sign} in the ${moonP.house}th House. Why do I experience visceral emotional overwhelm and sudden anger or shutdown? What unconscious childhood conditioning drives this, why do I feel lonely in friendships, and what future shifts are coming in my emotional thinking pattern?`,
       },
       {
         id: "relationships",
@@ -95,7 +96,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `Today, your relational radar is hyper-vigilant. In romance, you test consistency: you notice if their actions match their promises, and the moment you sense duplicity, you withdraw your warmth before you can be wounded again. In friendships, you curate a very small inner circle; you have zero patience for gossip or fair-weather acquaintances. However, your fear of betrayal sometimes keeps you from experiencing the effortless, messy affection you secretly crave.`,
         emotionalAngerAndBlindspot: `Your relational blindspot is the tendency to silently build a dossier of micro-disappointments without speaking up, until one minor incident triggers complete emotional disconnection. You expect partners to intuitively read your quiet needs because you read theirs so effortlessly. When they fail, you feel profoundly misunderstood and alone.`,
         futureShiftAndThinking: `Your romantic trajectory is shifting from rescue missions to reciprocal partnership. Upcoming celestial shifts are dismantling your pattern of auditioning for affection. You will learn to state your needs plainly without guilt or fear of driving the other person away. Your future love life will be characterized by ease, shared laughter, and a partner whose nervous system brings yours into calm stillness.`,
-        consultationPrompt: `Inquire on Venus in ${venusP.sign} in House ${venusP.house}: Why do I still hold a soft corner for past betrayal, why do I test partners before opening up, and what is the cosmic timing of my true reciprocal relationship?`,
+        readingPrompt: `Inquire on Venus in ${venusP.sign} in House ${venusP.house}: Why do I still hold a soft corner for past betrayal, why do I test partners before opening up, and what is the cosmic timing of my true reciprocal relationship?`,
       },
       {
         id: "career",
@@ -112,7 +113,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `In your current professional life, this creates an underlying tension: you feel a persistent restlessness, knowing you are operating far below your true ceiling. Routine tasks and repetitive bureaucracy induce deep cognitive fatigue. In collaborative settings and workplace friendships, you end up doing the work of three people because relying on others often results in disappointing compromises.`,
         emotionalAngerAndBlindspot: `Your blind spot is burnout disguised as self-reliance. You tell yourself 'It's faster if I just do it myself,' which creates quiet resentment toward colleagues and collaborators. When work stalls, your frustration turns inward as anxiety or irritability, rather than using your anger strategically to renegotiate your role.`,
         futureShiftAndThinking: `A major professional shift is brewing. As you align your Mars drive with disciplined boundaries, you will step out of executor mode into strategic visionary mode. You will stop asking for permission to lead. The thinking pattern shift ahead will see you taking calculated entrepreneurial risks, saying 'No' to mediocre compromises, and stepping into the public recognition your craftsmanship deserves.`,
-        consultationPrompt: `Inquire on Mars in ${marsP.sign} in House ${marsP.house}: What is blocking my career breakthrough, where am I settling for safe mediocrity, and how do I channel my drive into sovereign financial and creative success?`,
+        readingPrompt: `Inquire on Mars in ${marsP.sign} in House ${marsP.house}: What is blocking my career breakthrough, where am I settling for safe mediocrity, and how do I channel my drive into sovereign financial and creative success?`,
       },
       {
         id: "challenges",
@@ -129,7 +130,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `Presently, this Saturn placement manifests as an inner judge that rarely celebrates your victories. When you achieve something significant, you dismiss it as 'just what was expected' and immediately worry about the next obstacle. In relationships, it makes you fear being a burden, causing you to suffer in complete silence rather than asking for help.`,
         emotionalAngerAndBlindspot: `The subconscious trap is perfectionism as a shield against criticism. You delay launching projects, expressing love, or making major changes until conditions are '100% flawless,' which is simply fear disguised as prudence. You hold yourself to standards that you would consider cruel if imposed on someone else.`,
         futureShiftAndThinking: `The beautiful promise of Saturn is that its gifts are permanent. As you move through your current cycles, this heavy self-criticism is softening into profound, quiet self-trust. You will stop fearing failure because you will realize that nothing can take away the resilience you have forged. Your future mindset will be grounded in steady peace: you will do your best without carrying the emotional weight of the entire universe.`,
-        consultationPrompt: `Inquire on Saturn in ${saturnP.sign} in House ${saturnP.house}: What karmic test is currently reaching its resolution in my chart, how do I dismantle my chronic inner critic, and what enduring gift am I mastering?`,
+        readingPrompt: `Inquire on Saturn in ${saturnP.sign} in House ${saturnP.house}: What karmic test is currently reaching its resolution in my chart, how do I dismantle my chronic inner critic, and what enduring gift am I mastering?`,
       },
       {
         id: "current",
@@ -146,7 +147,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
         presentLoveAndFriendship: `Right now, in your daily life, love, and friendships, you are feeling a heightened intolerance for pretense. Conversations that lack genuine substance feel draining. You may find yourself naturally stepping back from one-sided dynamics where you do all the emotional outreach. Trust this instinct—it is your chart clearing space for aligned kinship.`,
         emotionalAngerAndBlindspot: `Beware of projecting internal pressure onto those around you. With retrogrades active, communications can easily be misinterpreted through the lens of past betrayals. If an old wound surfaces, do not assume history is repeating itself; recognize that your soul is finally strong enough to process and release it permanently.`,
         futureShiftAndThinking: `The threshold ahead: Over the coming lunar and planetary shifts, a window of decisive clarity will open. You will feel an unmistakable surge of resolve to close chapters that have been lingering in ambiguity. Your thinking pattern is stabilizing into sovereign certainty.`,
-        consultationPrompt: `Inquire on Current Transits: How are today's active planetary shifts and retrogrades affecting my natal Sun, Moon, and Rising right now, and what specific action should I take this week?`,
+        readingPrompt: `Inquire on Current Transits: How are today's active planetary shifts and retrogrades affecting my natal Sun, Moon, and Rising right now, and what specific action should I take this week?`,
       },
     ];
   };
@@ -154,7 +155,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
   const sections = buildSectionData();
   const current = sections.find((s) => s.id === activeSection) || sections[1]; // Default to Emotional Patterns
 
-  const handleLaunchConsultation = (promptText: string) => {
+  const handleLaunchReading = (promptText: string) => {
     try {
       localStorage.setItem("astrofindings_pending_inquiry", promptText);
     } catch (e) {
@@ -281,10 +282,10 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
               <div className="h-px bg-[rgba(234,193,87,0.2)] my-4" />
 
               <button
-                onClick={() => handleLaunchConsultation(current.consultationPrompt)}
+                onClick={() => handleLaunchReading(current.readingPrompt)}
                 className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-full bg-[#FAF7F2] border border-[#052036]/15 text-xs font-sans font-semibold text-[#052036] hover:bg-[#052036] hover:text-[#FAF9F6] transition-all cursor-pointer text-center shadow-sm"
               >
-                <span>Ask AstroFindings on this →</span>
+                <span>Ask AI Astrologer on this →</span>
               </button>
             </div>
           </div>
@@ -304,10 +305,10 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                   </span>
                 </div>
                 <button
-                  onClick={() => handleLaunchConsultation(current.consultationPrompt)}
+                  onClick={() => handleLaunchReading(current.readingPrompt)}
                   className="text-xs font-sans text-[#EAC157] hover:text-[#052036] transition-colors cursor-pointer flex items-center gap-1 font-semibold"
                 >
-                  <span>✦ Inscribe to Ask AstroFindings</span>
+                  <span>✦ Inquire with AI Astrologer</span>
                   <span>→</span>
                 </button>
               </div>
@@ -393,7 +394,7 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                           Unlock Full Reading ($19 / Full Access) →
                         </button>
                         <button
-                          onClick={() => handleLaunchConsultation(current.consultationPrompt)}
+                          onClick={() => handleLaunchReading(current.readingPrompt)}
                           className="text-xs font-sans text-[#052036]/70 hover:text-[#EAC157] transition-colors cursor-pointer font-medium"
                         >
                           Ask AI on this placement →
@@ -450,21 +451,21 @@ export default function ReadingPage({ onNavigate }: ReadingPageProps) {
                 </>
               )}
 
-              {/* Bottom Consultation Banner */}
+              {/* Bottom Reading Inquiry Banner */}
               <div className="p-5 border border-[#EAC157] bg-[rgba(234,193,87,0.1)] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
                 <div>
                   <span className="text-[10px] font-sans uppercase tracking-widest text-[#EAC157] block font-bold">
                     ✦ Have Specific Questions On This Placement?
                   </span>
                   <p className="text-xs text-[#052036] mt-0.5 font-sans">
-                    Consult Ask AstroFindings directly to examine real-time aspects, synastry, and deeper timing for {current.label}.
+                    Ask the AI Astrologer directly to examine real-time aspects, synastry, and deeper timing for {current.label}.
                   </p>
                 </div>
                 <button
-                  onClick={() => handleLaunchConsultation(current.consultationPrompt)}
+                  onClick={() => handleLaunchReading(current.readingPrompt)}
                   className="button-primary cursor-pointer text-xs py-2.5 px-6 rounded-full whitespace-nowrap font-bold"
                 >
-                  Consult Ask AstroFindings →
+                  Ask AI Astrologer →
                 </button>
               </div>
 

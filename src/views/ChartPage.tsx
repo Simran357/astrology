@@ -14,7 +14,7 @@ import {
 } from "../components/icons/CelestialIcons";
 import { useApp } from "../context/AppContext";
 import { HOUSE_LIFE_AREAS } from "../data/houseLifeAreas";
-import { askAstrologyConsultant, AIResponse } from "../services/aiAstrologyService";
+import { askAIAstrologer, AIResponse } from "../services/aiAstrologyService";
 
 interface ChartPageProps {
   onNavigate: (page: string) => void;
@@ -45,7 +45,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
     if (!text.trim()) return;
     setIsAskingAI(true);
     try {
-      const res = await askAstrologyConsultant(user, liveTransits, text);
+      const res = await askAIAstrologer(user, liveTransits, text);
       setAiAnswer(res);
     } catch (e) {
       console.error(e);

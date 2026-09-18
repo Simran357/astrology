@@ -6,7 +6,7 @@
 --                2. Enums (subscription_status_enum, house_system_enum)
 --                3. Public Tables (profiles, natal_charts, subscriptions,
 --                   payment_invoices, daily_horoscopes, user_devices,
---                   astrology_consultations)
+--                   ai_readings)
 --                4. Performance Indexes
 --                5. Granular Row Level Security (RLS) Policies
 --                6. Automated Timestamp Triggers
@@ -196,20 +196,22 @@ CREATE TABLE IF NOT EXISTS public.user_devices (
 );
 
 -- ------------------------------------------------------------------------------
--- 8. AI CONSULTATIONS / INSCRIPTION DOSSIERS
+-- 8. AI READINGS & PERSONALIZED INTERPRETATIONS (NO HUMAN CONSULTATIONS)
 -- ------------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS public.astrology_consultations (
+CREATE TABLE IF NOT EXISTS public.ai_readings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   question TEXT NOT NULL,
   category TEXT NOT NULL DEFAULT 'general', -- 'love', 'career', 'emotions', 'timing', 'decisions', 'general'
-  reading_title TEXT NOT NULL,
+  reading_type TEXT NOT NULL DEFAULT 'free' CHECK (reading_type IN ('free', 'deep')), -- 'free' (free insight) | 'deep' (paid deep reading)
+  title TEXT NOT NULL,
   summary TEXT NOT NULL,
-  dossier_sections JSONB NOT NULL DEFAULT '[]'::jsonb,
+  sections JSONB NOT NULL DEFAULT '[]'::jsonb,
   relevant_placements JSONB NOT NULL DEFAULT '[]'::jsonb,
   relevant_transits JSONB NOT NULL DEFAULT '[]'::jsonb,
   mind_reading_disclaimer TEXT,
-  engine_used TEXT DEFAULT 'AstroFindings Ephemeris Engine',
+  chart_snapshot JSONB,
+  engine_used TEXT DEFAULT 'AstroFindings AI Astrologer Engine',
   is_api_generated BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -227,7 +229,8 @@ CREATE INDEX IF NOT EXISTS idx_daily_horoscopes_user_target_date ON public.daily
 CREATE INDEX IF NOT EXISTS idx_daily_horoscopes_user_date ON public.daily_horoscopes(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_user_devices_user_id ON public.user_devices(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_devices_active_tz ON public.user_devices(is_active, timezone);
-CREATE INDEX IF NOT EXISTS idx_consultations_user_created ON public.astrology_consultations(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_ai_readings_user_created ON public.ai_readings(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_ai_readings_user_type ON public.ai_readings(user_id, reading_type);
 
 -- ------------------------------------------------------------------------------
 -- 10. ROW LEVEL SECURITY (RLS) POLICIES
@@ -238,7 +241,7 @@ ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payment_invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.daily_horoscopes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_devices ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.astrology_consultations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ai_readings ENABLE ROW LEVEL SECURITY;
 
 -- 10.1 PROFILES POLICIES
 -- Note: INSERT is mandatory alongside UPDATE so that PostgREST upsert succeeds.
@@ -339,20 +342,20 @@ CREATE POLICY "Users can delete own devices"
   ON public.user_devices FOR DELETE
   USING (auth.uid() = user_id);
 
--- 10.7 ASTROLOGY CONSULTATIONS POLICIES
-DROP POLICY IF EXISTS "Users can view own consultations" ON public.astrology_consultations;
-CREATE POLICY "Users can view own consultations"
-  ON public.astrology_consultations FOR SELECT
+-- 10.7 AI READINGS POLICIES (Users own their personalized reading history)
+DROP POLICY IF EXISTS "Users can view own ai readings" ON public.ai_readings;
+CREATE POLICY "Users can view own ai readings"
+  ON public.ai_readings FOR SELECT
   USING (auth.uid() = user_id);
 
-DROP POLICY IF EXISTS "Users can insert own consultations" ON public.astrology_consultations;
-CREATE POLICY "Users can insert own consultations"
-  ON public.astrology_consultations FOR INSERT
+DROP POLICY IF EXISTS "Users can insert own ai readings" ON public.ai_readings;
+CREATE POLICY "Users can insert own ai readings"
+  ON public.ai_readings FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-DROP POLICY IF EXISTS "Users can delete own consultations" ON public.astrology_consultations;
-CREATE POLICY "Users can delete own consultations"
-  ON public.astrology_consultations FOR DELETE
+DROP POLICY IF EXISTS "Users can delete own ai readings" ON public.ai_readings;
+CREATE POLICY "Users can delete own ai readings"
+  ON public.ai_readings FOR DELETE
   USING (auth.uid() = user_id);
 
 -- ------------------------------------------------------------------------------

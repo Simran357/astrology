@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { useApp } from "../context/AppContext";
 import { calculateCompatibility, PersonProfile } from "../services/astrologyEngine";
 import {
+  askAIAstrologer,
   askAstrologyConsultant,
   getPersonalizedAstrologyReading,
   AIResponse,
@@ -438,7 +439,7 @@ export function TimelinePage({ onNavigate }: Props) {
   const handleAskTimelineAI = async (topic: string) => {
     setIsConsultingAI(true);
     try {
-      const res = await askAstrologyConsultant(user, liveTransits, topic);
+      const res = await askAIAstrologer(user, liveTransits, topic);
       setAiInquiryResponse(res.text);
     } catch (e) {
       console.error(e);
@@ -879,16 +880,16 @@ export function TimelinePage({ onNavigate }: Props) {
               onClick={() => handleAskTimelineAI("When will the emotional fog lift in my life and where is my biggest breakthrough window coming?")}
               className="button-primary cursor-pointer text-xs py-2.5 px-4 mt-3"
             >
-              Consult AI on My Personal Breakthrough Timing →
+              Ask AI Astrologer on My Breakthrough Timing →
             </button>
           </div>
         </div>
       )}
 
-      {/* AI Consultation Feedback Box */}
+      {/* AI Reading Feedback Box */}
       {isConsultingAI && (
         <div className="p-4 border border-[#EAC157] bg-white shadow-sm rounded-xl text-xs text-[#EAC157] font-mono animate-pulse mt-6">
-          ✦ Consulting your whole-sign chart against live transits...
+          ✦ Synthesizing your whole-sign chart against live transits...
         </div>
       )}
 
@@ -1200,7 +1201,7 @@ export function RelationshipsPage({ onNavigate }: Props) {
               <div className="p-4 border border-[#EAC157] bg-white shadow-sm rounded-xl text-xs text-[#FAF9F6] leading-relaxed whitespace-pre-line mt-3">
                 <div className="flex items-center justify-between border-b border-[rgba(234,193,87,0.15)] pb-1 mb-2">
                   <span className="font-mono text-[#EAC157] uppercase text-[10px]">
-                    ✦ Synastry AI Consultation
+                    ✦ Synastry AI Reading
                   </span>
                   <button
                     onClick={() => setSynastryAIResponse(null)}
@@ -1443,12 +1444,13 @@ export function PalmReadingPage({ onNavigate }: Props) {
 }
 
 /* ========================================================================= */
-/* 7. ASK ASTROFINDINGS — CELESTIAL CONSULTATION & INSCRIPTION DOSSIER       */
+/* 7. ASK ASTROFINDINGS — AI ASTROLOGER READING & DOSSIER                   */
 /* ========================================================================= */
 
 export function AskAIPage({ onNavigate }: Props) {
-  const { user, liveTransits } = useApp();
+  const { user, liveTransits, isMembershipActive } = useApp();
   const [question, setQuestion] = useState("");
+  const [readingMode, setReadingMode] = useState<"free" | "deep">("free");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<AIResponse | null>(null);
   const [copied, setCopied] = useState(false);
@@ -1487,15 +1489,16 @@ export function AskAIPage({ onNavigate }: Props) {
     },
   ];
 
-  const handleConsult = async (qText?: string) => {
+  const handleConsult = async (qText?: string, modeOverride?: "free" | "deep") => {
     const textToSubmit = (qText || question).trim();
     if (!textToSubmit) return;
+    const activeMode = modeOverride || (isMembershipActive ? readingMode : "free");
     setIsLoading(true);
     try {
-      const res = await askAstrologyConsultant(user, liveTransits, textToSubmit);
+      const res = await askAstrologyConsultant(user, liveTransits, textToSubmit, activeMode);
       setResponse(res);
     } catch (e) {
-      console.error("Consultation error:", e);
+      console.error("AI Astrologer reading error:", e);
     } finally {
       setIsLoading(false);
     }
@@ -1525,7 +1528,7 @@ export function AskAIPage({ onNavigate }: Props) {
 
   const handleCopyDossier = () => {
     if (!response) return;
-    const textToCopy = `ASTROFINDINGS CONSULTATION DOSSIER\nSubject: ${user.name || "Sovereign Inquirer"}\nNatal Coordinates: Sun in ${user.sunSign}, Moon in ${user.moonSign}, Rising in ${user.risingSign}\nInquiry: ${question}\nEngine: ${response.engineUsed}\n\n${response.text}`;
+    const textToCopy = `ASTROFINDINGS AI ASTROLOGER DOSSIER\nSubject: ${user.name || "Sovereign Inquirer"}\nNatal Coordinates: Sun in ${user.sunSign}, Moon in ${user.moonSign}, Rising in ${user.risingSign}\nInquiry: ${question}\nEngine: ${response.engineUsed}\n\n${response.text}`;
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -1533,9 +1536,9 @@ export function AskAIPage({ onNavigate }: Props) {
 
   return (
     <Shell
-      eyebrow="03 / Astrological Consultation & Inscription"
-      title="Ask AstroFindings."
-      intro="A chart-grounded astrological salon. Not an automated chatbot, but an epistolary dossier synthesized by cross-examining your exact natal coordinates against current planetary transits."
+      eyebrow="03 / AI Astrologer Inquiry & Reading"
+      title="Ask the AI Astrologer."
+      intro="A chart-grounded astrological intelligence engine. Not an automated chatbot or human marketplace, but an authoritative epistolary dossier synthesized by cross-examining your exact natal coordinates against current planetary transits."
     >
       <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-white border border-[#052036]/10 shadow-sm mb-6">
         <div className="space-y-1">
@@ -1835,6 +1838,50 @@ export function AskAIPage({ onNavigate }: Props) {
             </span>
           </div>
 
+          {/* Free Insight vs Deep Reading Selector */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#052036]/10">
+            <div className="flex items-center gap-1.5 p-1 bg-white border border-[#052036]/10 rounded-xl w-fit shadow-xs">
+              <button
+                type="button"
+                onClick={() => setReadingMode("free")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                  readingMode === "free"
+                    ? "bg-[#052036] text-[#FAF9F6] font-semibold"
+                    : "text-[#052036]/70 hover:text-[#052036]"
+                }`}
+              >
+                ✦ Free Insight
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isMembershipActive) {
+                    onNavigate("pricing");
+                  } else {
+                    setReadingMode("deep");
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
+                  readingMode === "deep" && isMembershipActive
+                    ? "bg-[#EAC157] text-[#052036] font-semibold shadow-xs"
+                    : "text-[#052036]/70 hover:text-[#052036]"
+                }`}
+              >
+                <span>✦ Deep Reading</span>
+                {!isMembershipActive && (
+                  <span className="text-[9px] px-1.5 py-0.5 bg-[#052036]/10 text-[#052036] font-bold rounded">
+                    PREMIUM
+                  </span>
+                )}
+              </button>
+            </div>
+            <span className="text-[11px] font-mono text-[#052036]/70">
+              {readingMode === "free"
+                ? "Free Insight: Immediate clarity, perspective & direction grounded in key placements"
+                : "Deep Reading: Full 5-dimension analysis, all aspects, karmic roots & transit timing"}
+            </span>
+          </div>
+
           <textarea
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -1880,7 +1927,7 @@ export function AskAIPage({ onNavigate }: Props) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#052036]/10 pb-4 gap-2">
               <div>
                 <span className="text-[10px] font-mono tracking-widest uppercase text-[#EAC157] block">
-                  ✦ ASTROFINDINGS CONSULTATION DOSSIER · EPHEMERIS VERIFIED
+                  ✦ ASTROFINDINGS AI ASTROLOGER DOSSIER · EPHEMERIS VERIFIED
                 </span>
                 <h2 className="font-cormorant text-2xl text-[#052036] mt-0.5">
                   Astrological Reading on “{question.slice(0, 50)}
@@ -1993,6 +2040,30 @@ export function AskAIPage({ onNavigate }: Props) {
                       ✦ {p}
                     </span>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Natural Upgrade Invitation for Free Experience */}
+            {(!isMembershipActive || response.structuredReading?.readingType === "free") && (
+              <div className="p-5 rounded-2xl bg-[#FAF7F2] border border-[#EAC157]/40 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-[#EAC157]">✦</span>
+                  <h4 className="font-cormorant text-lg font-semibold text-[#052036]">
+                    Want to understand what's underneath this?
+                  </h4>
+                </div>
+                <p className="text-xs text-[#052036]/80 leading-relaxed font-sans">
+                  {response.structuredReading?.nextDeeperPrompt ||
+                    "The Deep AI Reading analyzes your full aspect geometry, house lords, subconscious defense patterns, somatic tension points, and exact planetary timing."}
+                </p>
+                <div className="pt-1">
+                  <button
+                    onClick={() => onNavigate("pricing")}
+                    className="button-primary text-xs py-2 px-5 font-semibold cursor-pointer"
+                  >
+                    Unlock Deep Reading ($19 / Full Access) →
+                  </button>
                 </div>
               </div>
             )}

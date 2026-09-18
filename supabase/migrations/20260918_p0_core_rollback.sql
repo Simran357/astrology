@@ -11,6 +11,7 @@ DROP TRIGGER IF EXISTS trg_subscriptions_updated_at ON public.subscriptions;
 DROP TRIGGER IF EXISTS trg_user_devices_updated_at ON public.user_devices;
 DROP FUNCTION IF EXISTS public.handle_updated_at();
 
+DROP TABLE IF EXISTS public.ai_readings CASCADE;
 DROP TABLE IF EXISTS public.astrology_consultations CASCADE;
 DROP TABLE IF EXISTS public.user_devices CASCADE;
 DROP TABLE IF EXISTS public.daily_horoscopes CASCADE;

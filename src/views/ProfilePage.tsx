@@ -423,7 +423,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
             <div>
               <p className="text-xs font-mono uppercase text-[#EAC157]">Your Inquiry Interests</p>
               <p className="text-xs text-[#052036]/70 mt-0.5">
-                Topics prioritized during your AI consultations and transit readings.
+                Topics prioritized during your personalized AI readings and transit insights.
               </p>
             </div>
             <button

@@ -4,6 +4,7 @@
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_user();
 
+DROP TABLE IF EXISTS public.ai_readings CASCADE;
 DROP TABLE IF EXISTS public.astrology_consultations CASCADE;
 DROP TABLE IF EXISTS public.user_devices CASCADE;
 DROP TABLE IF EXISTS public.daily_horoscopes CASCADE;

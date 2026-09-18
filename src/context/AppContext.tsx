@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import type { Session } from "@supabase/supabase-js";
 import {
   UserProfileData,
   PersonProfile,
@@ -37,6 +38,19 @@ export type PageId =
   | "wellness"
   | "palm";
 
+export const PUBLIC_PAGES: PageId[] = ["home", "login", "signup", "learn"];
+export const PROTECTED_PAGES: PageId[] = [
+  "dashboard",
+  "chart",
+  "reading",
+  "profile",
+  "timeline",
+  "relationships",
+  "askai",
+  "wellness",
+  "palm",
+];
+
 interface AppContextType {
   currentPage: PageId;
   navigate: (page: string) => void;
@@ -58,8 +72,16 @@ interface AppContextType {
   restorePurchases: () => Promise<{ success: boolean; message: string; restored?: boolean }>;
   subscriptionStatus: string;
   isLoggedIn: boolean;
+  isAuthLoading: boolean;
+  session: Session | null;
+  intendedPage: PageId | null;
+  setIntendedPage: (page: PageId | null) => void;
   login: (email?: string, password?: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (name: string, email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (
+    name: string,
+    email: string,
+    password?: string
+  ) => Promise<{ success: boolean; emailConfirmationRequired?: boolean; message?: string; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   isSupabaseReady: boolean;
@@ -71,7 +93,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const USER_STORAGE_KEY = "astral_heretic_user_profile";
 const PEOPLE_STORAGE_KEY = "astral_heretic_people_profiles";
 const MEMBERSHIP_STORAGE_KEY = "astral_heretic_membership";
-const AUTH_STORAGE_KEY = "astrofindings_auth_session";
 const ONBOARDING_COMPLETED_KEY = "astrofindings_onboarding_done";
 
 export const AppProvider: React.FC<{
@@ -82,6 +103,13 @@ export const AppProvider: React.FC<{
   const [isCalculating, setIsCalculating] = useState(false);
   const [isSupabaseReady] = useState(isSupabaseConfigured);
 
+  // Real Supabase session state (Source of Truth)
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [intendedPage, setIntendedPage] = useState<PageId | null>(null);
+
+  const isLoggedIn = Boolean(session?.user);
+
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
     try {
       return localStorage.getItem(ONBOARDING_COMPLETED_KEY) === "true";
@@ -90,17 +118,9 @@ export const AppProvider: React.FC<{
     }
   });
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem(AUTH_STORAGE_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
-
   const [highlightedPlanet, setHighlightedPlanet] = useState<string | null>(null);
 
-  // Load User from LocalStorage or default
+  // User Profile state
   const [user, setUser] = useState<UserProfileData>(() => {
     try {
       const saved = localStorage.getItem(USER_STORAGE_KEY);
@@ -123,33 +143,32 @@ export const AppProvider: React.FC<{
   const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
 
   // Sync server-side entitlement status
-  const checkServerEntitlements = useCallback(async () => {
+  const checkServerEntitlements = useCallback(async (token?: string) => {
     try {
-      const session = await getCurrentSession();
-      const headers: Record<string, string> = {};
-      if (session?.access_token) {
-        headers["Authorization"] = `Bearer ${session.access_token}`;
+      const activeToken = token || (await getCurrentSession())?.access_token;
+      if (!activeToken) {
+        setIsMembershipActive(false);
+        setSubscriptionStatus("free");
+        return;
       }
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${activeToken}`,
+      };
       const res = await fetch("/api/subscriptions/status", { headers });
       if (res.ok) {
         const data = await res.json();
-        setIsMembershipActive(data.isPremium);
+        setIsMembershipActive(Boolean(data.isPremium));
         setSubscriptionStatus(data.status || "free");
         try {
-          localStorage.setItem(MEMBERSHIP_STORAGE_KEY, String(data.isPremium));
+          localStorage.setItem(MEMBERSHIP_STORAGE_KEY, String(Boolean(data.isPremium)));
         } catch {}
       }
     } catch (e) {
-      console.warn("Failed to check subscription status:", e);
+      console.warn("[Entitlements] Failed to check server status:", e);
     }
   }, []);
 
-  useEffect(() => {
-    checkServerEntitlements();
-  }, [checkServerEntitlements, isLoggedIn]);
-
   const toggleMembership = () => {
-    // Local dev override helper
     setIsMembershipActive((prev) => {
       const next = !prev;
       try {
@@ -161,10 +180,10 @@ export const AppProvider: React.FC<{
 
   const startCheckout = async (planId: string = "monthly") => {
     try {
-      const session = await getCurrentSession();
+      const activeSession = session || (await getCurrentSession());
       const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (session?.access_token) {
-        headers["Authorization"] = `Bearer ${session.access_token}`;
+      if (activeSession?.access_token) {
+        headers["Authorization"] = `Bearer ${activeSession.access_token}`;
       }
 
       const res = await fetch("/api/payments/checkout", {
@@ -187,12 +206,15 @@ export const AppProvider: React.FC<{
     }
   };
 
+  // Hydrate user chart and profile from remote database
   const loadUserNatalData = useCallback(async (accessToken?: string) => {
     try {
-      const headers: Record<string, string> = {};
-      if (accessToken) {
-        headers["Authorization"] = `Bearer ${accessToken}`;
-      }
+      const token = accessToken || (await getCurrentSession())?.access_token;
+      if (!token) return;
+
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`,
+      };
       const res = await fetch("/api/natal/chart", { headers });
       if (res.ok) {
         const data = await res.json();
@@ -202,10 +224,19 @@ export const AppProvider: React.FC<{
           const sun = planets.find((p: any) => p.planet === "Sun");
           const moon = planets.find((p: any) => p.planet === "Moon");
           const asc = chart.ascendant;
+          const profile = data.profile;
+
+          setHasCompletedOnboarding(true);
+          try {
+            localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
+          } catch {}
 
           setUser((prev) => {
             const updated: UserProfileData = {
               ...prev,
+              name: profile?.display_name || prev.name,
+              avatar: profile?.avatar_url || prev.avatar,
+              interests: profile?.interests || prev.interests,
               isTimeApproximate: data.isApproximate ?? prev.isTimeApproximate,
               chartJson: chart,
               placements: planets.length > 0 ? planets : prev.placements,
@@ -221,6 +252,9 @@ export const AppProvider: React.FC<{
             return updated;
           });
         }
+      } else if (res.status === 404) {
+        // No natal chart saved yet for this account
+        setHasCompletedOnboarding(false);
       }
     } catch (e) {
       console.warn("Could not sync remote chart:", e);
@@ -229,11 +263,13 @@ export const AppProvider: React.FC<{
 
   const restorePurchases = useCallback(async (): Promise<{ success: boolean; message: string; restored?: boolean }> => {
     try {
-      const session = await getCurrentSession();
-      const headers: Record<string, string> = {};
-      if (session?.access_token) {
-        headers["Authorization"] = `Bearer ${session.access_token}`;
+      const activeSession = session || (await getCurrentSession());
+      if (!activeSession?.access_token) {
+        return { success: false, message: "Authentication required to restore purchases." };
       }
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${activeSession.access_token}`,
+      };
       const res = await fetch("/api/subscriptions/restore", {
         method: "POST",
         headers,
@@ -251,149 +287,128 @@ export const AppProvider: React.FC<{
     } catch (err: any) {
       return { success: false, message: err.message || "Failed to restore purchases." };
     }
-  }, []);
+  }, [session]);
 
-  // Auth session sync
+  // Real Supabase Auth Lifecycle Listener
   useEffect(() => {
-    const checkSession = async () => {
-      const session = await getCurrentSession();
-      if (session?.user) {
-        setIsLoggedIn(true);
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
-        setUser((prev) => ({
-          ...prev,
-          id: session.user.id,
-          email: session.user.email || prev.email,
-          name: session.user.user_metadata?.full_name || prev.name,
-          avatar: session.user.user_metadata?.avatar_url || prev.avatar,
-          authProvider: (session.user.app_metadata?.provider as any) || "google",
-        }));
-        loadUserNatalData(session.access_token);
-        checkServerEntitlements();
-      }
-    };
-    checkSession();
+    let isMounted = true;
 
-    const { unsubscribe } = onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setIsLoggedIn(true);
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
+    // 1. Initial Session Check on mount
+    getCurrentSession().then((initialSession) => {
+      if (!isMounted) return;
+      setSession(initialSession);
+      setIsAuthLoading(false);
+
+      if (initialSession?.user) {
+        const supaUser = initialSession.user;
         setUser((prev) => ({
           ...prev,
-          id: session.user.id,
-          email: session.user.email || prev.email,
-          name: session.user.user_metadata?.full_name || prev.name,
-          avatar: session.user.user_metadata?.avatar_url || prev.avatar,
-          authProvider: (session.user.app_metadata?.provider as any) || "google",
+          id: supaUser.id,
+          email: supaUser.email || prev.email,
+          name: supaUser.user_metadata?.full_name || supaUser.user_metadata?.name || prev.name,
+          avatar: supaUser.user_metadata?.avatar_url || prev.avatar,
+          authProvider: (supaUser.app_metadata?.provider as any) || "email",
         }));
-        loadUserNatalData(session.access_token);
-        checkServerEntitlements();
+        loadUserNatalData(initialSession.access_token);
+        checkServerEntitlements(initialSession.access_token);
+      }
+    });
+
+    // 2. Real-time auth state listener (handles login, logout, token refresh, OAuth redirects)
+    const { unsubscribe } = onAuthStateChange(async (event, currentSession) => {
+      if (!isMounted) return;
+      setSession(currentSession);
+      setIsAuthLoading(false);
+
+      if (currentSession?.user) {
+        const supaUser = currentSession.user;
+        setUser((prev) => ({
+          ...prev,
+          id: supaUser.id,
+          email: supaUser.email || prev.email,
+          name: supaUser.user_metadata?.full_name || supaUser.user_metadata?.name || prev.name,
+          avatar: supaUser.user_metadata?.avatar_url || prev.avatar,
+          authProvider: (supaUser.app_metadata?.provider as any) || "email",
+        }));
+        loadUserNatalData(currentSession.access_token);
+        checkServerEntitlements(currentSession.access_token);
+      } else if (event === "SIGNED_OUT") {
+        setUser(DEFAULT_USER_PROFILE);
+        setIsMembershipActive(false);
+        setSubscriptionStatus("free");
+        setHasCompletedOnboarding(false);
+        try {
+          localStorage.removeItem(USER_STORAGE_KEY);
+          localStorage.removeItem(MEMBERSHIP_STORAGE_KEY);
+          localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
+        } catch {}
       }
     });
 
     return () => {
+      isMounted = false;
       unsubscribe();
     };
-  }, []);
+  }, [loadUserNatalData, checkServerEntitlements]);
 
+  // Real Email/Password Login
   const login = useCallback(
     async (email?: string, password?: string): Promise<{ success: boolean; error?: string }> => {
-      if (email && password) {
-        const res = await signInWithEmail(email, password);
-        if (!res.success) {
-          return { success: false, error: res.error };
-        }
-        setIsLoggedIn(true);
-        try {
-          localStorage.setItem(AUTH_STORAGE_KEY, "true");
-        } catch {}
-        if (res.user) {
-          setUser((prev) => ({
-            ...prev,
-            id: res.user?.id || prev.id,
-            email: res.user?.email || prev.email,
-            name: res.user?.name || prev.name,
-            avatar: res.user?.avatar || prev.avatar,
-            authProvider: "email",
-          }));
-        }
-        return { success: true };
+      if (!email || !password) {
+        return { success: false, error: "Please enter both email and password." };
       }
-
-      setIsLoggedIn(true);
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
-      } catch {}
-      if (email) {
-        setUser((prev) => ({
-          ...prev,
-          email: email,
-          name: prev.name || email.split("@")[0],
-          authProvider: "email",
-        }));
+      const res = await signInWithEmail(email, password);
+      if (!res.success) {
+        return { success: false, error: res.error };
+      }
+      if (res.session) {
+        setSession(res.session);
       }
       return { success: true };
     },
     []
   );
 
+  // Real Email/Password Signup
   const signup = useCallback(
     async (
       name: string,
       email: string,
       password?: string
-    ): Promise<{ success: boolean; error?: string }> => {
-      const res = await signUpWithEmail(email, password || "password123", name);
+    ): Promise<{ success: boolean; emailConfirmationRequired?: boolean; message?: string; error?: string }> => {
+      if (!email || !password) {
+        return { success: false, error: "Please provide a valid email and password." };
+      }
+      const res = await signUpWithEmail(email, password, name);
       if (!res.success) {
         return { success: false, error: res.error };
       }
-      setIsLoggedIn(true);
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
-      } catch {}
-      setUser((prev) => ({
-        ...prev,
-        id: res.user?.id || prev.id,
-        name: name || prev.name,
-        email: email || prev.email,
-        avatar: res.user?.avatar || prev.avatar,
-        authProvider: "email",
-      }));
-      return { success: true };
+      if (res.session) {
+        setSession(res.session);
+      }
+      return {
+        success: true,
+        emailConfirmationRequired: res.emailConfirmationRequired,
+        message: res.message,
+      };
     },
     []
   );
 
+  // Real Google OAuth
   const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
-    const res = await signInWithGoogle();
-    if (!res.success) {
-      return { success: false, error: res.error };
-    }
-    if (res.isMockFallback && res.user) {
-      setIsLoggedIn(true);
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEY, "true");
-      } catch {}
-      setUser((prev) => ({
-        ...prev,
-        id: res.user?.id || prev.id,
-        email: res.user?.email || "seeker.astral@gmail.com",
-        name: res.user?.name || "Astral Seeker",
-        avatar: res.user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&auto=format",
-        authProvider: "google",
-      }));
-    }
-    return { success: true };
+    return await signInWithGoogle();
   }, []);
 
+  // Real Logout
   const logout = useCallback(async () => {
     await supabaseSignOut();
-    setIsLoggedIn(false);
+    setSession(null);
+    setUser(DEFAULT_USER_PROFILE);
     setIsMembershipActive(false);
     setSubscriptionStatus("free");
-    setUser(DEFAULT_USER_PROFILE);
+    setHasCompletedOnboarding(false);
     try {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem(USER_STORAGE_KEY);
       localStorage.removeItem(MEMBERSHIP_STORAGE_KEY);
       localStorage.removeItem(ONBOARDING_COMPLETED_KEY);
@@ -492,17 +507,19 @@ export const AppProvider: React.FC<{
         localStorage.setItem(ONBOARDING_COMPLETED_KEY, "true");
       } catch {}
 
-      // Persist to server API & Supabase database
-      const session = await getCurrentSession();
+      // Persist to server API & Supabase database if authenticated
+      const activeSession = session || (await getCurrentSession());
       const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (session?.access_token) {
-        headers["Authorization"] = `Bearer ${session.access_token}`;
+      if (activeSession?.access_token) {
+        headers["Authorization"] = `Bearer ${activeSession.access_token}`;
       }
 
       await fetch("/api/natal/chart", {
         method: "POST",
         headers,
         body: JSON.stringify({
+          name: updatedBasic.name,
+          interests: updatedBasic.interests,
           birthDate: updatedBasic.birthDate,
           birthTime: effectiveTime,
           birthLocation: updatedBasic.birthLocation,
@@ -574,24 +591,11 @@ export const AppProvider: React.FC<{
     onNavigate(page);
   };
 
-  // Safe navigation guard to prevent accessing chart without birth data
-  const safeNavigate = (page: string) => {
-    const chartDependent = ["chart", "reading", "dashboard"];
-    const hasBirthData = Boolean(user.birthDate && user.birthLocation && hasCompletedOnboarding);
-
-    if (chartDependent.includes(page) && !hasBirthData) {
-      onNavigate("onboarding");
-      return;
-    }
-
-    onNavigate(page);
-  };
-
   return (
     <AppContext.Provider
       value={{
         currentPage,
-        navigate: safeNavigate,
+        navigate: onNavigate,
         user,
         updateUser,
         isCalculating,
@@ -610,6 +614,10 @@ export const AppProvider: React.FC<{
         restorePurchases,
         subscriptionStatus,
         isLoggedIn,
+        isAuthLoading,
+        session,
+        intendedPage,
+        setIntendedPage,
         login,
         signup,
         loginWithGoogle,

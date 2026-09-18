@@ -11,7 +11,7 @@ import { resolveHistoricalTimezone } from "@/services/timezoneService";
 export async function GET(req: Request) {
   try {
     const auth = await getAuthenticatedUser(req);
-    if (!auth.userId) {
+    if (!auth.userId || !auth.user) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     }
 
@@ -37,9 +37,17 @@ export async function GET(req: Request) {
           houseSystem: data.house_system,
         };
 
+        // Also retrieve profile metadata for complete hydration
+        const { data: profile } = await client
+          .from("profiles")
+          .select("display_name, interests, avatar_url, birth_date, birth_time, birth_place_name")
+          .eq("id", auth.userId)
+          .maybeSingle();
+
         return NextResponse.json({
           chart: canonicalChart,
           isApproximate: data.is_time_approximate || data.is_approximate || false,
+          profile: profile || null,
           createdAt: data.created_at,
           fromCache: true,
         });
@@ -57,17 +65,19 @@ export async function GET(req: Request) {
  * POST /api/natal/chart
  * Calculates and persists the natal chart using real Swiss Ephemeris data
  * and historical UTC offset resolution.
- * Never trusts a client-supplied userId.
+ * Authenticated user session is strictly enforced; client-provided user IDs are ignored.
  */
 export async function POST(req: Request) {
   try {
     const auth = await getAuthenticatedUser(req);
-    if (!auth.userId) {
+    if (!auth.userId || !auth.user) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     }
 
     const body = await req.json();
     const {
+      name,
+      interests,
       birthDate,
       birthTime,
       birthLocation,
@@ -106,11 +116,13 @@ export async function POST(req: Request) {
 
     const client = auth.token ? getSupabaseUserClient(auth.token) : getSupabaseAdmin();
     if (client) {
-      // 1. Update user profile birth data
+      // 1. Update user profile birth data & metadata
       await client
         .from("profiles")
         .upsert({
           id: auth.userId,
+          ...(name ? { display_name: String(name).trim() } : {}),
+          ...(Array.isArray(interests) ? { interests } : {}),
           birth_date: birthDate,
           birth_time: resolvedTime,
           birth_place_name: birthLocation || "Unknown Location",
@@ -125,12 +137,12 @@ export async function POST(req: Request) {
           updated_at: new Date().toISOString(),
         }, { onConflict: "id" });
 
-      // 2. Persist real natal chart
+      // 2. Persist real natal chart (one per user, respecting UNIQUE(user_id))
       await client
         .from("natal_charts")
         .upsert({
           user_id: auth.userId,
-          name: body.name || "Primary Chart",
+          name: name || "Primary Chart",
           birth_date: birthDate,
           birth_time: resolvedTime,
           is_time_approximate: tzResolution.isTimeApproximate,

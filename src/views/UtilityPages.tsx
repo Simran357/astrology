@@ -74,7 +74,7 @@ const GoogleIcon = () => (
 );
 
 export function LoginPage({ onNavigate }: Props) {
-  const { login, loginWithGoogle, isSupabaseReady } = useApp();
+  const { login, loginWithGoogle, isSupabaseReady, intendedPage, setIntendedPage } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -94,8 +94,10 @@ export function LoginPage({ onNavigate }: Props) {
         return;
       }
       setSubmitted(true);
+      const target = intendedPage || "chart";
+      setIntendedPage(null);
       setTimeout(() => {
-        onNavigate("chart");
+        onNavigate(target);
       }, 350);
     } catch (err: any) {
       setErrorMsg(err.message || "Sign in failed.");
@@ -115,8 +117,10 @@ export function LoginPage({ onNavigate }: Props) {
         return;
       }
       setSubmitted(true);
+      const target = intendedPage || "chart";
+      setIntendedPage(null);
       setTimeout(() => {
-        onNavigate("chart");
+        onNavigate(target);
       }, 350);
     } catch (err: any) {
       setErrorMsg(err.message || "Google sign in failed.");
@@ -229,17 +233,19 @@ export function LoginPage({ onNavigate }: Props) {
 }
 
 export function SignupPage({ onNavigate }: Props) {
-  const { signup, loginWithGoogle, isSupabaseReady } = useApp();
+  const { signup, loginWithGoogle, isSupabaseReady, intendedPage, setIntendedPage, hasCompletedOnboarding } = useApp();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [confirmationMsg, setConfirmationMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSignupSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setConfirmationMsg(null);
     setIsLoading(true);
 
     try {
@@ -249,9 +255,16 @@ export function SignupPage({ onNavigate }: Props) {
         setIsLoading(false);
         return;
       }
+      if (res.emailConfirmationRequired) {
+        setConfirmationMsg(res.message || "Account created! Please check your email to confirm your account before logging in.");
+        setIsLoading(false);
+        return;
+      }
       setSubmitted(true);
+      const nextTarget = hasCompletedOnboarding ? (intendedPage || "chart") : "onboarding";
+      setIntendedPage(null);
       setTimeout(() => {
-        onNavigate("onboarding");
+        onNavigate(nextTarget);
       }, 400);
     } catch (err: any) {
       setErrorMsg(err.message || "Sign up failed.");
@@ -271,8 +284,10 @@ export function SignupPage({ onNavigate }: Props) {
         return;
       }
       setSubmitted(true);
+      const nextTarget = hasCompletedOnboarding ? (intendedPage || "chart") : "onboarding";
+      setIntendedPage(null);
       setTimeout(() => {
-        onNavigate("chart");
+        onNavigate(nextTarget);
       }, 350);
     } catch (err: any) {
       setErrorMsg(err.message || "Google registration failed.");
@@ -331,6 +346,20 @@ export function SignupPage({ onNavigate }: Props) {
         {errorMsg && (
           <div className="p-3 border border-[rgba(220,100,80,0.5)] bg-[rgba(60,20,20,0.4)] rounded-xl text-xs text-[#ff9999] leading-relaxed">
             {errorMsg}
+          </div>
+        )}
+
+        {confirmationMsg && (
+          <div className="p-4 border border-[#EAC157] bg-[rgba(234,193,87,0.1)] rounded-2xl text-xs text-[#052036] space-y-2">
+            <div className="font-bold text-[#8C6B1B]">✦ Account Confirmation Required</div>
+            <p className="text-xs text-[#052036]/80 leading-relaxed">{confirmationMsg}</p>
+            <button
+              type="button"
+              onClick={() => onNavigate("login")}
+              className="mt-1 text-xs font-mono text-[#8C6B1B] underline hover:text-[#052036] cursor-pointer block"
+            >
+              Go to sign in →
+            </button>
           </div>
         )}
 

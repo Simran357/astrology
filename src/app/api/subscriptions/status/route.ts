@@ -10,13 +10,13 @@ import { getAuthenticatedUser, getSupabaseAdmin, getSupabaseUserClient } from "@
 export async function GET(req: Request) {
   try {
     const auth = await getAuthenticatedUser(req);
-    if (!auth.userId) {
+    if (!auth.userId || !auth.user) {
       return NextResponse.json({
         isPremium: false,
         status: "free",
         tier: "free",
         reason: "Unauthenticated",
-      });
+      }, { status: 401 });
     }
 
     const client = auth.token ? getSupabaseUserClient(auth.token) : getSupabaseAdmin();

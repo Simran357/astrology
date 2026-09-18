@@ -81,7 +81,7 @@ const YES_QUESTIONS = [
 ];
 
 export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
-  const { updateUser, isCalculating, user, login } = useApp();
+  const { updateUser, isCalculating, user, isLoggedIn, setIntendedPage } = useApp();
   const [step, setStep] = useState(0);
 
   // Form Data
@@ -187,10 +187,14 @@ export default function OnboardingPage({ onNavigate }: OnboardingPageProps) {
         ],
       });
     } else {
-      login();
-      onNavigate("chart");
+      if (isLoggedIn) {
+        onNavigate("chart");
+      } else {
+        setIntendedPage("chart");
+        onNavigate("signup");
+      }
     }
-  }, [step, data, updateUser, login, onNavigate]);
+  }, [step, data, updateUser, isLoggedIn, setIntendedPage, onNavigate]);
 
   // Enter key listener: when user types name on Step 0 or presses Enter, proceed to next step
   useEffect(() => {

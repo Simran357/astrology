@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Migration: 20260917000001_p0_core_schema.sql
+-- Migration: 20260918_p0_core_schema.sql
 -- Description: FINAL Production Schema for AstroFindings Astrology Engine
 --              Includes:
 --                1. Extensions (uuid-ossp, pgcrypto)
@@ -241,6 +241,7 @@ ALTER TABLE public.user_devices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.astrology_consultations ENABLE ROW LEVEL SECURITY;
 
 -- 10.1 PROFILES POLICIES
+-- Note: INSERT is mandatory alongside UPDATE so that PostgREST upsert succeeds.
 DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
 CREATE POLICY "Users can read own profile"
   ON public.profiles FOR SELECT
@@ -299,6 +300,7 @@ CREATE POLICY "Users can view own invoices"
   USING (auth.uid() = user_id);
 
 -- 10.5 DAILY HOROSCOPES POLICIES
+-- Allows reading and idempotent caching from the client / authenticated user session.
 DROP POLICY IF EXISTS "Users can view own horoscopes" ON public.daily_horoscopes;
 CREATE POLICY "Users can view own horoscopes"
   ON public.daily_horoscopes FOR SELECT
@@ -396,6 +398,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
+  -- Create initial profile row synced with Supabase Auth metadata
   INSERT INTO public.profiles (
     id,
     email,
@@ -423,6 +426,7 @@ BEGIN
     avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
     updated_at = NOW();
 
+  -- Initialize default free tier ledger row in subscriptions
   INSERT INTO public.subscriptions (
     user_id,
     provider,

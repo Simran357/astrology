@@ -10,7 +10,7 @@ import { dodoPayments } from "@/lib/payments/dodoPayments";
 export async function POST(req: Request) {
   try {
     const auth = await getAuthenticatedUser(req);
-    if (!auth.userId) {
+    if (!auth.userId || !auth.user) {
       return NextResponse.json({ error: "Authentication required to initiate checkout" }, { status: 401 });
     }
 

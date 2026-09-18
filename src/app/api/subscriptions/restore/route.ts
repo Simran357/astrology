@@ -5,12 +5,12 @@ import { getAuthenticatedUser, getSupabaseAdmin, getSupabaseUserClient } from "@
  * POST /api/subscriptions/restore
  * Production Restore Purchases endpoint.
  * Validates authenticated session and recovers active subscriptions
- * from provider or subscription ledger.
+ * from verified payment invoices.
  */
 export async function POST(req: Request) {
   try {
     const auth = await getAuthenticatedUser(req);
-    if (!auth.userId) {
+    if (!auth.userId || !auth.user) {
       return NextResponse.json({ error: "Authentication required to restore purchases" }, { status: 401 });
     }
 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // Check payment invoices for any previous active payments
+    // Check payment invoices for any previous succeeded payments for this user
     const { data: invoices } = await client
       .from("payment_invoices")
       .select("*")
@@ -54,14 +54,17 @@ export async function POST(req: Request) {
       .limit(1);
 
     if (invoices && invoices.length > 0) {
-      // Re-activate subscription
+      // Re-activate subscription via admin service client (subscriptions table write is service-role protected)
+      const admin = getSupabaseAdmin() || client;
       const newPeriodEnd = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
-      await client
+      await admin
         .from("subscriptions")
         .upsert({
           user_id: auth.userId,
           status: "active",
           tier: "premium",
+          provider: "dodo",
+          payment_provider: "dodo_payments",
           current_period_end: newPeriodEnd,
           updated_at: new Date().toISOString(),
         }, { onConflict: "user_id" });

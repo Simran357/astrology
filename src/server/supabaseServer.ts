@@ -9,12 +9,14 @@ const supabaseUrl =
 const supabaseAnonKey =
   process.env.SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   "";
 
+// Service role key is STRICTLY server-only. Never expose to client.
 const supabaseServiceKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  supabaseAnonKey ||
+  process.env.SUPABASE_SECRET_KEY ||
   "";
 
 export const isServerSupabaseConfigured = (): boolean => {
@@ -28,10 +30,10 @@ export const isServerSupabaseConfigured = (): boolean => {
 
 /**
  * Creates an admin Supabase client (service role) for privileged backend tasks
- * such as webhooks, scheduled cron jobs, and database migrations.
+ * such as webhooks, scheduled cron jobs, and subscription updates.
  */
 export function getSupabaseAdmin(): SupabaseClient | null {
-  if (!isServerSupabaseConfigured()) return null;
+  if (!supabaseUrl || !supabaseServiceKey) return null;
   return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
@@ -45,7 +47,7 @@ export function getSupabaseAdmin(): SupabaseClient | null {
  * ensuring PostgreSQL Row Level Security (RLS) is automatically enforced.
  */
 export function getSupabaseUserClient(authToken: string): SupabaseClient | null {
-  if (!isServerSupabaseConfigured()) return null;
+  if (!supabaseUrl || !supabaseAnonKey || !authToken) return null;
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: false,
@@ -62,16 +64,15 @@ export function getSupabaseUserClient(authToken: string): SupabaseClient | null 
 export interface AuthContext {
   user: User | null;
   userId: string;
-  isMockFallback: boolean;
   token?: string;
 }
 
 /**
- * Securely extracts and verifies the authenticated user from the Request headers.
- * NEVER trust client-provided userId in the request body!
+ * Securely extracts and cryptographically verifies the authenticated user from Request headers.
+ * NEVER trusts client-provided userId or email in the request body or query params.
  *
- * Security flow:
- * Request -> Extract Bearer token / Cookie -> Supabase Auth verify -> Verified User
+ * Verification flow:
+ * Request -> Extract Bearer token / Cookie -> Supabase Auth verify -> Verified User ID
  */
 export async function getAuthenticatedUser(req: Request): Promise<AuthContext> {
   const authHeader = req.headers.get("authorization") || req.headers.get("Authorization");
@@ -80,7 +81,7 @@ export async function getAuthenticatedUser(req: Request): Promise<AuthContext> {
   if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.slice(7).trim();
   } else {
-    // Check cookie if bearer token is not present
+    // Check cookie if bearer token is not present in Authorization header
     const cookieHeader = req.headers.get("cookie") || "";
     const match = cookieHeader.match(/sb-[^;]+-auth-token=([^;]+)/);
     if (match) {
@@ -91,8 +92,9 @@ export async function getAuthenticatedUser(req: Request): Promise<AuthContext> {
     }
   }
 
-  // If live Supabase is configured and a token is provided, verify cryptographically with Supabase Auth
-  if (isServerSupabaseConfigured() && token) {
+  // Cryptographically verify token with Supabase Auth
+  if (token && supabaseUrl) {
+    // Use admin client if configured, otherwise verify with standard public client
     const admin = getSupabaseAdmin();
     if (admin) {
       const { data: { user }, error } = await admin.auth.getUser(token);
@@ -100,18 +102,28 @@ export async function getAuthenticatedUser(req: Request): Promise<AuthContext> {
         return {
           user,
           userId: user.id,
-          isMockFallback: false,
+          token,
+        };
+      }
+    } else if (supabaseAnonKey) {
+      const client = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      });
+      const { data: { user }, error } = await client.auth.getUser(token);
+      if (!error && user) {
+        return {
+          user,
+          userId: user.id,
           token,
         };
       }
     }
   }
 
-  // Fallback for local session / demo mode when Supabase keys are not yet configured in .env
-  const demoUserId = req.headers.get("x-user-id") || "demo-seeker-user";
+  // Unauthenticated: do NOT return mock users or accept x-user-id spoofing
   return {
     user: null,
-    userId: demoUserId,
-    isMockFallback: true,
+    userId: "",
+    token: undefined,
   };
 }

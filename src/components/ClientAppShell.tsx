@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navigation from "./Navigation";
-import { AppProvider, PageId } from "../context/AppContext";
+import { AppProvider, PageId, PROTECTED_PAGES, useApp } from "../context/AppContext";
 
 const APP_PAGES = [
   "dashboard",
@@ -20,6 +20,28 @@ const APP_PAGES = [
 
 interface ClientAppShellProps {
   children: React.ReactNode;
+}
+
+function RouteGuardWrapper({
+  children,
+  currentPage,
+  navigate,
+}: {
+  children: React.ReactNode;
+  currentPage: PageId;
+  navigate: (page: string) => void;
+}) {
+  const { isLoggedIn, isAuthLoading, setIntendedPage } = useApp();
+
+  useEffect(() => {
+    if (isAuthLoading) return;
+    if (!isLoggedIn && PROTECTED_PAGES.includes(currentPage)) {
+      setIntendedPage(currentPage);
+      navigate("login");
+    }
+  }, [isLoggedIn, isAuthLoading, currentPage, navigate, setIntendedPage]);
+
+  return <>{children}</>;
 }
 
 export default function ClientAppShell({ children }: ClientAppShellProps) {
@@ -63,12 +85,14 @@ export default function ClientAppShell({ children }: ClientAppShellProps) {
 
   return (
     <AppProvider currentPage={currentPage} onNavigate={navigate}>
-      <div className="min-h-full bg-[#FAF9F6] text-[#052036]">
-        <Navigation currentPage={currentPage} onNavigate={navigate as (page: PageId) => void} />
-        <main className={isAppPage ? "pt-14 md:pt-18 pb-24 md:pb-12" : ""}>
-          {children}
-        </main>
-      </div>
+      <RouteGuardWrapper currentPage={currentPage} navigate={navigate}>
+        <div className="min-h-full bg-[#FAF9F6] text-[#052036]">
+          <Navigation currentPage={currentPage} onNavigate={navigate as (page: PageId) => void} />
+          <main className={isAppPage ? "pt-14 md:pt-18 pb-24 md:pb-12" : ""}>
+            {children}
+          </main>
+        </div>
+      </RouteGuardWrapper>
     </AppProvider>
   );
 }

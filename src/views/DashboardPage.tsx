@@ -111,6 +111,37 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           </div>
         </div>
 
+        {/* Reading-room gallery */}
+        <section className="reading-room dashboard-card" aria-labelledby="reading-room-title">
+          <div className="reading-room-copy">
+            <p className="reading-room-kicker">THE ASTROLOGY READING ROOM / 01</p>
+            <h2 id="reading-room-title">A quieter way to<br /><i>read the sky.</i></h2>
+            <p>Keep the parts of your chart that feel useful close at hand: one placement, one question, one small piece of evidence at a time.</p>
+            <button className="button-primary" onClick={() => onNavigate("chart")}>Open your chart <span aria-hidden="true">↗</span></button>
+          </div>
+          <div className="reading-room-feature">
+            <div className="reading-room-stamp">FIELD<br />NOTE<br /><b>002</b></div>
+            <div className="phone-panel phone-panel-tall">
+              <span className="phone-notch" />
+              <p className="phone-overline">NATAL ARCHIVE</p>
+              <div className="phone-moon">☾</div>
+              <h3>{user.moonSign}<br /><i>Moon notes</i></h3>
+              <p className="phone-rule">How you return to yourself.</p>
+              <div className="phone-lines"><span /><span /><span /></div>
+              <span className="phone-footer">01 / 04</span>
+            </div>
+            <div className="reading-room-note">save the<br /><i>feeling</i> ↗</div>
+            <div className="phone-panel phone-panel-small">
+              <span className="phone-notch" />
+              <p className="phone-overline">TODAY</p>
+              <div className="tiny-orbit">✦</div>
+              <h3>Transit<br /><i>weather</i></h3>
+              <p className="phone-rule">A useful pause before the next move.</p>
+              <span className="phone-footer">SEP 18</span>
+            </div>
+          </div>
+        </section>
+
         {/* Main grid */}
         <div className="grid lg:grid-cols-5 gap-8">
 

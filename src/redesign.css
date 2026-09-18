@@ -1,0 +1,78 @@
+/* AstroFindings editorial redesign */
+:root {
+  --canvas: #f3eee6;
+  --paper: #fbf8f1;
+  --ink: #172c35;
+  --ink-muted: #66777a;
+  --accent: #d95f43;
+  --accent-soft: #f0c8b8;
+  --sun: #e8b84c;
+  --sage: #91a796;
+  --lavender: #ddd9e9;
+  --line-light: rgba(23,44,53,.14);
+  --radius-card: 24px;
+}
+html { background: var(--canvas); }
+body { background: var(--canvas); color: var(--ink); }
+button, a { transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+button:hover, a:hover { transform: translateY(-2px); }
+.astral-page, .astral-dashboard, .min-h-screen { background: var(--canvas) !important; color: var(--ink) !important; }
+.astral-page::before { background-image: radial-gradient(rgba(23,44,53,.13) .55px, transparent .55px); opacity: .22; }
+.site-header.app-header { position: sticky; top: 0; z-index: 50; width: 100%; min-height: 74px; padding: 14px clamp(18px,4vw,60px); background: rgba(251,248,241,.88); border-bottom: 1px solid var(--line-light); backdrop-filter: blur(18px); color: var(--ink); }
+.brand-name { color: var(--ink) !important; font-family: var(--app-font-serif); font-size: 1.35rem; letter-spacing: -.03em; }
+.brand-mark { background: var(--ink) !important; color: var(--sun) !important; border-color: var(--sun) !important; }
+.site-nav { gap: 5px; }
+.site-nav .button-quiet { color: var(--ink-muted) !important; border-radius: 999px; padding: 9px 13px; font-size: .74rem; }
+.site-nav .button-quiet:hover { color: var(--ink) !important; background: var(--accent-soft); }
+.app-status { color: var(--ink-muted) !important; font-size: .68rem; }
+.app-status span { color: var(--sage); }
+.section-shell { max-width: 1320px; }
+.display, .font-serif, h1, h2, h3, h4 { color: var(--ink) !important; }
+.eyebrow, .new-label, .dashboard-kicker, .dashboard-shelf-kicker { color: var(--accent) !important; }
+.button-primary, .new-outline, .button-quiet { border-radius: 999px !important; }
+.button-primary { background: var(--ink) !important; color: var(--paper) !important; box-shadow: 0 8px 20px rgba(23,44,53,.16); }
+.button-primary:hover { background: var(--accent) !important; }
+.dashboard-card, .dashboard-shelf, .card, [class*="bg-[rgba(31,24,48"] { background: var(--paper) !important; border: 1px solid var(--line-light) !important; border-radius: var(--radius-card) !important; box-shadow: 0 14px 32px rgba(23,44,53,.07) !important; }
+.astral-dashboard > div.relative { max-width: 1360px; }
+.dashboard-header { position: relative; padding: clamp(24px,5vw,58px); background: var(--lavender); border-radius: 32px; overflow: hidden; border: 1px solid var(--line-light); }
+.dashboard-header::after { content: "✦"; position: absolute; right: 7%; bottom: -25px; font-size: 14rem; line-height: 1; color: rgba(217,95,67,.13); transform: rotate(12deg); }
+.dashboard-title { font-size: clamp(2.5rem,6vw,5.2rem) !important; letter-spacing: -.07em; max-width: 720px; }
+.dashboard-subtitle { color: var(--ink-muted) !important; }
+.dashboard-sticker { background: var(--accent) !important; color: var(--paper) !important; border: 4px solid var(--paper) !important; box-shadow: 0 12px 24px rgba(23,44,53,.15); }
+.dashboard-visual-strip { position: absolute; right: clamp(18px,6vw,90px); top: 28px; width: min(38%, 400px); height: 210px; display: flex; align-items: center; justify-content: center; }
+.dashboard-visual-strip img { position: absolute; width: 128px; height: 158px; object-fit: contain; filter: drop-shadow(0 14px 12px rgba(23,44,53,.18)); }
+.dashboard-visual-strip img:first-of-type { right: 10px; top: 6px; transform: rotate(8deg); }
+.dashboard-visual-strip img:nth-of-type(2) { left: 24px; bottom: -5px; transform: rotate(-11deg); }
+.dashboard-visual-label, .dashboard-orbit-note { position: absolute; z-index: 2; font: 600 .63rem/1.3 var(--app-font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.dashboard-visual-label { left: 18px; top: 24px; color: var(--ink); }
+.dashboard-orbit-note { right: -4px; bottom: 2px; color: var(--accent); text-align: right; }
+.dashboard-shelf { display: grid; grid-template-columns: minmax(180px,.8fr) 2fr; gap: 24px; padding: 24px; margin-bottom: 32px; }
+.dashboard-shelf h2 { margin: 5px 0; font: 400 clamp(1.5rem,3vw,2.4rem)/1 var(--app-font-serif); letter-spacing: -.05em; }
+.dashboard-shelf p { color: var(--ink-muted); }
+.dashboard-shelf-items { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.dashboard-shelf-items button { background: #efe7d8; border: 0; border-radius: 16px; padding: 12px; text-align: left; color: var(--ink); cursor: pointer; }
+.dashboard-shelf-items button:hover { background: var(--accent-soft); }
+.dashboard-shelf-items img { display: block; width: 100%; height: 112px; object-fit: contain; mix-blend-mode: multiply; }
+.dashboard-shelf-items span { display: block; margin-top: 8px; font: 600 .62rem var(--app-font-mono); text-transform: uppercase; }
+.text-\[\#eee5d3\], .text-\[\#bfb7aa\], .text-\[\#d4af37\] { color: var(--ink) !important; }
+.text-\[\#bfb7aa\] { color: var(--ink-muted) !important; }
+.bg-\[\#0e0a17\], .bg-\[rgba\(31\,24\,48\,0\.8\)\], .bg-\[rgba\(31\,24\,48\,0\.85\)\] { background: var(--paper) !important; }
+.border-\[rgba\(238\,93\,52\,0\.12\)\], .border-\[rgba\(238\,93\,52\,0\.22\)\] { border-color: var(--line-light) !important; }
+.text-\[\#ee5d34\], .text-\[\#f0c870\] { color: var(--accent) !important; }
+@media (max-width: 850px) {
+  .site-header.app-header { min-height: 62px; }
+  .site-nav { overflow-x: auto; max-width: 58vw; scrollbar-width: none; }
+  .site-nav .button-quiet { white-space: nowrap; padding: 8px 10px; }
+  .app-status { display: none; }
+  .dashboard-visual-strip { position: relative; right: auto; top: auto; width: 100%; height: 150px; margin-bottom: 22px; }
+  .dashboard-header { padding: 22px; }
+  .dashboard-title { font-size: 2.9rem !important; }
+  .dashboard-shelf { grid-template-columns: 1fr; }
+  .dashboard-shelf-items { gap: 8px; }
+  .dashboard-shelf-items img { height: 86px; }
+}
+@media (max-width: 560px) {
+  .dashboard-shelf-items span { font-size: .52rem; }
+  .dashboard-visual-strip img { width: 100px; height: 124px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }

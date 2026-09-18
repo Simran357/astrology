@@ -3,6 +3,7 @@
 @import './dashboard-artifacts.css';
 @import './chani-inspired-home.css';
 @import './landing-visuals.css';
+@import './redesign.css';
 
 @custom-variant dark (&:is(.dark *));
 

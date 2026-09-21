@@ -1,9 +1,7 @@
 "use client";
 
-import HomePage from "@/views/HomePage";
-import { useApp } from "@/context/AppContext";
+import NewAstrologyApp from "@/App";
 
 export default function Page() {
-  const { navigate } = useApp();
-  return <HomePage onNavigate={navigate} />;
+  return <NewAstrologyApp />;
 }

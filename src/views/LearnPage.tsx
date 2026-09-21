@@ -59,7 +59,7 @@ export default function LearnPage({ onNavigate }: LearnPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0e0a17] text-[#eee5d3] selection:bg-[#ee5d34] selection:text-[#0e0a17]">
+    <div className="view-page learn-view-page min-h-screen bg-[#0e0a17] text-[#eee5d3] selection:bg-[#ee5d34] selection:text-[#0e0a17]">
       <div
         className="fixed inset-0 pointer-events-none"
         style={{

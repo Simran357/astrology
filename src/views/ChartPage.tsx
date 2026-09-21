@@ -124,7 +124,7 @@ export default function ChartPage({ onNavigate }: ChartPageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0e0a17] text-[#eee5d3]">
+    <div className="view-page chart-view-page min-h-screen bg-[#0e0a17] text-[#eee5d3]">
       <div className="fixed inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 40% 60% at 20% 50%, rgba(60,30,130,0.06) 0%, transparent 70%)" }}/>
 

@@ -1,0 +1,122 @@
+/* Shared editorial treatment for secondary view pages. Keeps the existing features; changes only their visual language. */
+.view-page,
+.astral-app-surface {
+  --view-paper: #f3eee3;
+  --view-paper-deep: #e7dfd0;
+  --view-ink: #201d19;
+  --view-muted: #756e64;
+  --view-rust: #a84f38;
+  --view-sage: #7b8b78;
+  background: var(--view-paper) !important;
+  color: var(--view-ink) !important;
+  position: relative;
+}
+
+.view-page::before,
+.astral-app-surface::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image: radial-gradient(#6f6255 0.45px, transparent .45px);
+  background-size: 8px 8px;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.view-page > *,
+.astral-app-surface > * { position: relative; z-index: 1; }
+
+.view-page .font-serif,
+.astral-app-surface .font-serif,
+.view-page .display,
+.astral-app-surface .display { color: var(--view-ink) !important; }
+
+.view-page .text-\[\#eee5d3\],
+.astral-app-surface .text-\[\#eee5d3\] { color: var(--view-ink) !important; }
+.view-page .text-\[\#bfb7aa\],
+.astral-app-surface .text-\[\#bfb7aa\] { color: var(--view-muted) !important; }
+.view-page .text-\[\#ee5d34\],
+.astral-app-surface .text-\[\#ee5d34\] { color: var(--view-rust) !important; }
+
+.view-page > .relative.z-10,
+.astral-app-surface > .section-shell { max-width: 1120px; }
+
+.view-page .border, .astral-app-surface .border {
+  border-color: rgba(32, 29, 25, .18) !important;
+}
+.view-page [class*="bg-[rgba(31,24,48"],
+.view-page [class*="bg-[rgba(20,15,35"],
+.astral-app-surface [class*="bg-[rgba(31,24,48"],
+.astral-app-surface [class*="bg-[rgba(20,15,35"] {
+  background: rgba(255, 252, 245, .66) !important;
+}
+.view-page [class*="bg-[#0e0a17"],
+.astral-app-surface [class*="bg-[#0e0a17"] { background: transparent !important; }
+
+/* Pinterest-like browsing: horizontal editorial index instead of dense pill nav. */
+.learn-view-page .overflow-x-auto {
+  border-bottom-color: rgba(32, 29, 25, .2) !important;
+  gap: 0.25rem;
+  scrollbar-width: none;
+}
+.learn-view-page .overflow-x-auto button {
+  border-color: transparent !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--view-muted) !important;
+  padding: .85rem .9rem;
+}
+.learn-view-page .overflow-x-auto button:hover,
+.learn-view-page .overflow-x-auto button[class*="bg-[rgba"] {
+  color: var(--view-ink) !important;
+  border-bottom-color: var(--view-rust) !important;
+}
+
+/* Reduce SaaS-card feeling: editorial sheets, rules and generous type. */
+.view-page .rounded-sm,
+.astral-app-surface .rounded-sm { border-radius: 0 !important; box-shadow: none !important; }
+.view-page .shadow-xl,
+.view-page .shadow-2xl,
+.astral-app-surface .shadow-xl,
+.astral-app-surface .shadow-2xl { box-shadow: 0 10px 28px rgba(62, 47, 33, .08) !important; }
+.view-page button[class*="bg-[#ee5d34"],
+.astral-app-surface button[class*="bg-[#ee5d34"] {
+  background: var(--view-rust) !important;
+  color: #fffaf1 !important;
+  border-radius: 999px !important;
+}
+.view-page h1, .astral-app-surface h1 { font-size: clamp(2.8rem, 7vw, 5.8rem); line-height: .96; letter-spacing: -.055em; }
+.view-page h2, .astral-app-surface h2 { letter-spacing: -.04em; }
+.view-page p, .astral-app-surface p { line-height: 1.7; }
+
+.chart-view-page #birth-chart-container { background: transparent; }
+.chart-view-page .grid.grid-cols-3 button { background: rgba(255, 252, 245, .6) !important; border-radius: 0 !important; }
+.chart-view-page .grid.grid-cols-3 button:hover { border-color: var(--view-rust) !important; }
+
+.reading-view-page .space-y-8 > div,
+.profile-view-page .space-y-8 > div { border-left: 2px solid var(--view-rust); padding-left: 1.25rem; }
+.reading-view-page [class*="bg-[radial-gradient"],
+.reading-view-page [class*="bg-[rgba(14,10,23"],
+.reading-view-page [class*="bg-[rgba(31,24,48"] { background: rgba(255, 252, 245, .72) !important; }
+.reading-view-page [class*="text-[#eee5d3"],
+.reading-view-page [class*="text-[#0e0a17"] { color: var(--view-ink) !important; }
+.reading-view-page [class*="text-[#bfb7aa"] { color: var(--view-muted) !important; }
+.reading-view-page [class*="border-l-2"] { border-left-color: var(--view-rust) !important; }
+.reading-view-page [class*="backdrop-blur"] { background: rgba(255, 252, 245, .96) !important; }
+.reading-view-page button[class*="bg-[#ee5d34"] { color: #fffaf1 !important; }
+.reading-view-page .space-y-8 > div { color: var(--view-ink); }
+.reading-view-page .space-y-8 > div p { color: var(--view-muted); }
+.reading-view-page .space-y-8 > div h2,
+.reading-view-page .space-y-8 > div h3 { color: var(--view-ink); }
+
+
+@media (max-width: 720px) {
+  .view-page > .relative.z-10,
+  .astral-app-surface > .section-shell { padding-left: 1.1rem; padding-right: 1.1rem; }
+  .view-page h1, .astral-app-surface h1 { font-size: clamp(2.7rem, 14vw, 4rem); }
+  .reading-view-page .space-y-8 > div,
+  .profile-view-page .space-y-8 > div { padding-left: .8rem; }
+}

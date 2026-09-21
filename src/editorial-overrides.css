@@ -52,4 +52,34 @@ main [class*="bg-[#0e0a17"], main [class*="bg-[#161124"], main [class*="bg-[#1f1
 main [class*="text-[#eee5d3"] { color: var(--ink) !important; }
 main [class*="text-[#bfb7aa"] { color: var(--ink-soft) !important; }
 main [class*="border-white"] { border-color: var(--line) !important; }
+/* Chani-style reading hierarchy: fewer containers, more editorial breathing room. */
+.astral-dashboard { font-family: var(--app-font-sans); }
+.astral-dashboard .relative.z-10 { padding-top: 0 !important; }
+.astral-dashboard .dashboard-header { padding-top: 18px; }
+.astral-dashboard .dashboard-visual-strip { min-height: 205px; margin-left: -28px; margin-right: -28px; border-left: 0; border-right: 0; }
+.astral-dashboard .dashboard-header > .dashboard-kicker { margin-top: 34px; }
+.astral-dashboard .dashboard-header > .dashboard-title { max-width: 760px; }
+.astral-dashboard .dashboard-header > .dashboard-subtitle { max-width: 520px; text-transform: none; letter-spacing: 0; font-family: var(--app-font-sans); font-size: .9rem; }
+.astral-dashboard .dashboard-sticker { border-color: var(--rust) !important; color: var(--rust) !important; background: transparent !important; }
+.astral-dashboard .dashboard-card { margin-bottom: 0; }
+.astral-dashboard .dashboard-card h2, .astral-dashboard .dashboard-card h3 { letter-spacing: -.045em; }
+.astral-dashboard .dashboard-card .font-mono { letter-spacing: .1em; }
+.astral-dashboard .dashboard-card [class*="border-dashed"] { background: transparent !important; border-color: var(--line) !important; border-top: 1px solid var(--line); border-left: 0; border-right: 0; border-bottom: 0; padding-left: 0; padding-right: 0; }
+.astral-dashboard .dashboard-card [class*="border-l-2"] { border-left: 0 !important; border-top: 1px solid var(--rust) !important; padding-left: 0; padding-top: 14px; }
+.astral-dashboard .dashboard-card [class*="bg-[rgba(14,10,23"] { background: transparent !important; }
+.astral-dashboard .dashboard-card strong { font-family: var(--app-font-serif); font-weight: 400; }
+.astral-dashboard .dashboard-shelf { margin-top: 24px; }
+.astral-dashboard .dashboard-shelf-items button { transition: transform .25s ease, background .25s ease; }
+.astral-dashboard .dashboard-shelf-items button:hover { transform: translateY(-4px); background: var(--paper-deep); }
+.astral-dashboard .grid[class~="lg:grid-cols-5"] { align-items: start; }
+.astral-dashboard .grid[class~="lg:grid-cols-5"] > div { gap: 0 !important; }
+.astral-dashboard .grid[class~="lg:grid-cols-5"] > div > .dashboard-card:first-child { border-top: 0; }
+.astral-dashboard .button-primary { font-family: var(--app-font-sans); font-weight: 600; letter-spacing: .02em; }
+
+@media (max-width: 760px) {
+  .astral-dashboard .dashboard-visual-strip { margin-left: -14px; margin-right: -14px; min-height: 150px; }
+  .astral-dashboard .dashboard-header { padding-bottom: 24px; }
+  .astral-dashboard .dashboard-title { font-size: clamp(2.8rem, 15vw, 4.5rem) !important; }
+  .astral-dashboard .dashboard-card { margin-bottom: 14px; }
+}
 @media (max-width: 640px) { .dashboard-visual-label { font-size: 1.1rem; }.dashboard-shelf-items span { font-size: .55rem; } }

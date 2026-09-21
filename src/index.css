@@ -4,6 +4,7 @@
 @import './chani-inspired-home.css';
 @import './landing-visuals.css';
 @import './redesign.css';
+@import './editorial-overrides.css';
 
 @custom-variant dark (&:is(.dark *));
 

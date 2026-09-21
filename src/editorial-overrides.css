@@ -1,0 +1,55 @@
+/* AstroFindings editorial reading system */
+:root {
+  --paper: #f4efe6;
+  --paper-deep: #e8dfcf;
+  --ink: #20231f;
+  --ink-soft: #68645b;
+  --rust: #b8563f;
+  --mustard: #d2a64c;
+  --sage: #7d927c;
+  --line: rgba(32,35,31,.18);
+  --app-font-sans: "Inter", Arial, sans-serif;
+  --app-font-serif: Georgia, "Times New Roman", serif;
+  --app-font-mono: "DM Mono", monospace;
+  --radius: .25rem;
+}
+html, body, #root { background: var(--paper) !important; color: var(--ink) !important; }
+body { font-family: var(--app-font-sans); }
+button, input, textarea, select { font: inherit; }
+button { border-radius: 0 !important; }
+.astral-dashboard, .astral-dashboard.min-h-screen { background: var(--paper) !important; color: var(--ink) !important; }
+.astral-dashboard .fixed.inset-0 { display: none; }
+.astral-dashboard .relative.z-10 { max-width: 1180px; }
+.astral-dashboard .dashboard-header { position: relative; padding: 28px 0 32px; border-bottom: 1px solid var(--line); }
+.astral-dashboard .dashboard-kicker { color: var(--rust) !important; letter-spacing: .16em; }
+.astral-dashboard .dashboard-title { color: var(--ink) !important; font-family: var(--app-font-serif); font-size: clamp(2.8rem, 7vw, 6.5rem) !important; line-height: .92; letter-spacing: -.07em; }
+.astral-dashboard .dashboard-subtitle { color: var(--ink-soft) !important; font-family: var(--app-font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.dashboard-visual-strip { min-height: 170px; display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-bottom: 28px; overflow: hidden; background: var(--paper-deep); border: 1px solid var(--line); padding: 20px 28px; }
+.dashboard-visual-strip img { width: 120px; height: 150px; object-fit: cover; mix-blend-mode: multiply; filter: sepia(.25) saturate(.75); }
+.dashboard-visual-strip img:nth-of-type(1) { transform: rotate(-5deg); }.dashboard-visual-strip img:nth-of-type(2) { transform: rotate(5deg); }
+.dashboard-visual-label { margin-right: auto; color: var(--ink); font: 700 clamp(1.1rem, 3vw, 2.1rem)/.9 var(--app-font-serif); letter-spacing: -.05em; }.dashboard-visual-label i { color: var(--rust); font-weight: 400; }
+.dashboard-orbit-note { align-self: flex-end; color: var(--rust); font: 700 .62rem/1.15 var(--app-font-mono); text-transform: uppercase; }.dashboard-orbit-note i { font-family: var(--app-font-serif); font-size: 1rem; text-transform: none; }
+.astral-dashboard .dashboard-card, .astral-dashboard .dashboard-shelf, .astral-dashboard [class*="bg-[rgba(31,24,48"] { background: transparent !important; color: var(--ink) !important; border-color: var(--line) !important; box-shadow: none !important; }
+.astral-dashboard .dashboard-card { border-width: 1px; border-style: solid; padding: 28px !important; }
+.astral-dashboard h2, .astral-dashboard h3, .astral-dashboard h4, .astral-dashboard p, .astral-dashboard span { color: inherit; }
+.astral-dashboard .text-\[\#eee5d3\], .astral-dashboard .text-\[\#eee5d3\]\/90 { color: var(--ink) !important; }
+.astral-dashboard .text-\[\#bfb7aa\] { color: var(--ink-soft) !important; }
+.astral-dashboard .text-\[\#f0c870\], .astral-dashboard .text-\[\#d4af37\] { color: var(--mustard) !important; }
+.astral-dashboard .text-\[\#ee5d34\] { color: var(--rust) !important; }
+.astral-dashboard .dashboard-shelf { display: grid; grid-template-columns: .8fr 1.2fr; gap: 30px; background: var(--paper-deep) !important; }
+.dashboard-shelf-kicker { color: var(--rust) !important; font: 700 .62rem var(--app-font-mono); letter-spacing: .14em; }
+.dashboard-shelf h2 { margin: 8px 0; font: 400 clamp(2rem, 4vw, 3.6rem)/.95 var(--app-font-serif); letter-spacing: -.06em; }
+.dashboard-shelf p { color: var(--ink-soft) !important; max-width: 300px; line-height: 1.5; }
+.dashboard-shelf-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }.dashboard-shelf-items button { color: var(--ink); text-align: left; background: var(--paper); border: 1px solid var(--line); padding: 10px; }.dashboard-shelf-items img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; margin-bottom: 10px; }.dashboard-shelf-items span { font: 600 .65rem var(--app-font-mono); text-transform: uppercase; }
+.astral-dashboard .button-primary { background: var(--rust) !important; color: #fffaf1 !important; border: 0; padding: 13px 18px; }
+.astral-dashboard .rounded-sm, .astral-dashboard .rounded-md, .astral-dashboard .rounded-lg, .astral-dashboard .rounded-xl { border-radius: 0 !important; }
+@media (max-width: 760px) { .dashboard-visual-strip { justify-content: flex-start; padding: 14px; }.dashboard-visual-strip img { width: 82px; height: 110px; }.dashboard-orbit-note { display: none; }.astral-dashboard .dashboard-shelf { grid-template-columns: 1fr; }.dashboard-shelf-items { grid-template-columns: repeat(3, 1fr); }.astral-dashboard .dashboard-card { padding: 20px !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Make non-dashboard routes inherit the same editorial surface. */
+main { background: var(--paper); color: var(--ink); }
+main h1, main h2, main h3 { font-family: var(--app-font-serif); }
+main [class*="bg-[#0e0a17"], main [class*="bg-[#161124"], main [class*="bg-[#1f1830"] { background: var(--paper) !important; color: var(--ink) !important; }
+main [class*="text-[#eee5d3"] { color: var(--ink) !important; }
+main [class*="text-[#bfb7aa"] { color: var(--ink-soft) !important; }
+main [class*="border-white"] { border-color: var(--line) !important; }
+@media (max-width: 640px) { .dashboard-visual-label { font-size: 1.1rem; }.dashboard-shelf-items span { font-size: .55rem; } }
